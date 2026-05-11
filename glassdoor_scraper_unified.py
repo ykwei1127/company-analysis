@@ -332,6 +332,11 @@ class GlassdoorScraper:
         
         wb.save(output_file)
         print(f"✓ Excel 格式已美化")
+
+        # 同步輸出 CSV
+        csv_file = os.path.splitext(output_file)[0] + '.csv'
+        df.to_csv(csv_file, index=False, encoding='utf-8-sig')
+        print(f"✓ CSV 已保存至: {csv_file}")
     
     def close(self):
         """關閉瀏覽器"""

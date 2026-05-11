@@ -42,6 +42,22 @@ EXPLORE_CONFIG = {
 # 比對模式：只需填入公司名稱，ID 和 URL 會自動從 Glassdoor 搜尋
 COMPANIES_TO_MATCH = [
     'NVIDIA',
+    'TSMC',
+    'MSI',
+    'Trend Micro',
+    'Google',
+    'Acer',
+    'Lenovo',
+    'Dell Technologies',
+    'HP Inc.',
+    'Quanta Computer',
+    'Wistron',
+    'Compal Electronics',
+    'Wiwynn',
+    'Delta Electronics',
+    'Inventec',
+    'Pegatron',
+    'AU Optronics',
 ]
 # ============================================================
 
@@ -307,7 +323,6 @@ class CompanyFinder:
         for link in all_links:
             try:
                 href = link.get_attribute('href') or ''
-                text = link.text.strip()
                 if not href:
                     continue
                 if '/Reviews/' not in href:
@@ -317,6 +332,7 @@ class CompanyFinder:
                 if not any(p in href for p in ['_IL.', '_IC', '_IN', '_IM']):
                     continue
                 clean_href = href.split('?')[0]
+                text = link.text.strip()
                 count_match = re.search(r'(\d[\d,]*)\s*review', text, re.IGNORECASE)
                 count = int(count_match.group(1).replace(',', '')) if count_match else None
                 return clean_href, count, page_heading

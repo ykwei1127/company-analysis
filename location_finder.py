@@ -198,7 +198,6 @@ class LocationFinder:
         for link in all_links:
             try:
                 href = link.get_attribute('href') or ''
-                text = link.text.strip()
                 if not href:
                     continue
                 if '/Reviews/' not in href:
@@ -209,6 +208,7 @@ class LocationFinder:
                 if not any(p in href for p in ['_IL.', '_IC', '_IN', '_IM']):
                     continue
                 clean_href = href.split('?')[0]
+                text = link.text.strip()
                 # 嘗試抓評論數
                 count_match = re.search(r'(\d[\d,]*)\s*review', text, re.IGNORECASE)
                 count = int(count_match.group(1).replace(',', '')) if count_match else None
