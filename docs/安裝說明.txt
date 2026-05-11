@@ -1,0 +1,68 @@
+Glassdoor 爬蟲工具 - 安裝與使用說明
+=====================================
+
+【安裝步驟】
+
+1. 確認已安裝 Python（建議 3.8 以上版本）
+   檢查方法：在命令提示字元輸入 python --version
+
+2. 安裝必要套件
+   在此資料夾開啟命令提示字元，執行：
+   pip install -r requirements.txt
+
+3. 確認已安裝 Chrome 瀏覽器
+   程式會自動下載對應的 ChromeDriver
+
+【使用方法】
+
+方法一：快速使用（推薦）
+   python quick_scrape.py
+
+方法二：完整功能
+   python glassdoor_scraper.py
+
+【修改要抓取的公司】
+
+編輯 quick_scrape.py 檔案，修改 companies 字典：
+
+companies = {
+    '公司名稱': 'Glassdoor URL',
+    '另一家公司': 'Glassdoor URL',
+}
+
+【輸出結果】
+
+程式會產生 Excel 檔案，包含以下欄位：
+- Company（公司名稱）
+- Overall（整體評分）
+- Recommend（推薦比例）
+- Diversity & Inclusion（多元與包容）
+- Work/Life Balance（工作生活平衡）
+- Compensation and Benefits（薪酬福利）
+- Culture & Values（文化價值）
+- Career Opportunities（職涯機會）
+- Senior Management（高階管理）
+
+【常見問題】
+
+Q: 找不到某些評分數據？
+A: Glassdoor 的網頁結構可能變更，或該公司評論數量不足
+
+Q: 程式執行很慢？
+A: 這是正常的，為了避免被 Glassdoor 封鎖，程式會刻意放慢速度
+
+Q: 被 Glassdoor 封鎖？
+A: 1. 增加請求間隔時間
+   2. 使用 VPN
+   3. 登入 Glassdoor 帳號後再執行
+
+Q: 如何隱藏瀏覽器視窗？
+A: 在 quick_scrape.py 中設定 show_browser = False
+
+【技術支援】
+
+如有問題請參考 README.md 或檢查：
+1. Python 版本是否正確
+2. 套件是否都安裝成功
+3. Chrome 瀏覽器是否已安裝
+4. 網路連線是否正常
