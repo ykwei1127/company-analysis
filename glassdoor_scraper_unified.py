@@ -71,6 +71,7 @@ class GlassdoorScraper:
                 'Company': company_name,
                 'Overall': None,
                 'Recommend': None,
+                'CEO Approval': None,
                 'Total Reviews': None,
                 'Diversity & Inclusion': None,
                 'Work/Life Balance': None,
@@ -106,6 +107,16 @@ class GlassdoorScraper:
             except Exception as e:
                 print(f"  ⚠ 無法找到推薦比例")
             
+            # 提取 CEO 支持率
+            try:
+                ceo_elem = self.driver.find_element(By.CSS_SELECTOR, 'p[class*="ceoApproval"]')
+                ceo_match = re.search(r'(\d+)%', ceo_elem.text)
+                if ceo_match:
+                    data['CEO Approval'] = f"{ceo_match.group(1)}%"
+                    print(f"  ✓ CEO Approval: {data['CEO Approval']}")
+            except Exception:
+                print(f"  ⚠ 無法找到 CEO 支持率")
+
             # 提取評論總數
             try:
                 review_count_elem = self.driver.find_element(By.CSS_SELECTOR, '.ReviewOverview_count__xexV9')
@@ -281,7 +292,7 @@ class GlassdoorScraper:
         
         # 調整列順序（相容有無 Location 欄位）
         base_cols = ['Company', 'Baseline Location', 'Country', 'Actual City', 'Overall', 'Recommend',
-                     'Total Reviews', 'Diversity & Inclusion', 'Work/Life Balance',
+                     'CEO Approval', 'Total Reviews', 'Diversity & Inclusion', 'Work/Life Balance',
                      'Compensation and Benefits', 'Culture & Values',
                      'Career Opportunities', 'Senior Management']
         columns_order = [c for c in base_cols if c in df.columns]
