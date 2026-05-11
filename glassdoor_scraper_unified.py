@@ -61,19 +61,14 @@ class GlassdoorScraper:
         """
         print(f"正在抓取: {company_name}")
         print(f"URL: {url}")
+        _t0 = time.time()
         
         try:
             self.driver.get(url)
-            time.sleep(5)
-            
-            # 滾動頁面以觸發動態載入
-            self.driver.execute_script("window.scrollTo(0, 500);")
-            time.sleep(2)
-            
+
+            # 等 Overall 評分出現（最多 8 秒），取代固定 sleep(5)
             data = {
                 'Company': company_name,
-                'Baseline Location': None,
-                'Actual City': None,
                 'Overall': None,
                 'Recommend': None,
                 'Total Reviews': None,
@@ -84,16 +79,21 @@ class GlassdoorScraper:
                 'Career Opportunities': None,
                 'Senior Management': None
             }
-            
+
             # 提取整體評分
             try:
-                overall_rating = self.wait.until(
+                overall_elem = WebDriverWait(self.driver, 8).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, 'p[data-size-variant="lg"]'))
-                ).text
+                )
+                overall_rating = overall_elem.text
                 data['Overall'] = float(overall_rating)
                 print(f"  ✓ Overall: {overall_rating}")
             except Exception as e:
                 print(f"  ⚠ 無法找到整體評分")
+
+            # 滾動頁面以觸發動態載入
+            self.driver.execute_script("window.scrollTo(0, 500);")
+            time.sleep(1)
             
             # 提取推薦比例
             try:
@@ -150,16 +150,17 @@ class GlassdoorScraper:
             except Exception as e:
                 print(f"  ⚠ 提取評分時發生錯誤: {str(e)}")
             
-            # 檢查缺失的數據
-            missing_fields = [key for key, value in data.items() if key != 'Company' and value is None]
+            # 檢查缺失的數據（排除由呼叫端填入的 metadata 欄位）
+            _meta_cols = {'Baseline Location', 'Actual City', 'Country'}
+            missing_fields = [k for k, v in data.items() if k not in _meta_cols and k != 'Company' and v is None]
             if missing_fields:
                 print(f"  ⚠ 缺失欄位: {', '.join(missing_fields)}")
             
-            print(f"✓ 成功抓取 {company_name}")
+            print(f"✓ 成功抓取 {company_name} ({time.time() - _t0:.1f}s)")
             return data
             
         except Exception as e:
-            print(f"✗ 抓取 {company_name} 時發生錯誤: {str(e)}")
+            print(f"✗ 抓取 {company_name} 時發生錯誤: {str(e)} ({time.time() - _t0:.1f}s)")
             return None
     
     def scrape_multiple_companies(self, company_urls):
@@ -196,6 +197,8 @@ class GlassdoorScraper:
         """
         import json
         all_data = []
+        total_start = time.time()
+        count = 0
 
         for json_file in json_files:
             with open(json_file, encoding='utf-8') as f:
@@ -209,17 +212,59 @@ class GlassdoorScraper:
                 actual_city = entry.get('matched_city') or baseline_loc
                 url = entry['url']
 
+                country = entry.get('baseline_country')
                 display_name = f"{company} - {baseline_loc}"
                 data = self.extract_rating_data(url, display_name)
                 if data:
                     data['Baseline Location'] = baseline_loc
                     data['Actual City'] = actual_city
+                    data['Country'] = country
                     all_data.append(data)
+                count += 1
                 time.sleep(3)
                 print()
 
+        total = time.time() - total_start
+        if count:
+            print(f"⏱ 總計 {count} 筆，耗時 {total:.0f}s，平均 {total/count:.1f}s/筆")
         return all_data
     
+    def scrape_from_baseline_json(self, json_file, company_name='ASUS'):
+        """
+        讀取 explore 模式產生的 *_locations.json（如 asus_locations.json）並抓取評分。
+
+        Args:
+            json_file: str，locations json 路徑
+            company_name: str，公司名稱
+
+        Returns:
+            list of dict
+        """
+        import json
+        all_data = []
+
+        with open(json_file, encoding='utf-8') as f:
+            entries = json.load(f)
+
+        for entry in entries:
+            if entry.get('status') != 'found' or not entry.get('url'):
+                continue
+            baseline_loc = entry['location']
+            country = entry.get('country')
+            url = entry['url']
+
+            display_name = f"{company_name} - {baseline_loc}"
+            data = self.extract_rating_data(url, display_name)
+            if data:
+                data['Baseline Location'] = baseline_loc
+                data['Actual City'] = baseline_loc
+                data['Country'] = country
+                all_data.append(data)
+            time.sleep(3)
+            print()
+
+        return all_data
+
     def save_to_excel(self, data, output_file='glassdoor_ratings.xlsx'):
         """
         將數據保存為 Excel 文件
@@ -235,7 +280,7 @@ class GlassdoorScraper:
         df = pd.DataFrame(data)
         
         # 調整列順序（相容有無 Location 欄位）
-        base_cols = ['Company', 'Baseline Location', 'Actual City', 'Overall', 'Recommend',
+        base_cols = ['Company', 'Baseline Location', 'Country', 'Actual City', 'Overall', 'Recommend',
                      'Total Reviews', 'Diversity & Inclusion', 'Work/Life Balance',
                      'Compensation and Benefits', 'Culture & Values',
                      'Career Opportunities', 'Senior Management']
@@ -328,20 +373,29 @@ def main():
         print("準備好後按 Enter 繼續...")
         input()
 
+    include_baseline = getattr(config, 'INCLUDE_BASELINE', False) if config else False
+    baseline_file = 'data/asus_locations.json'
+
     try:
         scraper = GlassdoorScraper(mode=mode, headless=headless)
+        data = []
+
+        if include_baseline and os.path.exists(baseline_file):
+            print(f"\n[INCLUDE_BASELINE=True] 抓取基準公司 ASUS：{baseline_file}\n")
+            data += scraper.scrape_from_baseline_json(baseline_file, company_name='ASUS')
 
         if matched_files:
             print(f"\n找到 matched JSON：{matched_files}")
             print(f"開始從 matched JSON 抓取數據...\n")
-            data = scraper.scrape_from_matched_json(matched_files)
-        elif config and hasattr(config, 'COMPANY_URLS'):
-            companies = config.COMPANY_URLS
-            print(f"\n開始抓取 {len(companies)} 個公司的數據...\n")
-            data = scraper.scrape_multiple_companies(companies)
-        else:
-            print("找不到 matched JSON 也沒有 config.py，請先執行 company_finder.py match")
-            return
+            data += scraper.scrape_from_matched_json(matched_files)
+        elif not include_baseline:
+            if config and hasattr(config, 'COMPANY_URLS'):
+                companies = config.COMPANY_URLS
+                print(f"\n開始抓取 {len(companies)} 個公司的數據...\n")
+                data += scraper.scrape_multiple_companies(companies)
+            else:
+                print("找不到 matched JSON 也沒有 config.py，請先執行 company_finder.py match")
+                return
 
         if data:
             scraper.save_to_excel(data, output_file)
