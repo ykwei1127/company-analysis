@@ -71,16 +71,16 @@ venv\Scripts\python company_finder.py match
 
 ---
 
-### Step 3：更新 config.py 並抓取評分
+### Step 3：抓取評分數據
 
-`company_finder.py match` 執行完後會自動印出可貼進 `config.py` 的內容。
-貼入後執行爬蟲：
+`company_finder.py match` 執行完後，`data/` 目錄下會有 `*_matched.json`。
+直接執行爬蟲，會自動讀取所有 matched JSON（**不需要手動更新 `config.py`**）：
 
 ```bash
 venv\Scripts\python glassdoor_scraper_unified.py
 ```
 
-輸出：`glassdoor_ratings.xlsx`
+輸出：`data/glassdoor_ratings.xlsx`
 
 ---
 
@@ -116,15 +116,20 @@ venv\Scripts\python glassdoor_scraper_unified.py
 
 ## 輸出 Excel 欄位
 
-- Company、Location、Country
-- Overall（整體評分）
-- Recommend（推薦比例）
-- Diversity & Inclusion
-- Work/Life Balance
-- Compensation and Benefits
-- Culture & Values
-- Career Opportunities
-- Senior Management
+| 欄位 | 說明 |
+|------|------|
+| Company | 公司名稱 |
+| Baseline Location | 比較基準地區（來自 ASUS 22 個地區） |
+| Actual City | 實際抓取的城市（與新公司 Glassdoor 的辦公室對應，可能與基準不同） |
+| Overall | 整體評分 |
+| Recommend | 推薦比例 |
+| Total Reviews | 評論總數 |
+| Diversity & Inclusion | 多元與包容 |
+| Work/Life Balance | 工作生活平衡 |
+| Compensation and Benefits | 薪酬福利 |
+| Culture & Values | 文化價值 |
+| Career Opportunities | 職涯機會 |
+| Senior Management | 高階管理 |
 
 ---
 

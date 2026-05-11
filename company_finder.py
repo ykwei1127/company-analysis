@@ -41,7 +41,7 @@ EXPLORE_CONFIG = {
 
 # 比對模式：只需填入公司名稱，ID 和 URL 會自動從 Glassdoor 搜尋
 COMPANIES_TO_MATCH = [
-    'TSMC',
+    'NVIDIA',
 ]
 # ============================================================
 
@@ -377,25 +377,35 @@ class CompanyFinder:
         在 Glassdoor 搜尋公司名稱，自動取得 company_id 和 locations_url。
         返回 dict 或 None（找不到時）。
         """
+        # 先導到首頁避免前一頁殘留連結干擾搜尋結果
+        self.driver.get("https://www.glassdoor.com")
+        time.sleep(2)
+
         search_url = f"https://www.glassdoor.com/Search/results.htm?keyword={company_name.replace(' ', '+')}"
         print(f"\n搜尋：{search_url}")
         self.driver.get(search_url)
         time.sleep(4)
 
+        name_keywords = [w.lower() for w in company_name.split() if len(w) > 1]
+
         all_links = self.driver.find_elements(By.TAG_NAME, 'a')
         for link in all_links:
             try:
                 href = link.get_attribute('href') or ''
-                # 目標：/Overview/ 或 /Reviews/ 頁面，含 E{數字}
-                m = re.search(r'[-_]E(\d+)(?:\.htm|$|[,.])', href)
+                # 支援兩種 ID 格式：-E7633 和 EI_IE7633
+                m = re.search(r'[-_]E(?:I_IE)?(\d+)(?:\.htm|$|[,.])', href)
                 if not m:
                     continue
                 # 確認是公司頁，排除 job/salary 等
                 if not any(p in href for p in ['/Overview/', '/Reviews/', '/Location/']):
                     continue
+                # 驗證 href 包含公司名稱關鍵字，避免抓到殘留的其他公司
+                href_lower = href.lower()
+                if not any(kw in href_lower for kw in name_keywords):
+                    continue
                 numeric_id = m.group(1)
-                # 從 href 取公司 slug（Overview URL 格式最乾淨）
-                slug_match = re.search(r'/(?:Overview|Reviews|Location)/([^/]+)-(?:Overview|Reviews|Office-Locations)-E\d+', href)
+                # 從 href 取公司 slug
+                slug_match = re.search(r'/(?:Overview|Reviews|Location)/(?:Working-at-)?([^/]+?)-(?:Overview|Reviews|Office-Locations|EI_IE)', href)
                 if slug_match:
                     slug = slug_match.group(1)
                 else:
@@ -427,6 +437,9 @@ class CompanyFinder:
                 if not m:
                     continue
                 if '/Overview/' not in href and '/Reviews/' not in href:
+                    continue
+                href_lower = href.lower()
+                if not any(kw in href_lower for kw in name_keywords):
                     continue
                 numeric_id = m.group(1)
                 slug_match = re.search(r'/(?:Overview|Reviews)/([^/]+)-(?:Overview|Reviews)-E\d+', href)
