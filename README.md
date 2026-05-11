@@ -82,6 +82,10 @@ venv\Scripts\python glassdoor_scraper_unified.py
 
 輸出：`data/glassdoor_ratings.xlsx`
 
+> **`config.py` 的 `INCLUDE_BASELINE` 開關**
+> - `True` ：一併抓取基準公司 ASUS 的評分（讀取 `data/asus_locations.json`）
+> - `False`：只抓取 `*_matched.json` 內的新公司
+
 ---
 
 ## 22 個基準地區（來自 ASUS）
@@ -120,6 +124,7 @@ venv\Scripts\python glassdoor_scraper_unified.py
 |------|------|
 | Company | 公司名稱 |
 | Baseline Location | 比較基準地區（來自 ASUS 22 個地區） |
+| Country | 基準地區的國家 |
 | Actual City | 實際抓取的城市（與新公司 Glassdoor 的辦公室對應，可能與基準不同） |
 | Overall | 整體評分 |
 | Recommend | 推薦比例 |
