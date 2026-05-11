@@ -41,9 +41,7 @@ EXPLORE_CONFIG = {
 
 # 比對模式：只需填入公司名稱，ID 和 URL 會自動從 Glassdoor 搜尋
 COMPANIES_TO_MATCH = [
-    # 範例，之後告知公司名稱後填入：
-    # 'Nvidia',
-    # 'AMD',
+    'TSMC',
 ]
 # ============================================================
 
@@ -155,6 +153,7 @@ class CompanyFinder:
 
         print(f"可比對國家：{sorted(country_to_city.keys())}")
 
+        global_review_url = company_config.get('global_review_url')
         results = []
         baseline_found = [loc for loc in baseline_locations if loc['status'] == 'found']
 
@@ -162,6 +161,31 @@ class CompanyFinder:
             ref_country = baseline['country']
             ref_location = baseline['location']
             print(f"\n[{i}/{len(baseline_found)}] 基準地區：{ref_location} ({ref_country})")
+
+            # Global 基準地區：直接填入 global review URL
+            if ref_location == 'Global':
+                if global_review_url:
+                    print(f"  ✅ Global review URL：{global_review_url}")
+                    results.append({
+                        'baseline_location': 'Global',
+                        'baseline_country': None,
+                        'company': company_name,
+                        'matched_city': 'Global',
+                        'url': global_review_url,
+                        'reviews_count': None,
+                        'status': 'found',
+                    })
+                else:
+                    results.append({
+                        'baseline_location': 'Global',
+                        'baseline_country': None,
+                        'company': company_name,
+                        'matched_city': None,
+                        'url': None,
+                        'reviews_count': None,
+                        'status': 'no_review_url',
+                    })
+                continue
 
             # 在新公司的城市裡找相同國家
             matched_city = None
@@ -379,11 +403,13 @@ class CompanyFinder:
 
                 company_id = f"E{numeric_id}"
                 locations_url = f"https://www.glassdoor.com/Location/All-{slug}-Office-Locations-{company_id}.htm"
+                global_review_url = f"https://www.glassdoor.com/Reviews/{slug}-Reviews-{company_id}.htm"
                 print(f"  找到：{company_name} → ID={company_id}, slug={slug}")
                 return {
                     'name': company_name,
                     'company_id': company_id,
                     'locations_url': locations_url,
+                    'global_review_url': global_review_url,
                 }
             except Exception:
                 continue
@@ -407,11 +433,13 @@ class CompanyFinder:
                 slug = slug_match.group(1) if slug_match else company_name.replace(' ', '-')
                 company_id = f"E{numeric_id}"
                 locations_url = f"https://www.glassdoor.com/Location/All-{slug}-Office-Locations-{company_id}.htm"
+                global_review_url = f"https://www.glassdoor.com/Reviews/{slug}-Reviews-{company_id}.htm"
                 print(f"  備用找到：{company_name} → ID={company_id}")
                 return {
                     'name': company_name,
                     'company_id': company_id,
                     'locations_url': locations_url,
+                    'global_review_url': global_review_url,
                 }
             except Exception:
                 continue

@@ -72,6 +72,8 @@ class GlassdoorScraper:
             
             data = {
                 'Company': company_name,
+                'Baseline Location': None,
+                'Actual City': None,
                 'Overall': None,
                 'Recommend': None,
                 'Total Reviews': None,
@@ -180,6 +182,43 @@ class GlassdoorScraper:
             print()
         
         return all_data
+
+    def scrape_from_matched_json(self, json_files):
+        """
+        從 company_finder.py 產生的 *_matched.json 抓取評分數據。
+        保留 baseline_location 和 matched_city，讓 Excel 顯示正確。
+
+        Args:
+            json_files: list of str，matched json 路徑
+
+        Returns:
+            list of dict
+        """
+        import json
+        all_data = []
+
+        for json_file in json_files:
+            with open(json_file, encoding='utf-8') as f:
+                entries = json.load(f)
+
+            for entry in entries:
+                if entry['status'] != 'found' or not entry.get('url'):
+                    continue
+                company = entry['company']
+                baseline_loc = entry['baseline_location']
+                actual_city = entry.get('matched_city') or baseline_loc
+                url = entry['url']
+
+                display_name = f"{company} - {baseline_loc}"
+                data = self.extract_rating_data(url, display_name)
+                if data:
+                    data['Baseline Location'] = baseline_loc
+                    data['Actual City'] = actual_city
+                    all_data.append(data)
+                time.sleep(3)
+                print()
+
+        return all_data
     
     def save_to_excel(self, data, output_file='glassdoor_ratings.xlsx'):
         """
@@ -195,10 +234,12 @@ class GlassdoorScraper:
         
         df = pd.DataFrame(data)
         
-        # 調整列順序
-        columns_order = ['Company', 'Overall', 'Recommend', 'Total Reviews', 'Diversity & Inclusion', 
-                        'Work/Life Balance', 'Compensation and Benefits', 
-                        'Culture & Values', 'Career Opportunities', 'Senior Management']
+        # 調整列順序（相容有無 Location 欄位）
+        base_cols = ['Company', 'Baseline Location', 'Actual City', 'Overall', 'Recommend',
+                     'Total Reviews', 'Diversity & Inclusion', 'Work/Life Balance',
+                     'Compensation and Benefits', 'Culture & Values',
+                     'Career Opportunities', 'Senior Management']
+        columns_order = [c for c in base_cols if c in df.columns]
         df = df[columns_order]
         
         # 保存為 Excel
@@ -222,9 +263,11 @@ class GlassdoorScraper:
             cell.alignment = Alignment(horizontal='center', vertical='center')
         
         # 設置列寬
-        ws.column_dimensions['A'].width = 25
-        for col in ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']:
-            ws.column_dimensions[col].width = 20
+        col_widths = {'A': 30, 'B': 22, 'C': 22, 'D': 10, 'E': 12,
+                      'F': 14, 'G': 20, 'H': 18, 'I': 24, 'J': 16,
+                      'K': 22, 'L': 18}
+        for col, width in col_widths.items():
+            ws.column_dimensions[col].width = width
         
         # 居中對齊數據
         for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
@@ -261,29 +304,19 @@ def load_config():
 
 
 def main():
+    import glob
+
     # 載入配置
     config = load_config()
-    
-    if config and hasattr(config, 'COMPANY_URLS'):
-        companies = config.COMPANY_URLS
-        scraper_config = getattr(config, 'SCRAPER_CONFIG', {})
-        output_config = getattr(config, 'OUTPUT_CONFIG', {})
-        
-        mode = scraper_config.get('mode', 'manual')
-        headless = scraper_config.get('headless', False)
-        output_file = output_config.get('filename', 'glassdoor_ratings.xlsx')
-    else:
-        # 使用預設配置
-        print("使用預設配置")
-        companies = {
-            'ASUS reviews': 'https://www.glassdoor.com/Reviews/ASUS-Reviews-E40093.htm',
-            'ASUS Taipei reviews': 'https://www.glassdoor.com/Reviews/ASUS-Taipei-Reviews-EI_IE40093.0,4_IL.5,11_IC3271041.htm',
-        }
-        mode = 'manual'
-        headless = False
-        output_file = 'glassdoor_ratings.xlsx'
-    
-    # 如果是手動模式，顯示提示
+    scraper_config = getattr(config, 'SCRAPER_CONFIG', {}) if config else {}
+    output_config = getattr(config, 'OUTPUT_CONFIG', {}) if config else {}
+    mode = scraper_config.get('mode', 'manual')
+    headless = scraper_config.get('headless', False)
+    output_file = output_config.get('filename', 'data/glassdoor_ratings.xlsx')
+
+    # 優先使用 data/*_matched.json（company_finder 產生的結果）
+    matched_files = sorted(glob.glob('data/*_matched.json'))
+
     if mode == 'manual':
         print("\n" + "="*60)
         print("手動模式 - 使用已登入的 Chrome")
@@ -294,23 +327,28 @@ def main():
         print("\n如果還沒準備好，請按 Ctrl+C 取消")
         print("準備好後按 Enter 繼續...")
         input()
-    
+
     try:
-        # 創建爬蟲實例
         scraper = GlassdoorScraper(mode=mode, headless=headless)
-        
-        print(f"\n開始抓取 {len(companies)} 個公司的數據...\n")
-        
-        # 抓取數據
-        data = scraper.scrape_multiple_companies(companies)
-        
-        # 保存為 Excel
+
+        if matched_files:
+            print(f"\n找到 matched JSON：{matched_files}")
+            print(f"開始從 matched JSON 抓取數據...\n")
+            data = scraper.scrape_from_matched_json(matched_files)
+        elif config and hasattr(config, 'COMPANY_URLS'):
+            companies = config.COMPANY_URLS
+            print(f"\n開始抓取 {len(companies)} 個公司的數據...\n")
+            data = scraper.scrape_multiple_companies(companies)
+        else:
+            print("找不到 matched JSON 也沒有 config.py，請先執行 company_finder.py match")
+            return
+
         if data:
             scraper.save_to_excel(data, output_file)
             print(f"\n✓ 完成！共抓取 {len(data)} 筆數據")
         else:
             print("\n✗ 沒有成功抓取任何數據")
-            
+
     except Exception as e:
         print(f"\n✗ 發生錯誤: {e}")
         if mode == 'manual':
