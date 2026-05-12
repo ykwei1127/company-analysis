@@ -19,7 +19,7 @@ import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class GlassdoorScraper:
-    def __init__(self, mode='manual', headless=False, chrome_debugger_port=9222):
+    def __init__(self, mode='manual', headless=False, chrome_debugger_port=9222, _log_fn=None):
         """
         初始化 Glassdoor 爬蟲
         
@@ -29,23 +29,23 @@ class GlassdoorScraper:
                 - 'auto': 自動啟動新的 Chrome（可能遇到人機驗證）
             headless: 僅在 auto 模式下有效，是否隱藏瀏覽器
             chrome_debugger_port: 僅在 manual 模式下有效，Chrome 調試端口
+            _log_fn: 可選的 logging 函式 (msg, end) → 供平行模式各 port 獨立記錄
         """
         self.mode = mode
+        self._log = _log_fn if _log_fn else lambda msg='', end='\n': print(msg, end=end)
         chrome_options = Options()
         
         if mode == 'manual':
-            # 手動模式：連接到現有 Chrome
             chrome_options.add_experimental_option("debuggerAddress", f"127.0.0.1:{chrome_debugger_port}")
-            print(f"📌 使用手動模式：連接到端口 {chrome_debugger_port} 的 Chrome")
+            self._log(f"📌 使用手動模式：連接到端口 {chrome_debugger_port} 的 Chrome")
         else:
-            # 自動模式：啟動新的 Chrome
             if headless:
                 chrome_options.add_argument('--headless')
             chrome_options.add_argument('--disable-blink-features=AutomationControlled')
             chrome_options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
             chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
             chrome_options.add_experimental_option('useAutomationExtension', False)
-            print(f"📌 使用自動模式：啟動新的 Chrome（headless={headless}）")
+            self._log(f"📌 使用自動模式：啟動新的 Chrome（headless={headless}）")
         
         self.driver = webdriver.Chrome(options=chrome_options)
         self.wait = WebDriverWait(self.driver, 15)
@@ -61,8 +61,8 @@ class GlassdoorScraper:
         Returns:
             dict: 包含各項評分的字典
         """
-        print(f"正在抓取: {company_name}")
-        print(f"URL: {url}")
+        self._log(f"正在抓取: {company_name}")
+        self._log(f"URL: {url}")
         _t0 = time.time()
         
         try:
@@ -90,9 +90,9 @@ class GlassdoorScraper:
                 )
                 overall_rating = overall_elem.text
                 data['Overall'] = float(overall_rating)
-                print(f"  ✓ Overall: {overall_rating}")
+                self._log(f"  ✓ Overall: {overall_rating}")
             except Exception as e:
-                print(f"  ⚠ 無法找到整體評分")
+                self._log(f"  ⚠ 無法找到整體評分")
 
             # 滾動頁面以觸發動態載入
             self.driver.execute_script("window.scrollTo(0, 500);")
@@ -105,9 +105,9 @@ class GlassdoorScraper:
                 match = re.search(r'(\d+)%', recommend_text)
                 if match:
                     data['Recommend'] = f"{match.group(1)}%"
-                    print(f"  ✓ Recommend: {data['Recommend']}")
+                    self._log(f"  ✓ Recommend: {data['Recommend']}")
             except Exception as e:
-                print(f"  ⚠ 無法找到推薦比例")
+                self._log(f"  ⚠ 無法找到推薦比例")
             
             # 提取 CEO 支持率
             try:
@@ -115,9 +115,9 @@ class GlassdoorScraper:
                 ceo_match = re.search(r'(\d+)%', ceo_elem.text)
                 if ceo_match:
                     data['CEO Approval'] = f"{ceo_match.group(1)}%"
-                    print(f"  ✓ CEO Approval: {data['CEO Approval']}")
+                    self._log(f"  ✓ CEO Approval: {data['CEO Approval']}")
             except Exception:
-                print(f"  ⚠ 無法找到 CEO 支持率")
+                self._log(f"  ⚠ 無法找到 CEO 支持率")
 
             # 提取評論總數
             try:
@@ -126,9 +126,9 @@ class GlassdoorScraper:
                 match = re.search(r'([\d,]+)', review_text)
                 if match:
                     data['Total Reviews'] = match.group(1)
-                    print(f"  ✓ Total Reviews: {data['Total Reviews']}")
+                    self._log(f"  ✓ Total Reviews: {data['Total Reviews']}")
             except Exception as e:
-                print(f"  ⚠ 無法找到評論總數")
+                self._log(f"  ⚠ 無法找到評論總數")
             
             # 提取各項評分
             try:
@@ -141,39 +141,39 @@ class GlassdoorScraper:
                         
                         if 'Diversity' in category_label or 'inclusion' in category_label:
                             data['Diversity & Inclusion'] = float(rating_value)
-                            print(f"  ✓ Diversity & Inclusion: {rating_value}")
+                            self._log(f"  ✓ Diversity & Inclusion: {rating_value}")
                         elif 'Work/Life' in category_label or 'Work-Life' in category_label:
                             data['Work/Life Balance'] = float(rating_value)
-                            print(f"  ✓ Work/Life Balance: {rating_value}")
+                            self._log(f"  ✓ Work/Life Balance: {rating_value}")
                         elif 'Compensation' in category_label or 'benefits' in category_label:
                             data['Compensation and Benefits'] = float(rating_value)
-                            print(f"  ✓ Compensation and Benefits: {rating_value}")
+                            self._log(f"  ✓ Compensation and Benefits: {rating_value}")
                         elif 'Culture' in category_label or 'values' in category_label:
                             data['Culture & Values'] = float(rating_value)
-                            print(f"  ✓ Culture & Values: {rating_value}")
+                            self._log(f"  ✓ Culture & Values: {rating_value}")
                         elif 'Career' in category_label or 'opportunities' in category_label:
                             data['Career Opportunities'] = float(rating_value)
-                            print(f"  ✓ Career Opportunities: {rating_value}")
+                            self._log(f"  ✓ Career Opportunities: {rating_value}")
                         elif 'Senior' in category_label or 'management' in category_label:
                             data['Senior Management'] = float(rating_value)
-                            print(f"  ✓ Senior Management: {rating_value}")
+                            self._log(f"  ✓ Senior Management: {rating_value}")
                     except Exception as e:
                         continue
                         
             except Exception as e:
-                print(f"  ⚠ 提取評分時發生錯誤: {str(e)}")
+                self._log(f"  ⚠ 提取評分時發生錯誤: {str(e)}")
             
             # 檢查缺失的數據（排除由呼叫端填入的 metadata 欄位）
             _meta_cols = {'Baseline Location', 'Actual City', 'Country'}
             missing_fields = [k for k, v in data.items() if k not in _meta_cols and k != 'Company' and v is None]
             if missing_fields:
-                print(f"  ⚠ 缺失欄位: {', '.join(missing_fields)}")
+                self._log(f"  ⚠ 缺失欄位: {', '.join(missing_fields)}")
             
-            print(f"✓ 成功抓取 {company_name} ({time.time() - _t0:.1f}s)")
+            self._log(f"✓ 成功抓取 {company_name} ({time.time() - _t0:.1f}s)")
             return data
             
         except Exception as e:
-            print(f"✗ 抓取 {company_name} 時發生錯誤: {str(e)} ({time.time() - _t0:.1f}s)")
+            self._log(f"✗ 抓取 {company_name} 時發生錯誤: {str(e)} ({time.time() - _t0:.1f}s)")
             return None
     
     def scrape_multiple_companies(self, company_urls):
@@ -193,17 +193,18 @@ class GlassdoorScraper:
             if data:
                 all_data.append(data)
             time.sleep(3)
-            print()
+            self._log()
         
         return all_data
 
-    def scrape_from_matched_json(self, json_files):
+    def scrape_from_matched_json(self, json_files, _progress_fn=None):
         """
         從 company_finder.py 產生的 *_matched.json 抓取評分數據。
         保留 baseline_location 和 matched_city，讓 Excel 顯示正確。
 
         Args:
             json_files: list of str，matched json 路徑
+            _progress_fn: callable(entry_name)，每筆 entry 完成後回報進度
 
         Returns:
             list of dict
@@ -228,28 +229,37 @@ class GlassdoorScraper:
                 country = entry.get('baseline_country')
                 display_name = f"{company} - {baseline_loc}"
                 data = self.extract_rating_data(url, display_name)
+                sleep_sec = 0.5
                 if data:
                     data['Baseline Location'] = baseline_loc
                     data['Actual City'] = actual_city
                     data['Country'] = country
                     data['Review URL'] = url
                     all_data.append(data)
+                    # 成功且有關鍵欄位才等較久，否則短等待
+                    if data.get('Overall') is not None:
+                        sleep_sec = 1.5
                 count += 1
-                time.sleep(3)
-                print()
+                # 回報進度
+                if _progress_fn:
+                    _progress_fn(display_name)
+                time.sleep(sleep_sec)
+                self._log()
 
         total = time.time() - total_start
         if count:
-            print(f"⏱ 總計 {count} 筆，耗時 {total:.0f}s，平均 {total/count:.1f}s/筆")
+            self._log(f"⏱ 總計 {count} 筆，耗時 {total:.0f}s，平均 {total/count:.1f}s/筆")
         return all_data
     
-    def scrape_from_baseline_json(self, json_file, company_name='ASUS'):
+    def scrape_from_baseline_json(self, json_file, company_name='ASUS', location_filter=None, _progress_fn=None):
         """
         讀取 explore 模式產生的 *_locations.json（如 asus_locations.json）並抓取評分。
 
         Args:
             json_file: str，locations json 路徑
             company_name: str，公司名稱
+            location_filter: str or None，若指定則只處理該地區
+            _progress_fn: callable(entry_name)，每筆 entry 完成後回報進度
 
         Returns:
             list of dict
@@ -264,19 +274,27 @@ class GlassdoorScraper:
             if entry.get('status') != 'found' or not entry.get('url'):
                 continue
             baseline_loc = entry['location']
+            if location_filter and baseline_loc != location_filter:
+                continue
             country = entry.get('country')
             url = entry['url']
 
             display_name = f"{company_name} - {baseline_loc}"
             data = self.extract_rating_data(url, display_name)
+            sleep_sec = 0.5
             if data:
                 data['Baseline Location'] = baseline_loc
                 data['Actual City'] = baseline_loc
                 data['Country'] = country
                 data['Review URL'] = url
                 all_data.append(data)
-            time.sleep(3)
-            print()
+                if data.get('Overall') is not None:
+                    sleep_sec = 1.5
+            # 回報進度
+            if _progress_fn:
+                _progress_fn(display_name)
+            time.sleep(sleep_sec)
+            self._log()
 
         return all_data
 
@@ -303,8 +321,9 @@ class GlassdoorScraper:
         df = df[columns_order]
         
         # 保存為 Excel
+        os.makedirs(os.path.dirname(output_file) or '.', exist_ok=True)
         df.to_excel(output_file, index=False, engine='openpyxl')
-        print(f"\n✓ 數據已保存至: {output_file}")
+        print(f"\n✓ 數據已保存至: {output_file}")  # save_to_excel 由主 thread 呼叫，用 print
         
         # 美化 Excel
         from openpyxl import load_workbook
@@ -340,7 +359,7 @@ class GlassdoorScraper:
         # 同步輸出 CSV
         csv_file = os.path.splitext(output_file)[0] + '.csv'
         df.to_csv(csv_file, index=False, encoding='utf-8-sig')
-        print(f"✓ CSV 已保存至: {csv_file}")
+        print(f"✓ CSV 已保存至: {csv_file}")  # save_to_excel 由主 thread 呼叫，用 print
     
     def close(self):
         """關閉瀏覽器"""
@@ -351,44 +370,103 @@ class GlassdoorScraper:
             pass
 
 
-def _worker(port, tasks, mode, headless):
+def _worker(port, tasks, mode, headless, log_path=None, _progress=None):
     """
     單一執行緒的工作函式，負責一個 Chrome port 的所有任務。
+    輸出收集到獨立 buffer，不修改全域 sys.stdout，避免多 thread 交錯。
 
     Args:
         port: Chrome debug port
         tasks: list of dict，每筆含 type('baseline'|'matched'), 以及對應參數
         mode: scraper mode
         headless: bool
+        log_path: 此 port 專屬的 log 路徑，None 則不寫檔
+        _progress: dict，用於回報進度給主執行緒
 
     Returns:
         list of dict
     """
-    scraper = GlassdoorScraper(mode=mode, headless=headless, chrome_debugger_port=port)
+    import io
+    import threading
+
+    buf = io.StringIO()  # 仍保留一份給最後合併主 log 用
+    _lock = threading.Lock()
+    _log_file = None
+
+    if log_path:
+        os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        _log_file = open(log_path, 'w', encoding='utf-8')
+
+    def _log(msg='', end='\n'):
+        s = str(msg) + end
+        with _lock:
+            buf.write(s)
+            if _log_file:
+                _log_file.write(s)
+                _log_file.flush()  # 即時 flush 到磁碟
+
+    scraper = GlassdoorScraper(mode=mode, headless=headless,
+                               chrome_debugger_port=port, _log_fn=_log)
     results = []
     try:
-        for task in tasks:
+        total = len(tasks)
+        for i, task in enumerate(tasks):
+            # 更新進度
+            task_name = task.get('company_name', task.get('file', 'unknown'))
+            if task.get('location_filter'):
+                task_name += f" [{task['location_filter']}]"
+            # 定義 progress callback，每筆 entry 完成後更新 _progress
+            def _progress_fn(entry_name):
+                if _progress is not None:
+                    with threading.Lock():
+                        _progress[port]['completed'] += 1
+                        _progress[port]['current'] = entry_name
+
             if task['type'] == 'baseline':
-                results += scraper.scrape_from_baseline_json(task['file'], task['company_name'])
+                results += scraper.scrape_from_baseline_json(
+                    task['file'], task['company_name'],
+                    location_filter=task.get('location_filter'),
+                    _progress_fn=_progress_fn
+                )
             elif task['type'] == 'matched':
-                results += scraper.scrape_from_matched_json([task['file']])
+                results += scraper.scrape_from_matched_json([task['file']], _progress_fn=_progress_fn)
+
     finally:
         scraper.close()
+        if _log_file:
+            _log_file.close()
+        # 標記完成
+        if _progress is not None:
+            with threading.Lock():
+                _progress[port]['finished'] = True
     return results
 
 
 def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
-                    mode='manual', headless=False):
+                    mode='manual', headless=False, log_ts=None):
     """
     將任務平均分配給多個 Chrome port 並平行執行。
+    每個 port 獨立寫 log，完成後合並到主 log。
 
     Returns:
         list of dict
     """
+    import threading
+
     tasks_all = []
 
     if include_baseline and os.path.exists(baseline_file):
-        tasks_all.append({'type': 'baseline', 'file': baseline_file, 'company_name': 'ASUS'})
+        # 把 ASUS baseline 拆成每個地區一個 task，分散分配避免照成瓶頃
+        with open(baseline_file, encoding='utf-8') as _f:
+            _entries = json.load(_f)
+        for _e in _entries:
+            if _e.get('status') == 'found' and _e.get('url'):
+                tasks_all.append({
+                    'type': 'baseline',
+                    'file': baseline_file,
+                    'company_name': 'ASUS',
+                    'location_filter': _e['location'],
+                })
 
     for f in matched_files:
         tasks_all.append({'type': 'matched', 'file': f})
@@ -401,23 +479,107 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
     for i, task in enumerate(tasks_all):
         buckets[i % len(ports)].append(task)
 
+    ts = log_ts or ''
+    port_logs = {port: f'logs/run_{ts}_port{port}.txt' for port in ports}
+
+    # 進度追蹤（空 bucket 直接標記完成）
+    _progress = {}
+    for port, bucket in zip(ports, buckets):
+        if bucket:
+            _progress[port] = {'completed': 0, 'current': 'init', 'finished': False}
+        else:
+            _progress[port] = {'completed': 0, 'current': '-', 'finished': True}
+
+    # 總任務數（先不精確計算，用一個預估值或動態更新）
+    total_tasks = len(tasks_all) * 10  # 粗略估計每個 task 平均 10 筆 entries
+
     total_start = time.time()
     all_data = []
-    with ThreadPoolExecutor(max_workers=len(ports)) as executor:
-        futures = {
-            executor.submit(_worker, port, bucket, mode, headless): port
-            for port, bucket in zip(ports, buckets) if bucket
-        }
-        for future in as_completed(futures):
-            port = futures[future]
-            try:
-                data = future.result()
-                all_data += data
-                print(f"[port {port}] 完成 {len(data)} 筆")
-            except Exception as e:
-                print(f"[port {port}] 發生錯誤: {e}")
+    port_counts = {}
 
-    print(f"\n⏱ 平行總耗時 {time.time() - total_start:.0f}s，共 {len(all_data)} 筆")
+    from tqdm import tqdm
+    # Windows 相容：ascii=True 避免編碼問題，dynamic_ncols=False 固定寬度
+    pbar = tqdm(total=total_tasks, desc='Scraping', unit='tasks',
+                ncols=100, ascii=True, position=0, leave=True)
+
+    def _update_pbar():
+        """更新進度條，計算總完成數"""
+        total_completed = sum(p['completed'] for p in _progress.values())
+        pbar.n = total_completed
+        # 顯示各 port 狀態
+        status_parts = []
+        for port in sorted(_progress.keys()):
+            p = _progress[port]
+            if p['finished']:
+                status_parts.append(f"P{port}:OK({p['completed']})")
+            else:
+                status_parts.append(f"P{port}:{p['completed']}")
+        pbar.set_postfix_str(' | '.join(status_parts))
+        pbar.refresh()
+
+    executor = ThreadPoolExecutor(max_workers=len(ports))
+    futures = {
+        executor.submit(_worker, port, bucket, mode, headless, port_logs[port], _progress): port
+        for port, bucket in zip(ports, buckets) if bucket
+    }
+
+    try:
+        while futures:
+            done_futures = []
+            for f in list(futures):
+                if f.done():
+                    port = futures[f]
+                    try:
+                        data = f.result()
+                        all_data += data
+                        port_counts[port] = len(data)
+                        pbar.write(f"[port {port}] 完成 {len(data)} 筆  log: {port_logs[port]}")
+                    except Exception as e:
+                        pbar.write(f"[port {port}] 發生錯誤: {e}")
+                    done_futures.append(f)
+                    _progress[port]['finished'] = True
+
+            # 移除已完成
+            for f in done_futures:
+                del futures[f]
+
+            # 更新顯示
+            _update_pbar()
+
+            if futures:
+                time.sleep(0.5)  # 0.5s 刷新一次
+
+    except KeyboardInterrupt:
+        pbar.close()
+        print("\n⚠ 收到 Ctrl+C，正在中止所有 worker...")
+        for f in futures:
+            f.cancel()
+        executor.shutdown(wait=False, cancel_futures=True)
+        raise
+
+    pbar.close()
+
+    elapsed = time.time() - total_start
+    print(f"\n⏱ 平行總耗時 {elapsed:.0f}s，共 {len(all_data)} 筆")
+
+    # 將各 port log 合並追加到主 log
+    import sys as _sys
+    main_log = getattr(getattr(_sys.stdout, '_file', None), 'name', None)
+    if main_log:
+        try:
+            with open(main_log, 'a', encoding='utf-8') as mf:
+                mf.write(f"\n{'='*60}\n")
+                mf.write(f"各 Port 詳細 Log\n")
+                mf.write(f"{'='*60}\n")
+                for port in ports:
+                    plog = port_logs[port]
+                    if os.path.exists(plog):
+                        mf.write(f"\n--- port {port} ({port_counts.get(port, 0)} 筆) ---\n")
+                        with open(plog, encoding='utf-8') as pf:
+                            mf.write(pf.read())
+        except Exception:
+            pass
+
     return all_data
 
 
@@ -507,7 +669,9 @@ def main():
     output_config = getattr(config, 'OUTPUT_CONFIG', {}) if config else {}
     mode = scraper_config.get('mode', 'manual')
     headless = scraper_config.get('headless', False)
-    output_file = output_config.get('filename', 'data/glassdoor_ratings.xlsx')
+    _base_output = output_config.get('filename', 'data/glassdoor_ratings.xlsx')
+    _stem, _ext = os.path.splitext(_base_output)
+    output_file = f"{_stem}_{_ts}{_ext}"
 
     # 優先使用 data/*_matched.json（company_finder 產生的結果）
     matched_files = sorted(glob.glob('data/*_matched.json'))
@@ -541,6 +705,7 @@ def main():
                 baseline_file=baseline_file,
                 mode=mode,
                 headless=headless,
+                log_ts=_ts,
             )
         else:
             port = parallel_ports[0] if parallel_ports else 9222
