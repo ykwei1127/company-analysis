@@ -20,10 +20,32 @@ import time
 import re
 import json
 import sys
+import os
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
+
+
+class TeeLogger:
+    """同時輸出到 stdout 和 log 檔"""
+    def __init__(self, filepath):
+        self._stdout = sys.stdout
+        self._file = open(filepath, 'w', encoding='utf-8')
+        sys.stdout = self
+
+    def write(self, data):
+        self._stdout.write(data)
+        self._file.write(data)
+
+    def flush(self):
+        self._stdout.flush()
+        self._file.flush()
+
+    def close(self):
+        sys.stdout = self._stdout
+        self._file.close()
 
 
 # ============================================================
@@ -41,7 +63,29 @@ EXPLORE_CONFIG = {
 
 # 比對模式：只需填入公司名稱，ID 和 URL 會自動從 Glassdoor 搜尋
 COMPANIES_TO_MATCH = [
+    'NVIDIA',
+    'TSMC',
+    'MSI',
+    'Trend Micro',
+    'Google',
+    'Acer',
+    'Lenovo',
+    'Dell Technologies',
+    {
+        'name': 'HP Inc.',
+        'company_id': 'E1093161',
+        'locations_url': 'https://www.glassdoor.com/Location/All-HP-Inc-Office-Locations-E1093161.htm',
+        'global_review_url': 'https://www.glassdoor.com/Reviews/HP-Inc-Reviews-E1093161.htm',
+        'slug': 'HP-Inc',
+    },
+    'Quanta Computer',
+    'Wistron',
     'Compal Electronics',
+    'Wiwynn',
+    'Delta Electronics',
+    'Inventec',
+    'Pegatron',
+    'AU Optronics',
 ]
 # ============================================================
 
@@ -67,7 +111,12 @@ class CompanyFinder:
 
         print(f"\n正在載入 Office Locations 頁面：{url}")
         self.driver.get(url)
-        time.sleep(5)
+        try:
+            WebDriverWait(self.driver, 10).until(
+                lambda d: d.execute_script('return document.readyState') == 'complete'
+            )
+        except Exception:
+            pass
         self._scroll_to_bottom()
         print("頁面載入完成，開始收集城市連結...")
 
@@ -132,11 +181,20 @@ class CompanyFinder:
         """
         numeric_id = re.sub(r'[^\d]', '', company_config['company_id'])
         company_name = company_config['name']
+        slug = company_config.get('slug') or company_config['locations_url'].split('All-')[1].split('-Office-')[0]
         url = company_config['locations_url']
+
+        # 建立基準地區 IC Code mapping（用於 fallback probe）
+        ic_map = self._build_ic_map(baseline_locations)
 
         print(f"\n正在載入 {company_name} Office Locations 頁面：{url}")
         self.driver.get(url)
-        time.sleep(5)
+        try:
+            WebDriverWait(self.driver, 10).until(
+                lambda d: d.execute_script('return document.readyState') == 'complete'
+            )
+        except Exception:
+            pass
         self._scroll_to_bottom()
         print("頁面載入完成，開始收集城市連結...")
 
@@ -197,6 +255,23 @@ class CompanyFinder:
                     break
 
             if not matched_city:
+                # Locations 頁找不到 → 用 IC/IN Code 直接 probe
+                code_info = ic_map.get(ref_location)
+                if code_info:
+                    city_label = ref_location.split(',')[0].strip()  # e.g. "Taipei" or "Taiwan"
+                    probe_url, probe_count = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
+                    if probe_url:
+                        print(f"  ✅ IC probe 找到 Review URL：{probe_url}")
+                        results.append({
+                            'baseline_location': ref_location,
+                            'baseline_country': ref_country,
+                            'company': company_name,
+                            'matched_city': city_label,
+                            'url': probe_url,
+                            'reviews_count': probe_count,
+                            'status': 'found',
+                        })
+                        continue
                 print(f"  ➖ {company_name} 無此國家辦公室")
                 results.append({
                     'baseline_location': ref_location,
@@ -226,6 +301,24 @@ class CompanyFinder:
                     'status': 'found',
                 })
             else:
+                # city 頁找不到 review URL → 用 IC/IN Code probe
+                code_info = ic_map.get(ref_location)
+                if code_info:
+                    city_label = ref_location.split(',')[0].strip()
+                    probe_url, probe_count = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
+                    if probe_url:
+                        print(f"  ✅ IC probe 找到 Review URL：{probe_url}")
+                        results.append({
+                            'baseline_location': ref_location,
+                            'baseline_country': ref_country,
+                            'company': company_name,
+                            'matched_city': city_label,
+                            'url': probe_url,
+                            'reviews_count': probe_count,
+                            'status': 'found',
+                        })
+                        time.sleep(1)
+                        continue
                 print(f"  ⚠️  城市存在但無 Review URL")
                 results.append({
                     'baseline_location': ref_location,
@@ -236,7 +329,7 @@ class CompanyFinder:
                     'reviews_count': None,
                     'status': 'no_review_url',
                 })
-            time.sleep(2)
+            time.sleep(1)
 
         return results
 
@@ -287,7 +380,12 @@ class CompanyFinder:
 
     def _find_review_url_from_city_page(self, city_loc_url, numeric_id):
         self.driver.get(city_loc_url)
-        time.sleep(3)
+        try:
+            WebDriverWait(self.driver, 8).until(
+                lambda d: d.execute_script('return document.readyState') == 'complete'
+            )
+        except Exception:
+            pass
 
         page_heading = None
         for sel in ['h1', 'h2', '[class*="heading"]', '[class*="Heading"]']:
@@ -323,6 +421,55 @@ class CompanyFinder:
             except Exception:
                 continue
         return None, None, page_heading
+
+    def _build_ic_map(self, baseline_locations):
+        """從 baseline JSON 的 URL 抽取每個地區的代碼 mapping。
+        Returns: dict {baseline_location: {'code': '3271041', 'type': 'IC'}}
+        type 可為 'IC'（城市）或 'IN'（國家）
+        """
+        ic_map = {}
+        for loc in baseline_locations:
+            url = loc.get('url') or ''
+            m = re.search(r'_(IC|IN)(\d+)\.htm', url)
+            if m:
+                ic_map[loc['location']] = {'code': m.group(2), 'type': m.group(1)}
+        return ic_map
+
+    def _probe_url_by_ic(self, slug, numeric_id, city_label, code_info):
+        """用 IC/IN Code 直接拼出 Review URL，載入後確認頁面是否有效。
+        code_info: {'code': '3271041', 'type': 'IC'} 或 {'code': '218', 'type': 'IN'}
+        Returns: (url, reviews_count) or (None, None)
+        """
+        code = code_info['code']
+        code_type = code_info['type']  # 'IC' or 'IN'
+        slug_len = len(slug)
+        city_len = len(city_label)
+        il_start = slug_len + 1
+        il_end = il_start + city_len
+        url = (f"https://www.glassdoor.com/Reviews/{slug}-{city_label}-Reviews"
+               f"-EI_IE{numeric_id}.0,{slug_len}"
+               f"_IL.{il_start},{il_end}_{code_type}{code}.htm")
+        self.driver.get(url)
+        try:
+            WebDriverWait(self.driver, 8).until(
+                lambda d: d.current_url != 'about:blank' and d.execute_script('return document.readyState') == 'complete'
+            )
+        except Exception:
+            pass
+        final_url = self.driver.current_url
+        # 如果被 redirect 到其他頁則無效
+        if f'_{code_type}{code}' not in final_url:
+            return None, None
+        # 嘗試抓評論數
+        count = None
+        try:
+            page_source = self.driver.page_source
+            m = re.search(r'(\d[\d,]+)\s*(?:Employee\s+)?Reviews?', page_source[:3000], re.IGNORECASE)
+            if m:
+                count = int(m.group(1).replace(',', ''))
+        except Exception:
+            pass
+        return final_url.split('?')[0], count
 
     def _extract_country(self, page_heading, address):
         """從 heading 括號或 address 最後一段取國家名"""
@@ -379,12 +526,22 @@ class CompanyFinder:
         """
         # 先導到首頁避免前一頁殘留連結干擾搜尋結果
         self.driver.get("https://www.glassdoor.com")
-        time.sleep(2)
+        try:
+            WebDriverWait(self.driver, 8).until(
+                lambda d: d.execute_script('return document.readyState') == 'complete'
+            )
+        except Exception:
+            pass
 
         search_url = f"https://www.glassdoor.com/Search/results.htm?keyword={company_name.replace(' ', '+')}"
         print(f"\n搜尋：{search_url}")
         self.driver.get(search_url)
-        time.sleep(4)
+        try:
+            WebDriverWait(self.driver, 10).until(
+                lambda d: d.execute_script('return document.readyState') == 'complete'
+            )
+        except Exception:
+            pass
 
         name_keywords = [w.lower() for w in company_name.split() if len(w) > 1]
 
@@ -428,7 +585,12 @@ class CompanyFinder:
         print(f"  搜尋結果未找到，嘗試備用方式...")
         fallback_url = f"https://www.glassdoor.com/Search/results.htm?keyword={company_name.replace(' ', '+')}&type=EMPLOYER"
         self.driver.get(fallback_url)
-        time.sleep(4)
+        try:
+            WebDriverWait(self.driver, 10).until(
+                lambda d: d.execute_script('return document.readyState') == 'complete'
+            )
+        except Exception:
+            pass
         all_links = self.driver.find_elements(By.TAG_NAME, 'a')
         for link in all_links:
             try:
@@ -502,6 +664,9 @@ def run_match():
         print("請在 COMPANIES_TO_MATCH 中加入要比對的公司名稱")
         return
 
+    import time as _time
+    _total_start = _time.time()
+
     finder = CompanyFinder(CHROME_DEBUG_PORT)
     all_company_results = {}
 
@@ -518,10 +683,13 @@ def run_match():
             company_name = company_config['name']
             print(f"\n{'='*60}")
             print(f"正在處理：{company_name}")
+            _t0 = _time.time()
             results = finder.match_against_baseline(company_config, baseline_found)
+            _elapsed = _time.time() - _t0
             finder.print_match_results(results, company_name)
             finder.save_results(results, company_name,
                                 output_file=f"data/{company_name.lower().replace(' ', '_')}_matched.json")
+            print(f"  ⏱  {company_name} 耗時：{_elapsed:.0f}s")
             all_company_results[company_name] = results
 
         # 產生彙整 config.py 片段
@@ -544,14 +712,25 @@ def run_match():
         print(f"\n錯誤：{e}")
         import traceback; traceback.print_exc()
     finally:
+        _total = _time.time() - _total_start
+        print(f"\n{'='*60}")
+        print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+        print(f"{'='*60}")
         finder.close()
 
 
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'match'
-    if mode == 'explore':
-        run_explore()
-    elif mode == 'match':
-        run_match()
-    else:
-        print(f"未知模式：{mode}，請使用 explore 或 match")
+    os.makedirs('logs', exist_ok=True)
+    log_path = f"logs/company_finder_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+    logger = TeeLogger(log_path)
+    print(f"Log: {log_path}")
+    try:
+        if mode == 'explore':
+            run_explore()
+        elif mode == 'match':
+            run_match()
+        else:
+            print(f"未知模式：{mode}，請使用 explore 或 match")
+    finally:
+        logger.close()

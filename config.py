@@ -38,7 +38,7 @@ SCRAPER_CONFIG = {
 # ============================================
 OUTPUT_CONFIG = {
     # 輸出檔案名稱
-    'filename': 'data/glassdoor_ratings.xlsx',
+    'filename': 'output/glassdoor_ratings.xlsx',
     
     # Excel 工作表名稱
     'sheet_name': 'Ratings',

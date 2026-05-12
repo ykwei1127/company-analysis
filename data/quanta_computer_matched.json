@@ -21,189 +21,198 @@
     "baseline_location": "Markham, ON",
     "baseline_country": "Canada",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Markham",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Markham-Reviews-EI_IE11939.0,15_IL.16,23_IC2280736.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Barcelona, CT",
     "baseline_country": "Spain",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Barcelona",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Barcelona-Reviews-EI_IE11939.0,15_IL.16,25_IC2547194.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Budapest, BU",
     "baseline_country": "Hungary",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Budapest",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Budapest-Reviews-EI_IE11939.0,15_IL.16,24_IC3125126.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Emmen, DR",
     "baseline_country": "Netherlands",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Emmen",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Emmen-Reviews-EI_IE11939.0,15_IL.16,21_IC3060162.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Hemel Hempstead, ENG",
     "baseline_country": "United Kingdom",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Hemel Hempstead",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Hemel%20Hempstead-Reviews-EI_IE11939.0,15_IL.16,31_IC2669775.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Milan, LOM",
     "baseline_country": "Italy",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Milan",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Milan-Reviews-EI_IE11939.0,15_IL.16,21_IC2802090.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Noisy-le-Grand, A8",
     "baseline_country": "France",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Noisy-le-Grand",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Noisy-le-Grand-Reviews-EI_IE11939.0,15_IL.16,30_IC3100822.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Ratingen, NW",
     "baseline_country": "Germany",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Ratingen",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Ratingen-Reviews-EI_IE11939.0,15_IL.16,24_IC2584004.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Bangkok, 10",
     "baseline_country": "Thailand",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Bangkok",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Bangkok-Reviews-EI_IE11939.0,15_IL.16,23_IC3179725.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Dubai, DU",
     "baseline_country": "United Arab Emirates",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Dubai",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Dubai-Reviews-EI_IE11939.0,15_IL.16,21_IC2204498.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Jakarta, JK",
     "baseline_country": "Indonesia",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Jakarta",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Jakarta-Reviews-EI_IE11939.0,15_IL.16,23_IC2709872.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Kuala Lumpur, 14",
     "baseline_country": "Malaysia",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Kuala Lumpur",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Kuala%20Lumpur-Reviews-EI_IE11939.0,15_IL.16,28_IC2986682.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Manila, D9",
     "baseline_country": "Philippines",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Manila",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Manila-Reviews-EI_IE11939.0,15_IL.16,22_IC2363570.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Mumbai, MH",
     "baseline_country": "India",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Mumbai",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Mumbai-Reviews-EI_IE11939.0,15_IL.16,22_IC2851180.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Seoul, 11",
     "baseline_country": "South Korea",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Seoul",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Seoul-Reviews-EI_IE11939.0,15_IL.16,21_IC3021489.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Singapore",
     "baseline_country": "Singapore",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Singapore",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Singapore-Reviews-EI_IE11939.0,15_IL.16,25_IC3235921.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Taipei, TPQ",
     "baseline_country": "Taiwan",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Taipei",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Taipei-Reviews-EI_IE11939.0,15_IL.16,22_IC3271041.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Quanta Computer",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Taiwan-Reviews-EI_IE11939.0,15_IL.16,22_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
   },
   {
     "baseline_location": "Tokyo, 40",
     "baseline_country": "Japan",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Tokyo",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Tokyo-Reviews-EI_IE11939.0,15_IL.16,21_IC2851580.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Santiago, RM",
     "baseline_country": "Chile",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Santiago",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Santiago-Reviews-EI_IE11939.0,15_IL.16,24_IC2434030.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "São Paulo, SP",
     "baseline_country": "Brazil",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "São Paulo",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-S%C3%A3o%20Paulo-Reviews-EI_IE11939.0,15_IL.16,25_IC2479061.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Sydney, NSW",
     "baseline_country": "Australia",
     "company": "Quanta Computer",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Sydney",
+    "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Sydney-Reviews-EI_IE11939.0,15_IL.16,22_IC2235932.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   }
 ]
