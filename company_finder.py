@@ -41,23 +41,7 @@ EXPLORE_CONFIG = {
 
 # 比對模式：只需填入公司名稱，ID 和 URL 會自動從 Glassdoor 搜尋
 COMPANIES_TO_MATCH = [
-    'NVIDIA',
-    'TSMC',
-    'MSI',
-    'Trend Micro',
-    'Google',
-    'Acer',
-    'Lenovo',
-    'Dell Technologies',
-    'HP Inc.',
-    'Quanta Computer',
-    'Wistron',
     'Compal Electronics',
-    'Wiwynn',
-    'Delta Electronics',
-    'Inventec',
-    'Pegatron',
-    'AU Optronics',
 ]
 # ============================================================
 
@@ -417,7 +401,7 @@ class CompanyFinder:
                     continue
                 # 驗證 href 包含公司名稱關鍵字，避免抓到殘留的其他公司
                 href_lower = href.lower()
-                if not any(kw in href_lower for kw in name_keywords):
+                if not all(kw in href_lower for kw in name_keywords):
                     continue
                 numeric_id = m.group(1)
                 # 從 href 取公司 slug
@@ -455,7 +439,7 @@ class CompanyFinder:
                 if '/Overview/' not in href and '/Reviews/' not in href:
                     continue
                 href_lower = href.lower()
-                if not any(kw in href_lower for kw in name_keywords):
+                if not all(kw in href_lower for kw in name_keywords):
                     continue
                 numeric_id = m.group(1)
                 slug_match = re.search(r'/(?:Overview|Reviews)/([^/]+)-(?:Overview|Reviews)-E\d+', href)

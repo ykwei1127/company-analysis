@@ -15,6 +15,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 import re
 import os
+import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class GlassdoorScraper:
     def __init__(self, mode='manual', headless=False, chrome_debugger_port=9222):
@@ -230,6 +232,7 @@ class GlassdoorScraper:
                     data['Baseline Location'] = baseline_loc
                     data['Actual City'] = actual_city
                     data['Country'] = country
+                    data['Review URL'] = url
                     all_data.append(data)
                 count += 1
                 time.sleep(3)
@@ -270,6 +273,7 @@ class GlassdoorScraper:
                 data['Baseline Location'] = baseline_loc
                 data['Actual City'] = baseline_loc
                 data['Country'] = country
+                data['Review URL'] = url
                 all_data.append(data)
             time.sleep(3)
             print()
@@ -291,7 +295,7 @@ class GlassdoorScraper:
         df = pd.DataFrame(data)
         
         # 調整列順序（相容有無 Location 欄位）
-        base_cols = ['Company', 'Baseline Location', 'Country', 'Actual City', 'Overall', 'Recommend',
+        base_cols = ['Company', 'Baseline Location', 'Country', 'Actual City', 'Review URL', 'Overall', 'Recommend',
                      'CEO Approval', 'Total Reviews', 'Diversity & Inclusion', 'Work/Life Balance',
                      'Compensation and Benefits', 'Culture & Values',
                      'Career Opportunities', 'Senior Management']
@@ -347,6 +351,129 @@ class GlassdoorScraper:
             pass
 
 
+def _worker(port, tasks, mode, headless):
+    """
+    單一執行緒的工作函式，負責一個 Chrome port 的所有任務。
+
+    Args:
+        port: Chrome debug port
+        tasks: list of dict，每筆含 type('baseline'|'matched'), 以及對應參數
+        mode: scraper mode
+        headless: bool
+
+    Returns:
+        list of dict
+    """
+    scraper = GlassdoorScraper(mode=mode, headless=headless, chrome_debugger_port=port)
+    results = []
+    try:
+        for task in tasks:
+            if task['type'] == 'baseline':
+                results += scraper.scrape_from_baseline_json(task['file'], task['company_name'])
+            elif task['type'] == 'matched':
+                results += scraper.scrape_from_matched_json([task['file']])
+    finally:
+        scraper.close()
+    return results
+
+
+def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
+                    mode='manual', headless=False):
+    """
+    將任務平均分配給多個 Chrome port 並平行執行。
+
+    Returns:
+        list of dict
+    """
+    tasks_all = []
+
+    if include_baseline and os.path.exists(baseline_file):
+        tasks_all.append({'type': 'baseline', 'file': baseline_file, 'company_name': 'ASUS'})
+
+    for f in matched_files:
+        tasks_all.append({'type': 'matched', 'file': f})
+
+    if not tasks_all:
+        return []
+
+    # 平均分配到各 port
+    buckets = [[] for _ in ports]
+    for i, task in enumerate(tasks_all):
+        buckets[i % len(ports)].append(task)
+
+    total_start = time.time()
+    all_data = []
+    with ThreadPoolExecutor(max_workers=len(ports)) as executor:
+        futures = {
+            executor.submit(_worker, port, bucket, mode, headless): port
+            for port, bucket in zip(ports, buckets) if bucket
+        }
+        for future in as_completed(futures):
+            port = futures[future]
+            try:
+                data = future.result()
+                all_data += data
+                print(f"[port {port}] 完成 {len(data)} 筆")
+            except Exception as e:
+                print(f"[port {port}] 發生錯誤: {e}")
+
+    print(f"\n⏱ 平行總耗時 {time.time() - total_start:.0f}s，共 {len(all_data)} 筆")
+    return all_data
+
+
+class TeeLogger:
+    """將 stdout 同時輸出到終端和檔案"""
+    def __init__(self, filepath):
+        import sys
+        self._terminal = sys.stdout
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        self._file = open(filepath, 'w', encoding='utf-8')
+        import sys as _sys
+        _sys.stdout = self
+
+    def write(self, message):
+        self._terminal.write(message)
+        self._file.write(message)
+
+    def flush(self):
+        self._terminal.flush()
+        self._file.flush()
+
+    def restore(self):
+        import sys
+        sys.stdout = self._terminal
+        self._file.close()
+
+
+def save_run_report(data, elapsed, log_txt_path, json_path):
+    """產出 JSON 摘要報告"""
+    from datetime import datetime
+    import collections
+
+    company_stats = collections.defaultdict(lambda: {'success': 0, 'failed': 0, 'missing': []})
+    for row in data:
+        company = row.get('Company', 'Unknown').split(' - ')[0]
+        company_stats[company]['success'] += 1
+        missing = [k for k, v in row.items()
+                   if v is None and k not in ('Company', 'Baseline Location', 'Actual City', 'Country')]
+        if missing:
+            company_stats[company]['missing'].append({'location': row.get('Baseline Location'), 'fields': missing})
+
+    report = {
+        'run_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'elapsed_seconds': round(elapsed, 1),
+        'elapsed_human': f"{int(elapsed//60)}m {int(elapsed%60)}s",
+        'total_rows': len(data),
+        'log_file': log_txt_path,
+        'companies': {k: dict(v) for k, v in company_stats.items()},
+    }
+
+    os.makedirs(os.path.dirname(json_path), exist_ok=True)
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+    print(f"✓ JSON 摘要已保存至: {json_path}")
+
+
 def load_config():
     """載入配置文件"""
     try:
@@ -366,6 +493,13 @@ def load_config():
 
 def main():
     import glob
+    from datetime import datetime
+    _main_start = time.time()
+    _ts = datetime.now().strftime('%Y%m%d_%H%M')
+    _log_txt = f'logs/run_{_ts}.txt'
+    _log_json = f'logs/run_{_ts}.json'
+    _tee = TeeLogger(_log_txt)
+    print(f"📋 Log 記錄至：{_log_txt}")
 
     # 載入配置
     config = load_config()
@@ -391,40 +525,72 @@ def main():
 
     include_baseline = getattr(config, 'INCLUDE_BASELINE', False) if config else False
     baseline_file = 'data/asus_locations.json'
+    parallel_ports = getattr(config, 'PARALLEL_PORTS', []) if config else []
+
+    # 單一 port 或空清單 → 單一模式；多個 port → 平行模式
+    use_parallel = len(parallel_ports) > 1
 
     try:
-        scraper = GlassdoorScraper(mode=mode, headless=headless)
-        data = []
+        if use_parallel:
+            print(f"\n⚡ 平行模式：使用 {len(parallel_ports)} 個 Chrome（ports: {parallel_ports}）")
+            print("請確認每個 port 的 Chrome 都已登入 Glassdoor\n")
+            data = parallel_scrape(
+                ports=parallel_ports,
+                matched_files=matched_files,
+                include_baseline=include_baseline,
+                baseline_file=baseline_file,
+                mode=mode,
+                headless=headless,
+            )
+        else:
+            port = parallel_ports[0] if parallel_ports else 9222
+            scraper = GlassdoorScraper(mode=mode, headless=headless, chrome_debugger_port=port)
+            data = []
 
-        if include_baseline and os.path.exists(baseline_file):
-            print(f"\n[INCLUDE_BASELINE=True] 抓取基準公司 ASUS：{baseline_file}\n")
-            data += scraper.scrape_from_baseline_json(baseline_file, company_name='ASUS')
+            if include_baseline and os.path.exists(baseline_file):
+                print(f"\n[INCLUDE_BASELINE=True] 抓取基準公司 ASUS：{baseline_file}\n")
+                data += scraper.scrape_from_baseline_json(baseline_file, company_name='ASUS')
 
-        if matched_files:
-            print(f"\n找到 matched JSON：{matched_files}")
-            print(f"開始從 matched JSON 抓取數據...\n")
-            data += scraper.scrape_from_matched_json(matched_files)
-        elif not include_baseline:
-            if config and hasattr(config, 'COMPANY_URLS'):
-                companies = config.COMPANY_URLS
-                print(f"\n開始抓取 {len(companies)} 個公司的數據...\n")
-                data += scraper.scrape_multiple_companies(companies)
-            else:
-                print("找不到 matched JSON 也沒有 config.py，請先執行 company_finder.py match")
-                return
+            if matched_files:
+                print(f"\n找到 matched JSON：{matched_files}")
+                print(f"開始從 matched JSON 抓取數據...\n")
+                data += scraper.scrape_from_matched_json(matched_files)
+            elif not include_baseline:
+                if config and hasattr(config, 'COMPANY_URLS'):
+                    companies = config.COMPANY_URLS
+                    print(f"\n開始抓取 {len(companies)} 個公司的數據...\n")
+                    data += scraper.scrape_multiple_companies(companies)
+                else:
+                    print("找不到 matched JSON 也沒有 config.py，請先執行 company_finder.py match")
+                    return
+
+            scraper.close()
 
         if data:
-            scraper.save_to_excel(data, output_file)
+            # save_to_excel 不需要 driver，建一個不連 Chrome 的輕量實例
+            saver = object.__new__(GlassdoorScraper)
+            saver.mode = mode
+            saver.save_to_excel(data, output_file)
             print(f"\n✓ 完成！共抓取 {len(data)} 筆數據")
         else:
             print("\n✗ 沒有成功抓取任何數據")
 
     except Exception as e:
+        import traceback
         print(f"\n✗ 發生錯誤: {e}")
+        traceback.print_exc()
         if mode == 'manual':
             print("\n請確認 Chrome 是否已用 --remote-debugging-port=9222 啟動")
+
     finally:
-        scraper.close()
+        elapsed = time.time() - _main_start
+        print(f"\n⏱ 總執行時間：{elapsed//60:.0f}m {elapsed%60:.0f}s")
+        try:
+            save_run_report(data if 'data' in dir() else [], elapsed, _log_txt, _log_json)
+        except Exception:
+            pass
+        _tee.restore()
+        print(f"📋 Log 已儲存：{_log_txt}")
 
 
 if __name__ == '__main__':

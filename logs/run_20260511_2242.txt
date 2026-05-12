@@ -1,0 +1,1035 @@
+📋 Log 記錄至：logs/run_20260511_2242.txt
+
+============================================================
+手動模式 - 使用已登入的 Chrome
+============================================================
+
+請確認：
+1. 已執行 啟動Chrome.bat
+2. 已在 Chrome 中登入 Glassdoor
+
+如果還沒準備好，請按 Ctrl+C 取消
+準備好後按 Enter 繼續...
+
+⚡ 平行模式：使用 3 個 Chrome（ports: [9222, 9223, 9224]）
+請確認每個 port 的 Chrome 都已登入 Glassdoor
+
+📌 使用手動模式：連接到端口 9222 的 Chrome
+📌 使用手動模式：連接到端口 9223 的 Chrome
+📌 使用手動模式：連接到端口 9224 的 Chrome
+正在抓取: AU Optronics - Global
+URL: https://www.glassdoor.com/Reviews/AU-Optronics-Reviews-E16126.htm
+正在抓取: Acer - Global
+URL: https://www.glassdoor.com/Reviews/Acer-Group-Reviews-E3802.htm
+正在抓取: ASUS - Global
+URL: https://www.glassdoor.com/Reviews/ASUS-Reviews-E40093.htm
+  ✓ Overall: 3.5
+  ✓ Overall: 3.6
+  ✓ Recommend: 61%
+  ✓ CEO Approval: 76%
+  ✓ Total Reviews: 400
+  ✓ Work/Life Balance: 3.7
+  ✓ Career Opportunities: 3.4
+  ✓ Culture & Values: 3.3
+  ✓ Overall: 3.8
+  ✓ Diversity & Inclusion: 3.3
+  ✓ Compensation and Benefits: 3.1
+  ✓ Senior Management: 3.0
+✓ 成功抓取 AU Optronics - Global (13.6s)
+  ✓ Recommend: 63%
+  ✓ CEO Approval: 73%
+  ✓ Total Reviews: 510
+  ✓ Work/Life Balance: 3.8
+  ✓ Culture & Values: 3.6
+  ✓ Diversity & Inclusion: 3.6
+  ✓ Compensation and Benefits: 3.6
+  ✓ Career Opportunities: 3.4
+  ✓ Senior Management: 3.1
+✓ 成功抓取 Acer - Global (16.3s)
+
+⏱ 總計 1 筆，耗時 17s，平均 16.6s/筆
+正在抓取: Delta Electronics - Global
+URL: https://www.glassdoor.com/Reviews/Delta-Electronics-Reviews-E41146.htm
+  ✓ Recommend: 57%
+  ✓ CEO Approval: 75%
+  ✓ Total Reviews: 1,491
+  ✓ Diversity & Inclusion: 3.3
+  ✓ Work/Life Balance: 3.2
+  ✓ Compensation and Benefits: 3.2
+  ✓ Culture & Values: 3.1
+  ✓ Career Opportunities: 3.1
+
+⏱ 總計 1 筆，耗時 19s，平均 19.3s/筆
+正在抓取: Dell Technologies - Global
+URL: https://www.glassdoor.com/Reviews/Dell-Technologies-Reviews-E1327.htm
+  ✓ Senior Management: 2.8
+✓ 成功抓取 ASUS - Global (18.5s)
+
+正在抓取: ASUS - Fremont, CA
+URL: https://www.glassdoor.com/Reviews/ASUS-Fremont-Reviews-EI_IE40093.0,4_IL.5,12_IC1147355.htm
+  ✓ Overall: 3.7
+  ✓ Recommend: 64%
+  ✓ CEO Approval: 70%
+  ✓ Total Reviews: 36,332
+  ✓ Diversity & Inclusion: 4.1
+  ✓ Work/Life Balance: 3.8
+  ✓ Culture & Values: 3.7
+  ✓ Compensation and Benefits: 3.5
+  ✓ Career Opportunities: 3.4
+  ✓ Senior Management: 3.3
+✓ 成功抓取 Dell Technologies - Global (8.1s)
+  ✓ Overall: 3.6
+
+正在抓取: Dell Technologies - Fremont, CA
+URL: https://www.glassdoor.com/Reviews/Dell-Technologies-Aliso-Reviews-EI_IE1327.0,17_IL.18,23_IC3789361.htm
+  ✓ Recommend: 66%
+  ✓ CEO Approval: 81%
+  ✓ Total Reviews: 754
+  ✓ Compensation and Benefits: 3.6
+  ✓ Diversity & Inclusion: 3.5
+  ✓ Work/Life Balance: 3.5
+  ✓ Career Opportunities: 3.5
+  ✓ Culture & Values: 3.4
+  ✓ Senior Management: 3.2
+✓ 成功抓取 Delta Electronics - Global (16.0s)
+
+正在抓取: Delta Electronics - Taipei, TPQ
+URL: https://www.glassdoor.com/Reviews/Delta-Electronics-Taipei-Reviews-EI_IE41146.0,17_IL.18,24_IC3271041.htm
+  ✓ Overall: 4.0
+  ✓ Recommend: 99%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 2
+  ✓ Work/Life Balance: 5.0
+  ✓ Compensation and Benefits: 5.0
+  ✓ Culture & Values: 4.0
+  ✓ Career Opportunities: 4.0
+  ✓ Senior Management: 3.0
+  ⚠ 缺失欄位: Diversity & Inclusion
+✓ 成功抓取 Dell Technologies - Fremont, CA (7.8s)
+  ✓ Overall: 3.6
+  ✓ Recommend: 51%
+  ✓ CEO Approval: 97%
+  ✓ Total Reviews: 79
+  ✓ Diversity & Inclusion: 3.4
+  ✓ Work/Life Balance: 3.0
+  ✓ Senior Management: 3.0
+  ✓ Culture & Values: 2.7
+  ✓ Career Opportunities: 2.5
+  ✓ Overall: 4.0
+
+正在抓取: Dell Technologies - Mumbai, MH
+URL: https://www.glassdoor.com/Reviews/Dell-Technologies-Bengaluru-Reviews-EI_IE1327.0,17_IL.18,27_IC2940587.htm
+  ✓ Compensation and Benefits: 2.3
+✓ 成功抓取 ASUS - Fremont, CA (21.7s)
+  ✓ Recommend: 93%
+  ✓ CEO Approval: 90%
+  ✓ Total Reviews: 118
+  ✓ Work/Life Balance: 4.2
+  ✓ Compensation and Benefits: 3.9
+  ✓ Career Opportunities: 3.9
+  ✓ Diversity & Inclusion: 3.5
+  ✓ Senior Management: 3.4
+  ✓ Culture & Values: 3.2
+✓ 成功抓取 Delta Electronics - Taipei, TPQ (9.8s)
+
+正在抓取: ASUS - Markham, ON
+URL: https://www.glassdoor.com/Reviews/ASUS-Markham-Reviews-EI_IE40093.0,4_IL.5,12_IC2280736.htm
+
+⏱ 總計 2 筆，耗時 32s，平均 15.9s/筆
+正在抓取: Inventec - Global
+URL: https://www.glassdoor.com/Reviews/Inventec-Reviews-E13485.htm
+  ✓ Overall: 3.9
+  ✓ Recommend: 71%
+  ✓ CEO Approval: 86%
+  ✓ Total Reviews: 5,161
+  ✓ Diversity & Inclusion: 4.2
+  ✓ Culture & Values: 4.1
+  ✓ Work/Life Balance: 4.0
+  ✓ Career Opportunities: 3.7
+  ✓ Compensation and Benefits: 3.5
+  ✓ Senior Management: 3.4
+✓ 成功抓取 Dell Technologies - Mumbai, MH (14.3s)
+  ✓ Overall: 3.5
+  ✓ Recommend: 56%
+  ✓ CEO Approval: 77%
+  ✓ Total Reviews: 162
+  ✓ Diversity & Inclusion: 3.6
+
+⏱ 總計 3 筆，耗時 39s，平均 13.0s/筆
+正在抓取: HP Inc. - Global
+URL: https://www.glassdoor.com/Reviews/HP-Inc-Reviews-E1093161.htm
+  ✓ Work/Life Balance: 3.5
+  ✓ Career Opportunities: 3.3
+  ✓ Culture & Values: 3.2
+  ✓ Senior Management: 3.1
+  ✓ Compensation and Benefits: 3.1
+✓ 成功抓取 Inventec - Global (10.4s)
+
+⏱ 總計 1 筆，耗時 13s，平均 13.4s/筆
+正在抓取: NVIDIA - Global
+URL: https://www.glassdoor.com/Reviews/NVIDIA-Reviews-E7633.htm
+  ✓ Overall: 2.0
+  ✓ Overall: 3.9
+  ✓ Recommend: 0%
+  ✓ Total Reviews: 14
+  ✓ Compensation and Benefits: 2.1
+  ✓ Work/Life Balance: 1.6
+  ✓ Senior Management: 1.3
+  ✓ Career Opportunities: 1.3
+  ✓ Culture & Values: 1.1
+  ✓ Diversity & Inclusion: 1.1
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 ASUS - Markham, ON (18.3s)
+  ✓ Recommend: 74%
+  ✓ CEO Approval: 59%
+  ✓ Total Reviews: 9,431
+  ✓ Diversity & Inclusion: 4.2
+
+正在抓取: ASUS - Barcelona, CT
+URL: https://www.glassdoor.com/Reviews/ASUS-Barcelona-Reviews-EI_IE40093.0,4_IL.5,14_IC2547194.htm
+  ✓ Work/Life Balance: 4.1
+  ✓ Culture & Values: 4.0
+  ✓ Compensation and Benefits: 3.5
+  ✓ Overall: 4.4
+  ✓ Career Opportunities: 3.5
+  ✓ Senior Management: 3.4
+✓ 成功抓取 HP Inc. - Global (12.1s)
+
+正在抓取: HP Inc. - Fremont, CA
+URL: https://www.glassdoor.com/Reviews/HP-Inc-Boise-Reviews-EI_IE1093161.0,6_IL.7,12_IC1127927.htm
+  ✓ Recommend: 90%
+  ✓ CEO Approval: 97%
+  ✓ Total Reviews: 5,442
+  ✓ Diversity & Inclusion: 4.4
+  ✓ Compensation and Benefits: 4.4
+  ✓ Culture & Values: 4.3
+  ✓ Career Opportunities: 4.3
+  ✓ Senior Management: 4.2
+  ✓ Work/Life Balance: 3.9
+✓ 成功抓取 NVIDIA - Global (17.5s)
+  ✓ Overall: 3.4
+  ✓ Recommend: 54%
+  ✓ Total Reviews: 180
+  ✓ Diversity & Inclusion: 4.2
+  ✓ Work/Life Balance: 3.9
+  ✓ Culture & Values: 3.6
+  ✓ Compensation and Benefits: 3.4
+  ✓ Career Opportunities: 3.3
+  ✓ Senior Management: 2.7
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 HP Inc. - Fremont, CA (8.6s)
+
+正在抓取: NVIDIA - Fremont, CA
+URL: https://www.glassdoor.com/Reviews/NVIDIA-Austin-Reviews-EI_IE7633.0,6_IL.7,13_IC1139761.htm
+
+正在抓取: HP Inc. - Barcelona, CT
+URL: https://www.glassdoor.com/Reviews/HP-Inc-Barcelona-Reviews-EI_IE1093161.0,6_IL.7,16_IC2547194.htm
+  ✓ Overall: 4.3
+  ✓ Recommend: 91%
+  ✓ CEO Approval: 91%
+  ✓ Total Reviews: 78
+  ✓ Compensation and Benefits: 4.7
+  ✓ Senior Management: 4.6
+  ✓ Career Opportunities: 4.5
+  ✓ Work/Life Balance: 4.4
+  ✓ Culture & Values: 4.3
+  ✓ Diversity & Inclusion: 4.2
+✓ 成功抓取 NVIDIA - Fremont, CA (9.0s)
+
+正在抓取: NVIDIA - Markham, ON
+URL: https://www.glassdoor.com/Reviews/NVIDIA-Toronto-Reviews-EI_IE7633.0,6_IL.7,14_IC2281069.htm
+  ✓ Overall: 4.0
+  ✓ Overall: 2.4
+  ✓ Recommend: 94%
+  ✓ Total Reviews: 225
+  ✓ Work/Life Balance: 4.3
+  ✓ Diversity & Inclusion: 4.2
+  ✓ Culture & Values: 4.1
+  ✓ Compensation and Benefits: 3.8
+  ✓ Career Opportunities: 3.8
+  ✓ Senior Management: 3.6
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 HP Inc. - Barcelona, CT (13.8s)
+  ✓ Recommend: 33%
+  ✓ Total Reviews: 5
+  ✓ Work/Life Balance: 2.4
+  ✓ Compensation and Benefits: 2.3
+  ✓ Career Opportunities: 2.3
+  ✓ Culture & Values: 1.7
+  ✓ Overall: 4.9
+  ✓ Diversity & Inclusion: 1.7
+  ✓ Senior Management: 1.7
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 ASUS - Barcelona, CT (33.5s)
+
+正在抓取: HP Inc. - Hemel Hempstead, ENG
+URL: https://www.glassdoor.com/Reviews/HP-Inc-Cambridge-Reviews-EI_IE1093161.0,6_IL.7,16_IC2662516.htm
+
+正在抓取: ASUS - Budapest, BU
+URL: https://www.glassdoor.com/Reviews/ASUS-Budapest-Reviews-EI_IE40093.0,4_IL.5,13_IC3125126.htm
+  ✓ Recommend: 88%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 23
+  ✓ Compensation and Benefits: 5.0
+  ✓ Culture & Values: 4.8
+  ✓ Diversity & Inclusion: 4.8
+  ✓ Senior Management: 4.8
+  ✓ Career Opportunities: 4.6
+  ✓ Work/Life Balance: 4.5
+✓ 成功抓取 NVIDIA - Markham, ON (14.0s)
+  ✓ Overall: 4.2
+
+正在抓取: NVIDIA - Hemel Hempstead, ENG
+URL: https://www.glassdoor.com/Reviews/NVIDIA-Reading-Reviews-EI_IE7633.0,6_IL.7,14_IC2675152.htm
+  ✓ Recommend: 21%
+  ✓ Total Reviews: 5
+  ✓ Diversity & Inclusion: 5.0
+  ✓ Culture & Values: 3.4
+  ✓ Work/Life Balance: 3.4
+  ✓ Compensation and Benefits: 3.4
+  ✓ Senior Management: 2.6
+  ✓ Career Opportunities: 2.6
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 HP Inc. - Hemel Hempstead, ENG (11.7s)
+
+正在抓取: HP Inc. - Mumbai, MH
+URL: https://www.glassdoor.com/Reviews/HP-Inc-Bengaluru-Reviews-EI_IE1093161.0,6_IL.7,16_IC2940587.htm
+  ✓ Overall: 4.3
+  ✓ Recommend: 100%
+  ✓ CEO Approval: 93%
+  ✓ Total Reviews: 14
+  ✓ Culture & Values: 5.0
+  ✓ Diversity & Inclusion: 5.0
+  ✓ Compensation and Benefits: 5.0
+  ✓ Career Opportunities: 5.0
+  ✓ Senior Management: 4.4
+  ✓ Work/Life Balance: 4.0
+✓ 成功抓取 NVIDIA - Hemel Hempstead, ENG (8.5s)
+
+正在抓取: NVIDIA - Ratingen, NW
+URL: https://www.glassdoor.com/Reviews/NVIDIA-Munich-Reviews-EI_IE7633.0,6_IL.7,13_IC4990924.htm
+  ✓ Overall: 4.0
+  ✓ Overall: 5.0
+  ✓ Recommend: 100%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 19
+  ✓ Compensation and Benefits: 5.0
+  ✓ Culture & Values: 4.9
+  ✓ Senior Management: 4.9
+  ✓ Recommend: 81%
+  ✓ CEO Approval: 99%
+  ✓ Diversity & Inclusion: 4.8
+  ✓ Total Reviews: 1,340
+  ✓ Career Opportunities: 4.6
+  ✓ Culture & Values: 4.2
+  ✓ Work/Life Balance: 3.9
+✓ 成功抓取 NVIDIA - Ratingen, NW (6.3s)
+  ✓ Diversity & Inclusion: 4.2
+  ✓ Work/Life Balance: 4.2
+  ✓ Senior Management: 3.6
+  ✓ Career Opportunities: 3.6
+  ✓ Compensation and Benefits: 3.4
+✓ 成功抓取 HP Inc. - Mumbai, MH (13.0s)
+
+正在抓取: NVIDIA - Mumbai, MH
+URL: https://www.glassdoor.com/Reviews/NVIDIA-Bengaluru-Reviews-EI_IE7633.0,6_IL.7,16_IC2940587.htm
+
+正在抓取: HP Inc. - Singapore
+URL: https://www.glassdoor.com/Reviews/HP-Inc-Singapore-Reviews-EI_IE1093161.0,6_IL.7,16_IC3235921.htm
+  ⚠ 無法找到整體評分
+  ⚠ 無法找到推薦比例
+  ⚠ 無法找到 CEO 支持率
+  ⚠ 無法找到評論總數
+  ⚠ 缺失欄位: Overall, Recommend, CEO Approval, Total Reviews, Diversity & Inclusion, Work/Life Balance, Compensation and Benefits, Culture & Values, Career Opportunities, Senior Management
+✓ 成功抓取 ASUS - Budapest, BU (32.5s)
+  ✓ Overall: 3.9
+
+正在抓取: ASUS - Emmen, DR
+URL: https://www.glassdoor.com/Reviews/ASUS-Emmen-Reviews-EI_IE40093.0,4_IL.5,10_IC3060162.htm
+  ✓ Recommend: 69%
+  ✓ Total Reviews: 547
+  ✓ Diversity & Inclusion: 4.3
+  ✓ Culture & Values: 4.2
+  ✓ Work/Life Balance: 4.2
+  ✓ Senior Management: 3.4
+  ✓ Career Opportunities: 3.4
+  ✓ Compensation and Benefits: 3.3
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 HP Inc. - Singapore (14.1s)
+
+正在抓取: HP Inc. - Taipei, TPQ
+URL: https://www.glassdoor.com/Reviews/HP-Inc-Taipei-Reviews-EI_IE1093161.0,6_IL.7,13_IC3271041.htm
+  ✓ Overall: 4.5
+  ✓ Recommend: 95%
+  ✓ CEO Approval: 99%
+  ✓ Total Reviews: 563
+  ✓ Culture & Values: 4.5
+  ✓ Diversity & Inclusion: 4.5
+  ✓ Career Opportunities: 4.5
+  ✓ Compensation and Benefits: 4.4
+  ✓ Senior Management: 4.3
+  ✓ Work/Life Balance: 4.1
+✓ 成功抓取 NVIDIA - Mumbai, MH (22.3s)
+
+正在抓取: NVIDIA - Taipei, TPQ
+URL: https://www.glassdoor.com/Reviews/NVIDIA-Hsinchu-Reviews-EI_IE7633.0,6_IL.7,14_IC4915323.htm
+  ✓ Overall: 4.3
+  ✓ Recommend: 87%
+  ✓ Total Reviews: 127
+  ✓ Diversity & Inclusion: 4.5
+  ✓ Culture & Values: 4.4
+  ✓ Work/Life Balance: 4.4
+  ✓ Compensation and Benefits: 3.8
+  ✓ Career Opportunities: 3.7
+  ✓ Senior Management: 3.6
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 HP Inc. - Taipei, TPQ (12.9s)
+  ✓ Overall: 4.6
+
+⏱ 總計 7 筆，耗時 107s，平均 15.3s/筆
+正在抓取: MSI - Global
+URL: https://www.glassdoor.com/Reviews/MSI-Reviews-E1273104.htm
+  ✓ Recommend: 100%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 8
+  ✓ Culture & Values: 5.0
+  ✓ Compensation and Benefits: 4.4
+  ✓ Career Opportunities: 4.4
+  ✓ Diversity & Inclusion: 4.0
+  ⚠ 無法找到整體評分
+  ✓ Work/Life Balance: 4.0
+  ✓ Senior Management: 3.7
+✓ 成功抓取 NVIDIA - Taipei, TPQ (12.3s)
+  ⚠ 無法找到推薦比例
+  ⚠ 無法找到 CEO 支持率
+  ⚠ 無法找到評論總數
+  ⚠ 缺失欄位: Overall, Recommend, CEO Approval, Total Reviews, Diversity & Inclusion, Work/Life Balance, Compensation and Benefits, Culture & Values, Career Opportunities, Senior Management
+✓ 成功抓取 ASUS - Emmen, DR (30.5s)
+
+⏱ 總計 7 筆，耗時 111s，平均 15.8s/筆
+正在抓取: Trend Micro - Global
+URL: https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Reviews-E8983.htm
+
+正在抓取: ASUS - Hemel Hempstead, ENG
+URL: https://www.glassdoor.com/Reviews/ASUS-Hemel-Hempstead-Reviews-EI_IE40093.0,4_IL.5,20_IC2669775.htm
+  ✓ Overall: 4.0
+  ✓ Recommend: 75%
+  ✓ CEO Approval: 91%
+  ✓ Total Reviews: 63
+  ✓ Diversity & Inclusion: 3.9
+  ✓ Culture & Values: 3.8
+  ✓ Work/Life Balance: 3.8
+  ✓ Compensation and Benefits: 3.5
+  ✓ Senior Management: 3.4
+  ✓ Career Opportunities: 3.3
+✓ 成功抓取 MSI - Global (12.6s)
+
+⏱ 總計 1 筆，耗時 16s，平均 15.6s/筆
+正在抓取: Quanta Computer - Global
+URL: https://www.glassdoor.com/Reviews/Quanta-Computer-Reviews-E11939.htm
+  ✓ Overall: 3.0
+  ✓ Overall: 3.7
+  ✓ Recommend: 50%
+  ✓ CEO Approval: 54%
+  ✓ Total Reviews: 570
+  ✓ Diversity & Inclusion: 3.2
+  ✓ Career Opportunities: 3.1
+  ✓ Compensation and Benefits: 3.0
+  ✓ Senior Management: 2.7
+  ✓ Culture & Values: 2.6
+  ✓ Work/Life Balance: 2.6
+✓ 成功抓取 Quanta Computer - Global (5.1s)
+  ✓ Recommend: 71%
+  ✓ CEO Approval: 75%
+  ✓ Total Reviews: 2,073
+  ✓ Culture & Values: 4.0
+  ✓ Diversity & Inclusion: 4.0
+  ✓ Work/Life Balance: 4.0
+  ✓ Career Opportunities: 3.6
+  ✓ Senior Management: 3.3
+  ✓ Compensation and Benefits: 3.3
+✓ 成功抓取 Trend Micro - Global (14.4s)
+  ✓ Overall: 3.7
+
+正在抓取: Quanta Computer - Fremont, CA
+URL: https://www.glassdoor.com/Reviews/Quanta-Computer-Fremont-Reviews-EI_IE11939.0,15_IL.16,23_IC1147355.htm
+  ✓ Recommend: 99%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 17
+
+正在抓取: Trend Micro - Fremont, CA
+URL: https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Austin-Reviews-EI_IE8983.0,15_IL.16,22_IC1139761.htm
+  ✓ Diversity & Inclusion: 4.5
+  ✓ Culture & Values: 4.3
+  ✓ Work/Life Balance: 3.8
+  ✓ Senior Management: 3.8
+  ✓ Career Opportunities: 3.0
+  ✓ Compensation and Benefits: 2.8
+✓ 成功抓取 ASUS - Hemel Hempstead, ENG (20.6s)
+  ✓ Overall: 2.9
+  ✓ Recommend: 3%
+  ✓ Total Reviews: 60
+  ✓ Work/Life Balance: 2.7
+  ✓ Culture & Values: 2.6
+  ✓ Diversity & Inclusion: 2.6
+  ✓ Senior Management: 2.5
+  ✓ Compensation and Benefits: 2.3
+  ✓ Career Opportunities: 2.1
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 Quanta Computer - Fremont, CA (7.4s)
+
+正在抓取: ASUS - Milan, LOM
+URL: https://www.glassdoor.com/Reviews/ASUS-Milan-Reviews-EI_IE40093.0,4_IL.5,10_IC2802090.htm
+
+⏱ 總計 2 筆，耗時 18s，平均 9.2s/筆
+正在抓取: Wistron - Global
+URL: https://www.glassdoor.com/Reviews/Wistron-Reviews-E15218.htm
+  ✓ Overall: 4.3
+  ✓ Recommend: 72%
+  ✓ CEO Approval: 68%
+  ✓ Total Reviews: 36
+  ✓ Work/Life Balance: 4.7
+  ✓ Culture & Values: 4.2
+  ✓ Diversity & Inclusion: 4.2
+  ✓ Career Opportunities: 3.7
+  ✓ Compensation and Benefits: 3.2
+  ✓ Senior Management: 3.1
+✓ 成功抓取 Trend Micro - Fremont, CA (13.2s)
+  ✓ Overall: 3.4
+
+正在抓取: Trend Micro - Markham, ON
+URL: https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Kanata-Reviews-EI_IE8983.0,15_IL.16,22_IC2282818.htm
+  ✓ Recommend: 48%
+  ✓ CEO Approval: 83%
+  ✓ Total Reviews: 710
+  ✓ Work/Life Balance: 3.1
+  ✓ Career Opportunities: 3.1
+  ✓ Culture & Values: 3.0
+  ✓ Diversity & Inclusion: 3.0
+  ✓ Compensation and Benefits: 2.8
+  ✓ Senior Management: 2.7
+✓ 成功抓取 Wistron - Global (10.8s)
+  ✓ Overall: 3.3
+
+正在抓取: Wistron - Taipei, TPQ
+URL: https://www.glassdoor.com/Reviews/Wistron-Taipei-Reviews-EI_IE15218.0,7_IL.8,14_IC3271041.htm
+  ✓ Recommend: 100%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 5
+  ✓ Work/Life Balance: 5.0
+  ✓ Culture & Values: 4.0
+  ✓ Diversity & Inclusion: 4.0
+  ✓ Career Opportunities: 4.0
+  ✓ Senior Management: 3.0
+  ✓ Compensation and Benefits: 3.0
+✓ 成功抓取 Trend Micro - Markham, ON (10.4s)
+  ✓ Overall: 3.6
+
+正在抓取: Trend Micro - Hemel Hempstead, ENG
+URL: https://www.glassdoor.com/Reviews/Trend-Micro-Inc-London-Reviews-EI_IE8983.0,15_IL.16,22_IC2671300.htm
+  ✓ Recommend: 66%
+  ✓ CEO Approval: 95%
+  ✓ Total Reviews: 216
+  ✓ Work/Life Balance: 3.5
+  ✓ Career Opportunities: 3.5
+  ✓ Culture & Values: 3.3
+  ✓ Diversity & Inclusion: 3.3
+  ✓ Compensation and Benefits: 3.0
+  ✓ Senior Management: 2.9
+✓ 成功抓取 Wistron - Taipei, TPQ (10.5s)
+  ✓ Overall: 3.6
+
+⏱ 總計 2 筆，耗時 27s，平均 13.6s/筆
+[port 9223] 完成 16 筆
+  ✓ Recommend: 85%
+  ✓ CEO Approval: 99%
+  ✓ Total Reviews: 28
+  ✓ Work/Life Balance: 4.0
+  ✓ Compensation and Benefits: 3.7
+  ✓ Culture & Values: 3.6
+  ✓ Career Opportunities: 3.3
+  ✓ Diversity & Inclusion: 3.2
+  ✓ Senior Management: 2.9
+✓ 成功抓取 Trend Micro - Hemel Hempstead, ENG (11.4s)
+
+正在抓取: Trend Micro - Ratingen, NW
+URL: https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Munich-Reviews-EI_IE8983.0,15_IL.16,22_IC4990924.htm
+  ✓ Overall: 3.3
+  ✓ Overall: 4.0
+  ✓ Recommend: 100%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 1
+  ✓ Diversity & Inclusion: 3.3
+  ✓ Senior Management: 3.3
+  ✓ Career Opportunities: 3.3
+  ✓ Culture & Values: 2.4
+  ✓ Work/Life Balance: 2.4
+  ✓ Compensation and Benefits: 1.5
+✓ 成功抓取 ASUS - Milan, LOM (43.2s)
+  ✓ Recommend: 100%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 4
+  ✓ Diversity & Inclusion: 4.4
+  ✓ Culture & Values: 4.0
+  ✓ Work/Life Balance: 4.0
+
+正在抓取: ASUS - Noisy-le-Grand, A8
+URL: https://www.glassdoor.com/Reviews/ASUS-Noisy-le-Grand-Reviews-EI_IE40093.0,4_IL.5,19_IC3100822.htm
+  ✓ Compensation and Benefits: 4.0
+  ✓ Senior Management: 3.6
+  ✓ Career Opportunities: 3.6
+✓ 成功抓取 Trend Micro - Ratingen, NW (9.9s)
+
+正在抓取: Trend Micro - Tokyo, 40
+URL: https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Tokyo-Reviews-EI_IE8983.0,15_IL.16,21_IC2851580.htm
+  ✓ Overall: 4.4
+  ✓ Overall: 2.4
+  ✓ Recommend: 99%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 18
+  ✓ Work/Life Balance: 4.6
+  ✓ Career Opportunities: 4.5
+  ✓ Diversity & Inclusion: 4.3
+  ✓ Culture & Values: 4.1
+  ✓ Recommend: 22%
+  ✓ Compensation and Benefits: 4.0
+  ✓ CEO Approval: 23%
+  ✓ Senior Management: 3.8
+✓ 成功抓取 Trend Micro - Tokyo, 40 (8.8s)
+  ✓ Total Reviews: 4
+  ✓ Diversity & Inclusion: 2.8
+  ✓ Culture & Values: 2.5
+  ✓ Senior Management: 2.3
+  ✓ Work/Life Balance: 2.2
+  ✓ Compensation and Benefits: 2.1
+  ✓ Career Opportunities: 2.1
+✓ 成功抓取 ASUS - Noisy-le-Grand, A8 (14.2s)
+
+⏱ 總計 6 筆，耗時 86s，平均 14.4s/筆
+正在抓取: Wiwynn - Global
+URL: https://www.glassdoor.com/Reviews/Wiwynn-Reviews-E1161475.htm
+
+正在抓取: ASUS - Ratingen, NW
+URL: https://www.glassdoor.com/Reviews/ASUS-Ratingen-Reviews-EI_IE40093.0,4_IL.5,13_IC2584004.htm
+  ✓ Overall: 3.5
+  ✓ Recommend: 59%
+  ⚠ 無法找到 CEO 支持率
+  ✓ Total Reviews: 86
+  ✓ Compensation and Benefits: 3.5
+  ✓ Career Opportunities: 3.5
+  ✓ Diversity & Inclusion: 3.4
+  ✓ Culture & Values: 3.1
+  ✓ Work/Life Balance: 3.0
+  ✓ Senior Management: 2.9
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 Wiwynn - Global (11.8s)
+  ✓ Overall: 4.0
+  ✓ Recommend: 97%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 1
+  ✓ Culture & Values: 3.0
+  ✓ Work/Life Balance: 3.0
+
+⏱ 總計 1 筆，耗時 15s，平均 14.8s/筆
+[port 9224] 完成 18 筆
+  ✓ Senior Management: 2.5
+  ✓ Career Opportunities: 2.3
+  ✓ Compensation and Benefits: 1.6
+  ✓ Diversity & Inclusion: 1.4
+✓ 成功抓取 ASUS - Ratingen, NW (13.1s)
+
+正在抓取: ASUS - Bangkok, 10
+URL: https://www.glassdoor.com/Reviews/ASUS-Bangkok-Reviews-EI_IE40093.0,4_IL.5,12_IC3179725.htm
+  ✓ Overall: 3.9
+  ✓ Recommend: 79%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 8
+  ✓ Diversity & Inclusion: 4.5
+  ✓ Compensation and Benefits: 4.0
+  ✓ Culture & Values: 3.7
+  ✓ Work/Life Balance: 3.5
+  ✓ Senior Management: 3.4
+  ✓ Career Opportunities: 3.1
+✓ 成功抓取 ASUS - Bangkok, 10 (10.7s)
+
+正在抓取: ASUS - Dubai, DU
+URL: https://www.glassdoor.com/Reviews/ASUS-Dubai-Reviews-EI_IE40093.0,4_IL.5,10_IC2204498.htm
+  ✓ Overall: 2.6
+  ✓ Recommend: 3%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 19
+  ✓ Diversity & Inclusion: 2.3
+  ✓ Career Opportunities: 2.3
+  ✓ Culture & Values: 2.2
+  ✓ Senior Management: 2.2
+  ✓ Work/Life Balance: 1.9
+  ✓ Compensation and Benefits: 1.7
+✓ 成功抓取 ASUS - Dubai, DU (9.6s)
+
+正在抓取: ASUS - Jakarta, JK
+URL: https://www.glassdoor.com/Reviews/ASUS-Jakarta-Reviews-EI_IE40093.0,4_IL.5,12_IC2709872.htm
+  ✓ Overall: 4.0
+  ✓ Recommend: 99%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 15
+  ✓ Diversity & Inclusion: 4.6
+  ✓ Compensation and Benefits: 4.3
+  ✓ Culture & Values: 4.2
+  ✓ Senior Management: 4.0
+  ✓ Career Opportunities: 3.8
+  ✓ Work/Life Balance: 3.6
+✓ 成功抓取 ASUS - Jakarta, JK (15.6s)
+
+正在抓取: ASUS - Kuala Lumpur, 14
+URL: https://www.glassdoor.com/Reviews/ASUS-Kuala-Lumpur-Reviews-EI_IE40093.0,4_IL.5,17_IC2986682.htm
+  ✓ Overall: 4.9
+  ✓ Recommend: 55%
+  ✓ Total Reviews: 5
+  ✓ Career Opportunities: 5.0
+  ✓ Compensation and Benefits: 4.9
+  ✓ Culture & Values: 4.0
+  ✓ Diversity & Inclusion: 4.0
+  ✓ Work/Life Balance: 4.0
+  ✓ Senior Management: 3.0
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 ASUS - Kuala Lumpur, 14 (11.8s)
+
+正在抓取: ASUS - Manila, D9
+URL: https://www.glassdoor.com/Reviews/ASUS-Manila-Reviews-EI_IE40093.0,4_IL.5,11_IC2363570.htm
+  ✓ Overall: 4.1
+  ✓ Recommend: 87%
+  ✓ Total Reviews: 11
+  ✓ Compensation and Benefits: 4.8
+  ✓ Culture & Values: 3.9
+  ✓ Diversity & Inclusion: 3.9
+  ✓ Senior Management: 3.9
+  ✓ Career Opportunities: 3.5
+  ✓ Work/Life Balance: 1.7
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 ASUS - Manila, D9 (9.1s)
+
+正在抓取: ASUS - Mumbai, MH
+URL: https://www.glassdoor.com/Reviews/ASUS-Mumbai-Reviews-EI_IE40093.0,4_IL.5,11_IC2851180.htm
+  ✓ Overall: 3.3
+  ✓ Recommend: 99%
+  ✓ CEO Approval: 99%
+  ✓ Total Reviews: 28
+  ✓ Work/Life Balance: 3.7
+  ✓ Diversity & Inclusion: 3.4
+  ✓ Career Opportunities: 3.4
+  ✓ Culture & Values: 3.1
+  ✓ Senior Management: 3.0
+  ✓ Compensation and Benefits: 3.0
+✓ 成功抓取 ASUS - Mumbai, MH (14.2s)
+
+正在抓取: ASUS - Seoul, 11
+URL: https://www.glassdoor.com/Reviews/ASUS-Seoul-Reviews-EI_IE40093.0,4_IL.5,10_IC3021489.htm
+  ✓ Overall: 3.0
+  ✓ Recommend: 100%
+  ✓ Total Reviews: 1
+  ✓ Work/Life Balance: 4.0
+  ✓ Career Opportunities: 4.0
+  ✓ Culture & Values: 3.0
+  ✓ Diversity & Inclusion: 3.0
+  ✓ Senior Management: 3.0
+  ✓ Compensation and Benefits: 2.0
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 ASUS - Seoul, 11 (10.4s)
+
+正在抓取: ASUS - Singapore
+URL: https://www.glassdoor.com/Reviews/ASUS-Singapore-Reviews-EI_IE40093.0,4_IL.5,14_IC3235921.htm
+  ✓ Overall: 2.8
+  ✓ Recommend: 37%
+  ✓ CEO Approval: 44%
+  ✓ Total Reviews: 50
+  ✓ Diversity & Inclusion: 3.1
+  ✓ Work/Life Balance: 2.7
+  ✓ Compensation and Benefits: 2.7
+  ✓ Culture & Values: 2.6
+  ✓ Career Opportunities: 2.6
+  ✓ Senior Management: 2.3
+✓ 成功抓取 ASUS - Singapore (12.5s)
+
+正在抓取: ASUS - Taipei, TPQ
+URL: https://www.glassdoor.com/Reviews/ASUS-Taipei-Reviews-EI_IE40093.0,4_IL.5,11_IC3271041.htm
+  ✓ Overall: 3.7
+  ✓ Recommend: 67%
+  ✓ CEO Approval: 98%
+  ✓ Total Reviews: 524
+  ✓ Work/Life Balance: 3.8
+  ✓ Career Opportunities: 3.5
+  ✓ Diversity & Inclusion: 3.3
+  ✓ Compensation and Benefits: 3.3
+  ✓ Culture & Values: 3.1
+  ✓ Senior Management: 2.8
+✓ 成功抓取 ASUS - Taipei, TPQ (11.0s)
+
+正在抓取: ASUS - Tokyo, 40
+URL: https://www.glassdoor.com/Reviews/ASUS-Tokyo-Reviews-EI_IE40093.0,4_IL.5,10_IC2851580.htm
+  ✓ Overall: 1.0
+  ⚠ 無法找到推薦比例
+  ✓ Total Reviews: 2
+  ✓ Senior Management: 3.0
+  ✓ Compensation and Benefits: 2.0
+  ✓ Culture & Values: 1.0
+  ✓ Diversity & Inclusion: 1.0
+  ✓ Work/Life Balance: 1.0
+  ✓ Career Opportunities: 1.0
+  ⚠ 缺失欄位: Recommend, CEO Approval
+✓ 成功抓取 ASUS - Tokyo, 40 (8.5s)
+
+正在抓取: ASUS - Santiago, RM
+URL: https://www.glassdoor.com/Reviews/ASUS-Santiago-Reviews-EI_IE40093.0,4_IL.5,13_IC2434030.htm
+  ✓ Overall: 5.0
+  ✓ Recommend: 100%
+  ✓ Total Reviews: 1
+  ✓ Diversity & Inclusion: 5.0
+  ✓ Career Opportunities: 5.0
+  ✓ Culture & Values: 4.0
+  ✓ Senior Management: 4.0
+  ✓ Work/Life Balance: 3.0
+  ✓ Compensation and Benefits: 3.0
+  ⚠ 缺失欄位: CEO Approval
+✓ 成功抓取 ASUS - Santiago, RM (13.4s)
+
+正在抓取: ASUS - São Paulo, SP
+URL: https://www.glassdoor.com/Reviews/ASUS-S%C3%A3o-Paulo-Reviews-EI_IE40093.0,4_IL.5,14_IC2479061.htm
+  ✓ Overall: 3.2
+  ✓ Recommend: 55%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 3
+  ✓ Compensation and Benefits: 3.7
+  ✓ Diversity & Inclusion: 3.1
+  ✓ Work/Life Balance: 2.4
+  ✓ Culture & Values: 2.3
+  ✓ Senior Management: 2.1
+  ✓ Career Opportunities: 1.6
+✓ 成功抓取 ASUS - São Paulo, SP (10.9s)
+
+正在抓取: ASUS - Sydney, NSW
+URL: https://www.glassdoor.com/Reviews/ASUS-Sydney-Reviews-EI_IE40093.0,4_IL.5,11_IC2235932.htm
+  ✓ Overall: 1.2
+  ✓ Recommend: 1%
+  ✓ CEO Approval: 53%
+  ✓ Total Reviews: 22
+  ✓ Culture & Values: 1.0
+  ✓ Diversity & Inclusion: 1.0
+  ✓ Work/Life Balance: 1.0
+  ✓ Senior Management: 1.0
+  ✓ Compensation and Benefits: 1.0
+  ✓ Career Opportunities: 1.0
+✓ 成功抓取 ASUS - Sydney, NSW (14.4s)
+
+正在抓取: Compal Electronics - Global
+URL: https://www.glassdoor.com/Reviews/Delta-Electronics-Reviews-E41146.htm
+  ✓ Overall: 3.6
+  ✓ Recommend: 66%
+  ✓ CEO Approval: 81%
+  ✓ Total Reviews: 754
+  ✓ Compensation and Benefits: 3.6
+  ✓ Diversity & Inclusion: 3.5
+  ✓ Work/Life Balance: 3.5
+  ✓ Career Opportunities: 3.5
+  ✓ Culture & Values: 3.4
+  ✓ Senior Management: 3.2
+✓ 成功抓取 Compal Electronics - Global (10.6s)
+
+正在抓取: Compal Electronics - Emmen, DR
+URL: https://www.glassdoor.com/Reviews/Delta-Electronics-Hoofddorp-Reviews-EI_IE41146.0,17_IL.18,27_IC3063772.htm
+  ✓ Overall: 3.3
+  ✓ Recommend: 53%
+  ✓ CEO Approval: 99%
+  ✓ Total Reviews: 18
+  ✓ Diversity & Inclusion: 3.6
+  ✓ Compensation and Benefits: 3.6
+  ✓ Work/Life Balance: 3.3
+  ✓ Culture & Values: 3.1
+  ✓ Senior Management: 2.6
+  ✓ Career Opportunities: 2.3
+✓ 成功抓取 Compal Electronics - Emmen, DR (11.3s)
+
+正在抓取: Compal Electronics - Taipei, TPQ
+URL: https://www.glassdoor.com/Reviews/Delta-Electronics-Taipei-Reviews-EI_IE41146.0,17_IL.18,24_IC3271041.htm
+  ✓ Overall: 4.0
+  ✓ Recommend: 93%
+  ✓ CEO Approval: 90%
+  ✓ Total Reviews: 118
+  ✓ Work/Life Balance: 4.2
+  ✓ Compensation and Benefits: 3.9
+  ✓ Career Opportunities: 3.9
+  ✓ Diversity & Inclusion: 3.5
+  ✓ Senior Management: 3.4
+  ✓ Culture & Values: 3.2
+✓ 成功抓取 Compal Electronics - Taipei, TPQ (10.5s)
+
+⏱ 總計 3 筆，耗時 41s，平均 13.8s/筆
+正在抓取: Google - Global
+URL: https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm
+  ✓ Overall: 4.4
+  ✓ Recommend: 87%
+  ✓ CEO Approval: 82%
+  ✓ Total Reviews: 48,118
+  ✓ Compensation and Benefits: 4.5
+  ✓ Diversity & Inclusion: 4.4
+  ✓ Culture & Values: 4.2
+  ✓ Work/Life Balance: 4.2
+  ✓ Career Opportunities: 4.2
+  ✓ Senior Management: 3.9
+✓ 成功抓取 Google - Global (10.9s)
+
+⏱ 總計 1 筆，耗時 14s，平均 13.9s/筆
+正在抓取: Lenovo - Global
+URL: https://www.glassdoor.com/Reviews/Lenovo-Reviews-E8034.htm
+  ✓ Overall: 3.9
+  ✓ Recommend: 77%
+  ✓ CEO Approval: 87%
+  ✓ Total Reviews: 3,519
+  ✓ Diversity & Inclusion: 4.0
+  ✓ Culture & Values: 3.8
+  ✓ Compensation and Benefits: 3.8
+  ✓ Work/Life Balance: 3.7
+  ✓ Career Opportunities: 3.5
+  ✓ Senior Management: 3.4
+✓ 成功抓取 Lenovo - Global (11.4s)
+
+正在抓取: Lenovo - Fremont, CA
+URL: https://www.glassdoor.com/Reviews/Lenovo-Chicago-Reviews-EI_IE8034.0,6_IL.7,14_IC1128808.htm
+  ✓ Overall: 2.0
+  ✓ Recommend: 11%
+  ✓ CEO Approval: 74%
+  ✓ Total Reviews: 45
+  ✓ Compensation and Benefits: 2.7
+  ✓ Career Opportunities: 2.3
+  ✓ Diversity & Inclusion: 2.2
+  ✓ Culture & Values: 1.7
+  ✓ Work/Life Balance: 1.3
+  ✓ Senior Management: 1.3
+✓ 成功抓取 Lenovo - Fremont, CA (21.3s)
+
+正在抓取: Lenovo - Ratingen, NW
+URL: https://www.glassdoor.com/Reviews/Lenovo-Stuttgart-Reviews-EI_IE8034.0,6_IL.7,16_IC2507190.htm
+  ✓ Overall: 5.0
+  ✓ Recommend: 99%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 1
+  ✓ Culture & Values: 4.6
+  ✓ Diversity & Inclusion: 4.6
+  ✓ Compensation and Benefits: 4.0
+  ✓ Work/Life Balance: 3.5
+  ✓ Career Opportunities: 3.4
+  ✓ Senior Management: 3.1
+✓ 成功抓取 Lenovo - Ratingen, NW (10.6s)
+
+正在抓取: Lenovo - Mumbai, MH
+URL: https://www.glassdoor.com/Reviews/Lenovo-Bengaluru-Reviews-EI_IE8034.0,6_IL.7,16_IC2940587.htm
+  ✓ Overall: 3.9
+  ✓ Recommend: 71%
+  ✓ CEO Approval: 94%
+  ✓ Total Reviews: 192
+  ✓ Compensation and Benefits: 3.9
+  ✓ Diversity & Inclusion: 3.8
+  ✓ Culture & Values: 3.7
+  ✓ Work/Life Balance: 3.5
+  ✓ Career Opportunities: 3.2
+  ✓ Senior Management: 3.1
+✓ 成功抓取 Lenovo - Mumbai, MH (10.2s)
+
+正在抓取: Lenovo - São Paulo, SP
+URL: https://www.glassdoor.com/Reviews/Lenovo-Campinas-Reviews-EI_IE8034.0,6_IL.7,15_IC2490130.htm
+  ✓ Overall: 2.1
+  ✓ Recommend: 36%
+  ✓ CEO Approval: 100%
+  ✓ Total Reviews: 2
+  ✓ Compensation and Benefits: 2.3
+  ✓ Culture & Values: 2.1
+  ✓ Work/Life Balance: 1.9
+  ✓ Senior Management: 1.9
+  ✓ Career Opportunities: 1.9
+  ✓ Diversity & Inclusion: 1.5
+✓ 成功抓取 Lenovo - São Paulo, SP (8.8s)
+
+正在抓取: Lenovo - Sydney, NSW
+URL: https://www.glassdoor.com/Reviews/Lenovo-Sydney-Reviews-EI_IE8034.0,6_IL.7,13_IC2235932.htm
+  ✓ Overall: 3.5
+  ✓ Recommend: 53%
+  ✓ CEO Approval: 59%
+  ✓ Total Reviews: 42
+  ✓ Diversity & Inclusion: 2.9
+  ✓ Compensation and Benefits: 2.8
+  ✓ Senior Management: 2.6
+  ✓ Culture & Values: 2.5
+  ✓ Career Opportunities: 2.5
+  ✓ Work/Life Balance: 2.3
+✓ 成功抓取 Lenovo - Sydney, NSW (10.8s)
+
+⏱ 總計 6 筆，耗時 91s，平均 15.2s/筆
+正在抓取: Pegatron - Global
+URL: https://www.glassdoor.com/Reviews/Pegatron-Reviews-E337948.htm
+  ✓ Overall: 3.3
+  ✓ Recommend: 44%
+  ✓ CEO Approval: 69%
+  ✓ Total Reviews: 506
+  ✓ Diversity & Inclusion: 3.3
+  ✓ Work/Life Balance: 3.2
+  ✓ Culture & Values: 3.1
+  ✓ Career Opportunities: 3.1
+  ✓ Compensation and Benefits: 3.0
+  ✓ Senior Management: 2.9
+✓ 成功抓取 Pegatron - Global (13.1s)
+
+正在抓取: Pegatron - Fremont, CA
+URL: https://www.glassdoor.com/Reviews/Pegatron-Jeffersonville-Reviews-EI_IE337948.0,8_IL.9,23_IC1145141.htm
+  ✓ Overall: 2.7
+  ✓ Recommend: 8%
+  ✓ CEO Approval: 2%
+  ✓ Total Reviews: 34
+  ✓ Diversity & Inclusion: 3.4
+  ✓ Work/Life Balance: 2.2
+  ✓ Culture & Values: 2.0
+  ✓ Compensation and Benefits: 1.9
+  ✓ Senior Management: 1.4
+  ✓ Career Opportunities: 1.3
+✓ 成功抓取 Pegatron - Fremont, CA (10.9s)
+
+⏱ 總計 2 筆，耗時 30s，平均 15.0s/筆
+正在抓取: TSMC - Global
+URL: https://www.glassdoor.com/Reviews/TSMC-Reviews-E4130.htm
+  ✓ Overall: 3.3
+  ✓ Recommend: 46%
+  ✓ CEO Approval: 74%
+  ✓ Total Reviews: 2,135
+  ✓ Compensation and Benefits: 3.8
+  ✓ Career Opportunities: 3.5
+  ✓ Diversity & Inclusion: 2.8
+  ✓ Senior Management: 2.7
+  ✓ Culture & Values: 2.6
+  ✓ Work/Life Balance: 2.2
+✓ 成功抓取 TSMC - Global (8.9s)
+
+正在抓取: TSMC - Taipei, TPQ
+URL: https://www.glassdoor.com/Reviews/TSMC-Hsinchu-Reviews-EI_IE4130.0,4_IL.5,12_IC4915323.htm
+  ✓ Overall: 3.5
+  ✓ Recommend: 52%
+  ✓ CEO Approval: 81%
+  ✓ Total Reviews: 613
+  ✓ Compensation and Benefits: 3.9
+  ✓ Career Opportunities: 3.7
+  ✓ Diversity & Inclusion: 2.9
+  ✓ Senior Management: 2.9
+  ✓ Culture & Values: 2.8
+  ✓ Work/Life Balance: 2.5
+✓ 成功抓取 TSMC - Taipei, TPQ (10.3s)
+
+⏱ 總計 2 筆，耗時 25s，平均 12.6s/筆
+[port 9222] 完成 37 筆
+
+⏱ 平行總耗時 671s，共 71 筆
+
+✓ 數據已保存至: data/glassdoor_ratings.xlsx
+✓ Excel 格式已美化
+✓ CSV 已保存至: data/glassdoor_ratings.csv
+
+✓ 完成！共抓取 71 筆數據
+
+⏱ 總執行時間：11m 21s
+✓ JSON 摘要已保存至: logs/run_20260511_2242.json

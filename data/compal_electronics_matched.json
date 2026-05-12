@@ -4,7 +4,7 @@
     "baseline_country": null,
     "company": "Compal Electronics",
     "matched_city": "Global",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Reviews-E41146.htm",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-Reviews-E13464.htm",
     "reviews_count": null,
     "status": "found"
   },
@@ -12,10 +12,10 @@
     "baseline_location": "Fremont, CA",
     "baseline_country": "United States",
     "company": "Compal Electronics",
-    "matched_city": "Fremont, CA",
+    "matched_city": null,
     "url": null,
     "reviews_count": null,
-    "status": "no_review_url"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Markham, ON",
@@ -48,10 +48,10 @@
     "baseline_location": "Emmen, DR",
     "baseline_country": "Netherlands",
     "company": "Compal Electronics",
-    "matched_city": "Hoofddorp, NH",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Hoofddorp-Reviews-EI_IE41146.0,17_IL.18,27_IC3063772.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Hemel Hempstead, ENG",
@@ -165,10 +165,10 @@
     "baseline_location": "Taipei, TPQ",
     "baseline_country": "Taiwan",
     "company": "Compal Electronics",
-    "matched_city": "Taipei, TPQ",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Taipei-Reviews-EI_IE41146.0,17_IL.18,24_IC3271041.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Tokyo, 40",
@@ -201,9 +201,9 @@
     "baseline_location": "Sydney, NSW",
     "baseline_country": "Australia",
     "company": "Compal Electronics",
-    "matched_city": "Notting Hill, VIC",
+    "matched_city": null,
     "url": null,
     "reviews_count": null,
-    "status": "no_review_url"
+    "status": "not_in_company"
   }
 ]

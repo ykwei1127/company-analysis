@@ -1,0 +1,225 @@
+{
+  "run_at": "2026-05-11 22:53:48",
+  "elapsed_seconds": 681.2,
+  "elapsed_human": "11m 21s",
+  "total_rows": 71,
+  "log_file": "logs/run_20260511_2242.txt",
+  "companies": {
+    "Acer": {
+      "success": 1,
+      "failed": 0,
+      "missing": []
+    },
+    "Dell Technologies": {
+      "success": 3,
+      "failed": 0,
+      "missing": [
+        {
+          "location": "Fremont, CA",
+          "fields": [
+            "Diversity & Inclusion"
+          ]
+        }
+      ]
+    },
+    "HP Inc.": {
+      "success": 7,
+      "failed": 0,
+      "missing": [
+        {
+          "location": "Fremont, CA",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Barcelona, CT",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Hemel Hempstead, ENG",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Singapore",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Taipei, TPQ",
+          "fields": [
+            "CEO Approval"
+          ]
+        }
+      ]
+    },
+    "MSI": {
+      "success": 1,
+      "failed": 0,
+      "missing": []
+    },
+    "Quanta Computer": {
+      "success": 2,
+      "failed": 0,
+      "missing": [
+        {
+          "location": "Fremont, CA",
+          "fields": [
+            "CEO Approval"
+          ]
+        }
+      ]
+    },
+    "Wistron": {
+      "success": 2,
+      "failed": 0,
+      "missing": []
+    },
+    "AU Optronics": {
+      "success": 1,
+      "failed": 0,
+      "missing": []
+    },
+    "Delta Electronics": {
+      "success": 2,
+      "failed": 0,
+      "missing": []
+    },
+    "Inventec": {
+      "success": 1,
+      "failed": 0,
+      "missing": []
+    },
+    "NVIDIA": {
+      "success": 7,
+      "failed": 0,
+      "missing": []
+    },
+    "Trend Micro": {
+      "success": 6,
+      "failed": 0,
+      "missing": []
+    },
+    "Wiwynn": {
+      "success": 1,
+      "failed": 0,
+      "missing": [
+        {
+          "location": "Global",
+          "fields": [
+            "CEO Approval"
+          ]
+        }
+      ]
+    },
+    "ASUS": {
+      "success": 23,
+      "failed": 0,
+      "missing": [
+        {
+          "location": "Markham, ON",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Barcelona, CT",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Budapest, BU",
+          "fields": [
+            "Overall",
+            "Recommend",
+            "CEO Approval",
+            "Total Reviews",
+            "Diversity & Inclusion",
+            "Work/Life Balance",
+            "Compensation and Benefits",
+            "Culture & Values",
+            "Career Opportunities",
+            "Senior Management"
+          ]
+        },
+        {
+          "location": "Emmen, DR",
+          "fields": [
+            "Overall",
+            "Recommend",
+            "CEO Approval",
+            "Total Reviews",
+            "Diversity & Inclusion",
+            "Work/Life Balance",
+            "Compensation and Benefits",
+            "Culture & Values",
+            "Career Opportunities",
+            "Senior Management"
+          ]
+        },
+        {
+          "location": "Kuala Lumpur, 14",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Manila, D9",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Seoul, 11",
+          "fields": [
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Tokyo, 40",
+          "fields": [
+            "Recommend",
+            "CEO Approval"
+          ]
+        },
+        {
+          "location": "Santiago, RM",
+          "fields": [
+            "CEO Approval"
+          ]
+        }
+      ]
+    },
+    "Compal Electronics": {
+      "success": 3,
+      "failed": 0,
+      "missing": []
+    },
+    "Google": {
+      "success": 1,
+      "failed": 0,
+      "missing": []
+    },
+    "Lenovo": {
+      "success": 6,
+      "failed": 0,
+      "missing": []
+    },
+    "Pegatron": {
+      "success": 2,
+      "failed": 0,
+      "missing": []
+    },
+    "TSMC": {
+      "success": 2,
+      "failed": 0,
+      "missing": []
+    }
+  }
+}
