@@ -14,6 +14,8 @@
 | `啟動Chrome.bat` | 以 remote debug 模式啟動 Chrome port 9222（單一或平行模式） |
 | `啟動Chrome_9223.bat` | 平行模式用：啟動 Chrome port 9223 |
 | `啟動Chrome_9224.bat` | 平行模式用：啟動 Chrome port 9224 |
+| `debug/test_progress.py` | 測試進度顯示與日誌功能 |
+| `debug/fix_taiwan_rows.py` | 修復特定公司 Taiwan 資料 |
 
 ---
 
@@ -82,8 +84,8 @@ venv\Scripts\python company_finder.py match
 venv\Scripts\python glassdoor_scraper_unified.py
 ```
 
-輸出：`data/glassdoor_ratings.xlsx` 和 `data/glassdoor_ratings.csv`
-每次執行也會在 `logs/` 目錄產生 `.txt`（完整 log）和 `.json`（摘要報告）。
+輸出：`output/glassdoor_ratings.xlsx` 和 `output/glassdoor_ratings.csv`
+每次執行也會在 `logs/` 目錄產生 `.txt`（完整 log）和 `.json`（摘要報告），並自動將各 port 的詳細 log 合併。
 
 > **`config.py` 相關開關**
 >
@@ -91,7 +93,7 @@ venv\Scripts\python glassdoor_scraper_unified.py
 > |------|------|
 > | `INCLUDE_BASELINE = True` | 一併抓取基準公司 ASUS 的評分（讀取 `data/asus_locations.json`） |
 > | `INCLUDE_BASELINE = False` | 只抓取 `*_matched.json` 內的新公司 |
-> | `PARALLEL_PORTS = [9222, 9223, 9224]` | 平行模式：3 個 Chrome 同時抓，約 3x 加速 |
+> | `PARALLEL_PORTS = [9222, 9223, 9224]` | 平行模式：3 個 Chrome 同時抓，約 3x 加速，顯示 tqdm 進度條 |
 > | `PARALLEL_PORTS = [9222]` | 單一模式：只用一個 Chrome（預設） |
 
 **平行模式使用步驟：**
@@ -158,5 +160,7 @@ venv\Scripts\python glassdoor_scraper_unified.py
 
 - 必須保持 Chrome 以 debug 模式開啟並登入 Glassdoor（單一模式用 port 9222；平行模式需同時開 9222/9223/9224）
 - Glassdoor 有 paywall，未登入時部分數據會被遮擋
-- 各城市頁面之間有 2–3 秒延遲，避免觸發反爬蟲
+- 各城市頁面之間採動態延遲：成功抓取 1.5s，失敗 0.5s，優化整體速度
+- 平行模式會顯示 tqdm 進度條，即時顯示各 port 完成的 entries 數
+- 日誌即時 flush 到磁碟，crash 不會丟失已完成的紀錄
 - 若搜尋到的公司 ID 有誤（如 Compal Electronics 誤抓為 Delta Electronics），`company_finder.py` 會以 `all()` 比對所有關鍵字避免誤判，但仍建議執行後確認 `*_matched.json` 的 Global URL 是否正確
