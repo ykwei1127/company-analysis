@@ -6,9 +6,15 @@
     <el-card style="margin-bottom: 20px">
       <template #header><span style="font-weight: 600">Multi-Dimension Radar</span></template>
 
-      <!-- Legend: ALL companies with colored squares -->
+      <!-- Clickable Legend: toggle companies on/off -->
       <div class="legend-row">
-        <span v-for="c in companies" :key="c.company" class="legend-item">
+        <span
+          v-for="c in companies"
+          :key="c.company"
+          class="legend-item"
+          :class="{ inactive: !selectedCompanies.includes(c.company) }"
+          @click="toggleCompany(c.company)"
+        >
           <span class="legend-square" :style="{ background: COMPANY_COLORS[c.company] || '#555' }"></span>
           {{ c.company }}
         </span>
@@ -34,10 +40,10 @@
         </div>
       </template>
       <el-table :data="gapData" stripe style="width: 100%">
-        <el-table-column prop="dimension" label="Dimension" width="180" />
-        <el-table-column prop="valueA" :label="companyA" width="120" align="center" />
-        <el-table-column prop="valueB" :label="companyB" width="120" align="center" />
-        <el-table-column label="Gap" width="120" align="center">
+        <el-table-column prop="dimension" label="Dimension" min-width="140" />
+        <el-table-column prop="valueA" :label="companyA" min-width="100" align="center" />
+        <el-table-column prop="valueB" :label="companyB" min-width="100" align="center" />
+        <el-table-column label="Gap" min-width="100" align="center">
           <template #default="{ row }">
             <span v-if="row.gap != null" :style="{ color: row.gap > 0 ? '#67c23a' : row.gap < 0 ? '#f56c6c' : '#ccc' }">
               {{ row.gap > 0 ? '+' : '' }}{{ row.gap.toFixed(2) }}
@@ -86,13 +92,29 @@ const COMPANY_COLORS: Record<string, string> = {
   Pegatron: '#f06292',
 }
 
+const DEFAULT_SELECTED = ['ASUS', 'NVIDIA', 'Google', 'Dell Technologies', 'HP Inc.', 'Acer', 'Lenovo', 'MSI']
+
 const store = useDashboardStore()
 const themeStore = useThemeStore()
 const companies = ref<CompanyOverview[]>([])
+const selectedCompanies = ref<string[]>([...DEFAULT_SELECTED])
 const companyA = ref('ASUS')
 const companyB = ref('Google')
 
 const companyNames = computed(() => companies.value.map(c => c.company))
+
+const visibleCompanies = computed(() =>
+  companies.value.filter(c => selectedCompanies.value.includes(c.company))
+)
+
+function toggleCompany(name: string) {
+  const idx = selectedCompanies.value.indexOf(name)
+  if (idx >= 0) {
+    selectedCompanies.value.splice(idx, 1)
+  } else {
+    selectedCompanies.value.push(name)
+  }
+}
 
 const DIMS: DimensionKey[] = ['overall', 'culture', 'wlb', 'salary', 'career', 'diversity', 'management']
 
@@ -128,7 +150,7 @@ const radarOption = computed(() => {
     },
     series: [{
       type: 'radar',
-      data: companies.value.map(c => ({
+      data: visibleCompanies.value.map(c => ({
         name: c.company,
         value: DIMS.map(d => getRadarValue(c, d)),
         lineStyle: { color: COMPANY_COLORS[c.company] ?? '#555', width: 2 },
@@ -167,6 +189,7 @@ watch(() => store.selectedRunId, loadData)
 .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 .gap-controls { display: flex; align-items: center; gap: 8px; }
 .legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; padding: 0 8px; }
-.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; user-select: none; transition: opacity 0.2s; }
+.legend-item.inactive { opacity: 0.35; }
 .legend-square { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
 </style>

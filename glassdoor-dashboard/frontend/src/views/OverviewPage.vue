@@ -40,26 +40,25 @@
     <el-card>
       <template #header><span style="font-weight: 600">Company Summary</span></template>
       <el-table :data="filteredCompanies" stripe style="width: 100%" :default-sort="{ prop: 'overall', order: 'descending' }">
-        <el-table-column prop="rank" label="#" width="50" align="center" sortable />
-        <el-table-column prop="company" label="Company" width="180" sortable />
-        <el-table-column prop="overall" label="Overall" width="90" align="center" sortable />
-        <el-table-column prop="culture" label="Culture" width="90" align="center" sortable />
-        <el-table-column prop="wlb" label="WLB" width="80" align="center" sortable />
-        <el-table-column prop="salary" label="Salary" width="80" align="center" sortable />
-        <el-table-column prop="career" label="Career" width="80" align="center" sortable />
-        <el-table-column prop="diversity" label="D&I" width="70" align="center" sortable />
-        <el-table-column prop="management" label="Mgmt" width="75" align="center" sortable />
-        <el-table-column prop="recommend" label="Recommend%" width="110" align="center" sortable>
+        <el-table-column prop="rank" label="#" width="45" align="center" sortable />
+        <el-table-column prop="company" label="Company" min-width="120" sortable />
+        <el-table-column prop="overall" label="Overall" min-width="70" align="center" sortable />
+        <el-table-column prop="culture" label="Culture" min-width="70" align="center" sortable />
+        <el-table-column prop="wlb" label="WLB" min-width="60" align="center" sortable />
+        <el-table-column prop="salary" label="Salary" min-width="60" align="center" sortable />
+        <el-table-column prop="career" label="Career" min-width="60" align="center" sortable />
+        <el-table-column prop="diversity" label="D&I" min-width="55" align="center" sortable />
+        <el-table-column prop="management" label="Mgmt" min-width="60" align="center" sortable />
+        <el-table-column prop="recommend" label="Recommend%" min-width="95" align="center" sortable>
           <template #default="{ row }">
             {{ row.recommend != null ? row.recommend.toFixed(0) + '%' : '—' }}
           </template>
         </el-table-column>
-        <el-table-column prop="ceo_approval" label="CEO%" width="80" align="center" sortable>
+        <el-table-column prop="ceo_approval" label="CEO%" min-width="65" align="center" sortable>
           <template #default="{ row }">
             {{ row.ceo_approval != null ? row.ceo_approval.toFixed(0) + '%' : '—' }}
           </template>
         </el-table-column>
-        <el-table-column prop="total_reviews" label="Reviews" width="90" align="center" sortable />
       </el-table>
     </el-card>
   </div>
