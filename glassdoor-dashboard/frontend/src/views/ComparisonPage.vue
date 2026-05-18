@@ -4,43 +4,24 @@
 
     <!-- Radar Chart -->
     <el-card style="margin-bottom: 20px">
-      <template #header>
-        <div class="card-header">
-          <span>Multi-Dimension Radar</span>
-          <div class="radar-controls">
-            <span class="ctrl-label">Companies (max 8):</span>
-            <el-select
-              v-model="selectedCompanies"
-              multiple
-              collapse-tags
-              collapse-tags-tooltip
-              :max-collapse-tags="4"
-              placeholder="Select"
-              size="small"
-              style="width: 340px"
-            >
-              <el-option v-for="name in companyNames" :key="name" :label="name" :value="name" />
-            </el-select>
-          </div>
-        </div>
-      </template>
+      <template #header><span style="font-weight: 600">Multi-Dimension Radar</span></template>
 
-      <!-- Legend -->
+      <!-- Legend: ALL companies with colored squares -->
       <div class="legend-row">
-        <span v-for="c in visibleCompanies" :key="c.company" class="legend-item">
-          <span class="legend-dot" :style="{ background: COMPANY_COLORS[c.company] || '#555' }"></span>
+        <span v-for="c in companies" :key="c.company" class="legend-item">
+          <span class="legend-square" :style="{ background: COMPANY_COLORS[c.company] || '#555' }"></span>
           {{ c.company }}
         </span>
       </div>
 
-      <v-chart :option="radarOption" style="height: 420px" autoresize />
+      <v-chart :option="radarOption" style="height: 480px" autoresize />
     </el-card>
 
     <!-- Gap Analysis -->
     <el-card>
       <template #header>
         <div class="card-header">
-          <span>Gap Analysis</span>
+          <span style="font-weight: 600">Gap Analysis</span>
           <div class="gap-controls">
             <el-select v-model="companyA" size="small" style="width: 160px">
               <el-option v-for="name in companyNames" :key="name" :label="name" :value="name" />
@@ -85,34 +66,33 @@ import { type DimensionKey, DIMENSION_LABELS } from '../types'
 use([RadarChart, TooltipComponent, LegendComponent, RadarComponent, CanvasRenderer])
 
 const COMPANY_COLORS: Record<string, string> = {
-  ASUS: '#00bcd4',
-  Acer: '#8bc34a',
-  'Dell Technologies': '#ff9800',
-  'HP Inc.': '#2196f3',
-  Lenovo: '#e91e63',
-  MSI: '#f44336',
-  'Trend Micro': '#9c27b0',
-  NVIDIA: '#76b900',
   Google: '#4285f4',
-  TSMC: '#795548',
-  Pegatron: '#607d8b',
+  NVIDIA: '#76b900',
+  'HP Inc.': '#2196f3',
+  MSI: '#f44336',
+  'Dell Technologies': '#ff9800',
+  'Trend Micro': '#9c27b0',
+  Wiwynn: '#00bcd4',
+  'Compal Electronics': '#ff7043',
+  Lenovo: '#e91e63',
   Inventec: '#ff5722',
+  'AU Optronics': '#607d8b',
+  Acer: '#8bc34a',
+  TSMC: '#795548',
+  ASUS: '#00bcd4',
+  'Quanta Computer': '#3f51b5',
+  'Delta Electronics': '#673ab7',
   Wistron: '#009688',
+  Pegatron: '#f06292',
 }
-
-const DEFAULT_COMPANIES = ['ASUS', 'NVIDIA', 'Google', 'Dell Technologies', 'HP Inc.', 'Acer']
 
 const store = useDashboardStore()
 const themeStore = useThemeStore()
 const companies = ref<CompanyOverview[]>([])
-const selectedCompanies = ref<string[]>([...DEFAULT_COMPANIES])
 const companyA = ref('ASUS')
-const companyB = ref('NVIDIA')
+const companyB = ref('Google')
 
 const companyNames = computed(() => companies.value.map(c => c.company))
-const visibleCompanies = computed(() =>
-  companies.value.filter(c => selectedCompanies.value.includes(c.company))
-)
 
 const DIMS: DimensionKey[] = ['overall', 'culture', 'wlb', 'salary', 'career', 'diversity', 'management']
 
@@ -148,7 +128,7 @@ const radarOption = computed(() => {
     },
     series: [{
       type: 'radar',
-      data: visibleCompanies.value.map(c => ({
+      data: companies.value.map(c => ({
         name: c.company,
         value: DIMS.map(d => getRadarValue(c, d)),
         lineStyle: { color: COMPANY_COLORS[c.company] ?? '#555', width: 2 },
@@ -176,9 +156,6 @@ const gapData = computed(() => {
 async function loadData() {
   const { data } = await getOverview(store.selectedRunId || undefined)
   companies.value = data
-  const available = new Set(data.map((c: CompanyOverview) => c.company))
-  selectedCompanies.value = DEFAULT_COMPANIES.filter(c => available.has(c))
-  if (selectedCompanies.value.length === 0) selectedCompanies.value = data.slice(0, 6).map((c: CompanyOverview) => c.company)
 }
 
 onMounted(loadData)
@@ -188,9 +165,8 @@ watch(() => store.selectedRunId, loadData)
 <style scoped>
 .page-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin: 0 0 14px 0; }
 .card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-.radar-controls, .gap-controls { display: flex; align-items: center; gap: 8px; }
-.ctrl-label { font-size: 12px; color: var(--text-secondary); }
+.gap-controls { display: flex; align-items: center; gap: 8px; }
 .legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; padding: 0 8px; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
-.legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend-square { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
 </style>

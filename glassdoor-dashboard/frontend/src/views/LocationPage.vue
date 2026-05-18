@@ -1,23 +1,63 @@
 <template>
   <div>
+    <h3 class="page-title">Location Breakdown</h3>
+
     <!-- View tabs -->
     <div class="view-tabs">
-      <button class="view-tab" :class="{ active: viewMode === 'heatmap' }" @click="viewMode = 'heatmap'">Heatmap</button>
       <button class="view-tab" :class="{ active: viewMode === 'pivot' }" @click="viewMode = 'pivot'">Pivot Table</button>
-      <button class="view-tab" :class="{ active: viewMode === 'detail' }" @click="viewMode = 'detail'">Detail</button>
+      <button class="view-tab" :class="{ active: viewMode === 'heatmap' }" @click="viewMode = 'heatmap'">Heatmap</button>
     </div>
 
-    <!-- Region tabs -->
-    <div v-if="viewMode === 'heatmap'" class="controls-row">
-      <div class="region-tabs">
-        <button v-for="r in REGIONS" :key="r.key" class="region-tab" :class="{ active: selectedRegion === r.key }" @click="selectedRegion = r.key">
-          {{ r.label }}
-        </button>
+    <!-- ═══════ Pivot Table View ═══════ -->
+    <div v-if="viewMode === 'pivot'">
+      <!-- Filters -->
+      <div class="controls-row">
+        <el-select v-model="pivotCompanyFilter" placeholder="Filter by company" clearable multiple collapse-tags size="default" style="width: 280px">
+          <el-option v-for="name in companyList" :key="name" :label="name" :value="name" />
+        </el-select>
+        <el-select v-model="pivotDimension" size="default" style="width: 200px">
+          <el-option v-for="dim in PIVOT_DIMS" :key="dim.key" :label="dim.label" :value="dim.key" />
+        </el-select>
       </div>
+
+      <!-- Pivot: Location × Company -->
+      <el-card>
+        <template #header><span style="font-weight: 600">{{ pivotDimLabel }} by Location × Company</span></template>
+        <div class="pivot-scroll">
+          <table class="pivot-table">
+            <thead>
+              <tr>
+                <th class="loc-col">Location</th>
+                <th v-for="company in pivotCompanies" :key="company">{{ company }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="loc in pivotLocations" :key="loc">
+                <td class="loc-col">{{ loc }}</td>
+                <td v-for="company in pivotCompanies" :key="company">
+                  <span v-if="getPivotValue(loc, company) != null" class="pivot-cell" :style="heatStyle(getPivotValue(loc, company)!)">
+                    {{ getPivotValue(loc, company)!.toFixed(2) }}
+                  </span>
+                  <span v-else class="pivot-empty">—</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </el-card>
     </div>
 
-    <!-- Heatmap View -->
+    <!-- ═══════ Heatmap View ═══════ -->
     <div v-if="viewMode === 'heatmap'">
+      <!-- Region tabs -->
+      <div class="controls-row">
+        <div class="region-tabs">
+          <button v-for="r in REGIONS" :key="r.key" class="region-tab" :class="{ active: selectedRegion === r.key }" @click="selectedRegion = r.key">
+            {{ r.label }}
+          </button>
+        </div>
+      </div>
+
       <table class="heatmap-table">
         <thead>
           <tr>
@@ -30,8 +70,11 @@
             <td class="company-col" :class="{ highlight: row.company === 'ASUS' }">
               <span v-if="row.company === 'ASUS'">&#9733; </span>{{ row.company }}
             </td>
-            <td v-for="dim in DIM_COLS" :key="dim.key" class="heat-cell" :style="row[dim.key] != null ? heatStyle(Number(row[dim.key])) : {}">
-              {{ row[dim.key] != null ? Number(row[dim.key]).toFixed(1) : '—' }}
+            <td v-for="dim in DIM_COLS" :key="dim.key" class="heat-cell">
+              <span v-if="row[dim.key] != null" class="heat-badge" :style="heatStyle(Number(row[dim.key]))">
+                {{ Number(row[dim.key]).toFixed(1) }}
+              </span>
+              <span v-else class="heat-na">—</span>
             </td>
           </tr>
         </tbody>
@@ -44,74 +87,6 @@
         </span>
         <span class="legend-item"><span class="legend-swatch" style="background: #333"></span> n/a</span>
       </div>
-      <p v-if="REGION_NOTES[selectedRegion]" class="region-note">{{ REGION_NOTES[selectedRegion] }}</p>
-    </div>
-
-    <!-- Pivot Table View -->
-    <div v-if="viewMode === 'pivot'">
-      <el-card>
-        <template #header><span>Pivot: Company x Location</span></template>
-        <el-table :data="allRatings" stripe style="width: 100%" max-height="600">
-          <el-table-column prop="company" label="Company" width="160" sortable fixed />
-          <el-table-column prop="baseline_location" label="Location" width="180" sortable />
-          <el-table-column prop="country" label="Country" width="140" sortable />
-          <el-table-column prop="overall" label="Overall" width="80" align="center" sortable />
-          <el-table-column prop="wlb" label="WLB" width="70" align="center" sortable />
-          <el-table-column prop="culture" label="Culture" width="80" align="center" sortable />
-          <el-table-column prop="career" label="Career" width="80" align="center" sortable />
-          <el-table-column prop="salary" label="Salary" width="80" align="center" sortable />
-          <el-table-column prop="management" label="Mgmt" width="75" align="center" sortable />
-          <el-table-column prop="diversity" label="D&I" width="70" align="center" sortable />
-          <el-table-column prop="recommend" label="Recommend%" width="110" align="center" sortable>
-            <template #default="{ row }">
-              {{ row.recommend != null ? row.recommend.toFixed(1) + '%' : 'N/A' }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="ceo_approval" label="CEO%" width="80" align="center" sortable>
-            <template #default="{ row }">
-              {{ row.ceo_approval != null ? row.ceo_approval.toFixed(1) + '%' : 'N/A' }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="total_reviews" label="Reviews" width="90" align="center" sortable />
-        </el-table>
-      </el-card>
-    </div>
-
-    <!-- Detail View -->
-    <div v-if="viewMode === 'detail'">
-      <el-card>
-        <template #header>
-          <div class="card-header">
-            <span>Detail View</span>
-            <el-select v-model="detailCompany" placeholder="Filter company" clearable size="small" style="width: 200px">
-              <el-option v-for="name in companyList" :key="name" :label="name" :value="name" />
-            </el-select>
-          </div>
-        </template>
-        <el-table :data="detailData" stripe style="width: 100%" max-height="600">
-          <el-table-column prop="company" label="Company" width="160" sortable fixed />
-          <el-table-column prop="baseline_location" label="Location" width="180" sortable />
-          <el-table-column prop="country" label="Country" width="140" sortable />
-          <el-table-column prop="overall" label="Overall" width="80" align="center" sortable />
-          <el-table-column prop="wlb" label="WLB" width="70" align="center" sortable />
-          <el-table-column prop="culture" label="Culture" width="80" align="center" sortable />
-          <el-table-column prop="career" label="Career" width="80" align="center" sortable />
-          <el-table-column prop="salary" label="Salary" width="80" align="center" sortable />
-          <el-table-column prop="management" label="Mgmt" width="75" align="center" sortable />
-          <el-table-column prop="diversity" label="D&I" width="70" align="center" sortable />
-          <el-table-column prop="recommend" label="Recommend%" width="110" align="center" sortable>
-            <template #default="{ row }">
-              {{ row.recommend != null ? row.recommend.toFixed(1) + '%' : 'N/A' }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="ceo_approval" label="CEO%" width="80" align="center" sortable>
-            <template #default="{ row }">
-              {{ row.ceo_approval != null ? row.ceo_approval.toFixed(1) + '%' : 'N/A' }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="total_reviews" label="Reviews" width="90" align="center" sortable />
-        </el-table>
-      </el-card>
     </div>
   </div>
 </template>
@@ -124,9 +99,10 @@ import type { LocationRating, DimensionKey } from '../types'
 
 const store = useDashboardStore()
 const allRatings = ref<LocationRating[]>([])
-const viewMode = ref<'heatmap' | 'pivot' | 'detail'>('heatmap')
+const viewMode = ref<'pivot' | 'heatmap'>('pivot')
 const selectedRegion = ref('north_america')
-const detailCompany = ref('')
+const pivotCompanyFilter = ref<string[]>([])
+const pivotDimension = ref<DimensionKey>('overall')
 
 // Region definitions
 const REGIONS = [
@@ -138,13 +114,18 @@ const REGIONS = [
   { key: 'global', label: 'Global', countries: [] },
 ]
 
-const REGION_NOTES: Record<string, string> = {
-  north_america: 'North America: ASUS from Fremont + Markham offices. \u2605 row = ASUS. "\u2014" = no data.',
-  asia: 'Asia: Taiwan data from Taiwan-wide page. \u2605 row = ASUS. "\u2014" = no data.',
-  global: 'Global: Company-wide aggregate pages. \u2605 row = ASUS. "\u2014" = no data.',
-}
+// Pivot dimension options
+const PIVOT_DIMS: { key: DimensionKey; label: string }[] = [
+  { key: 'overall',    label: 'Overall' },
+  { key: 'wlb',       label: 'Work/Life Balance' },
+  { key: 'culture',   label: 'Culture & Values' },
+  { key: 'career',    label: 'Career Opportunities' },
+  { key: 'salary',    label: 'Compensation' },
+  { key: 'management', label: 'Senior Management' },
+  { key: 'diversity', label: 'Diversity & Inclusion' },
+]
 
-// Dimension columns shown in the heatmap (excluding overall as separate concept)
+// Heatmap dimension columns
 const DIM_COLS: { key: DimensionKey; label: string }[] = [
   { key: 'wlb',        label: 'Work-life balance' },
   { key: 'culture',    label: 'Culture & values' },
@@ -154,8 +135,7 @@ const DIM_COLS: { key: DimensionKey; label: string }[] = [
   { key: 'diversity',  label: 'Diversity & inclusion' },
 ]
 
-// Preferred company order (ASUS first, then alphabetical)
-const COMPANY_ORDER = ['ASUS', 'Acer', 'Dell Technologies', 'HP Inc.', 'Lenovo', 'MSI', 'Trend Micro', 'NVIDIA', 'Google', 'TSMC']
+const COMPANY_ORDER = ['ASUS', 'Acer', 'AU Optronics', 'Compal Electronics', 'Dell Technologies', 'Delta Electronics', 'Google', 'HP Inc.', 'Inventec', 'Lenovo', 'MSI', 'NVIDIA', 'Pegatron', 'Quanta Computer', 'Trend Micro', 'TSMC', 'Wistron', 'Wiwynn']
 
 const legend = [
   { label: '4.4+',    color: '#2d6a2d' },
@@ -166,14 +146,32 @@ const legend = [
   { label: '<3.0',    color: '#c0392b' },
 ]
 
-const companyList = computed(() => [...new Set(allRatings.value.map(r => r.company))].sort())
-
-const detailData = computed(() => {
-  if (!detailCompany.value) return allRatings.value
-  return allRatings.value.filter(r => r.company === detailCompany.value)
+const companyList = computed(() => {
+  const set = new Set(allRatings.value.map(r => r.company))
+  return COMPANY_ORDER.filter(c => set.has(c)).concat([...set].filter(c => !COMPANY_ORDER.includes(c)).sort())
 })
 
-// Region-filtered ratings
+// ═══════ Pivot Table Logic ═══════
+const pivotDimLabel = computed(() => PIVOT_DIMS.find(d => d.key === pivotDimension.value)?.label ?? 'Overall')
+
+const pivotCompanies = computed(() => {
+  if (pivotCompanyFilter.value.length > 0) return pivotCompanyFilter.value
+  return companyList.value
+})
+
+const pivotLocations = computed(() => {
+  const locs = new Set(allRatings.value.map(r => r.baseline_location).filter(Boolean))
+  return [...locs].sort()
+})
+
+const getPivotValue = (loc: string, company: string): number | null => {
+  const row = allRatings.value.find(r => r.company === company && r.baseline_location === loc)
+  if (!row) return null
+  const val = row[pivotDimension.value]
+  return val != null ? val : null
+}
+
+// ═══════ Heatmap Logic ═══════
 const regionRatings = computed(() => {
   const region = REGIONS.find(r => r.key === selectedRegion.value)
   if (!region) return []
@@ -187,7 +185,6 @@ const regionRatings = computed(() => {
   )
 })
 
-// Unique companies in region, sorted by preferred order
 const regionCompanies = computed(() => {
   const set = new Set(regionRatings.value.map(r => r.company))
   const ordered = COMPANY_ORDER.filter(c => set.has(c))
@@ -195,7 +192,6 @@ const regionCompanies = computed(() => {
   return [...ordered, ...rest]
 })
 
-// Aggregate per company across multiple locations in the region (simple avg)
 const heatmapRows = computed(() => {
   return regionCompanies.value.map(company => {
     const rows = regionRatings.value.filter(r => r.company === company)
@@ -208,7 +204,6 @@ const heatmapRows = computed(() => {
   })
 })
 
-// Heatmap color helpers
 const heatStyle = (val: number) => {
   if (val >= 4.4) return { background: '#2d6a2d', color: '#fff' }
   if (val >= 4.0) return { background: '#4a9e4a', color: '#fff' }
@@ -230,7 +225,7 @@ watch(() => store.selectedRunId, loadData)
 <style scoped>
 .page-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin: 0 0 14px 0; }
 
-/* View tabs (top-level) */
+/* View tabs */
 .view-tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 0; }
 .view-tab {
   padding: 7px 20px;
@@ -247,11 +242,10 @@ watch(() => store.selectedRunId, loadData)
 .view-tab:hover { color: var(--accent-blue-light); }
 .view-tab.active { color: var(--accent-blue-light); border-bottom-color: var(--accent-blue-light); font-weight: 600; }
 
-/* Controls row */
+/* Controls */
 .controls-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 16px;
   flex-wrap: wrap;
   gap: 12px;
@@ -270,19 +264,27 @@ watch(() => store.selectedRunId, loadData)
 .region-tab:hover { border-color: var(--accent-blue); color: var(--text-primary); }
 .region-tab.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
 
-/* Heatmap table */
+/* ═══ Pivot Table ═══ */
+.pivot-scroll { overflow-x: auto; }
+.pivot-table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+.pivot-table th { padding: 10px 12px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 12px; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); position: sticky; top: 0; }
+.pivot-table td { padding: 8px 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
+.loc-col { text-align: left !important; min-width: 160px; font-weight: 500; color: var(--text-primary); }
+.pivot-cell { display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 12px; min-width: 48px; }
+.pivot-empty { color: var(--text-muted); }
+
+/* ═══ Heatmap ═══ */
 .heatmap-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.heatmap-table th { padding: 8px 10px; text-align: center; color: var(--text-secondary); font-weight: 500; font-size: 12px; border-bottom: 1px solid var(--border-color); }
-.heatmap-table td { padding: 6px 10px; text-align: center; border-bottom: 1px solid var(--border-color); }
+.heatmap-table th { padding: 10px 12px; text-align: center; color: var(--text-secondary); font-weight: 500; font-size: 12px; border-bottom: 1px solid var(--border-color); }
+.heatmap-table td { padding: 8px 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
 .company-col { text-align: left !important; width: 180px; font-weight: 500; }
 .company-col.highlight { color: var(--accent-blue-light); }
-.heat-cell { font-weight: 600; font-size: 13px; border-radius: 4px; min-width: 50px; }
+.heat-cell { min-width: 60px; }
+.heat-badge { display: inline-block; padding: 4px 14px; border-radius: 4px; font-weight: 600; font-size: 13px; min-width: 48px; }
+.heat-na { color: var(--text-muted); }
 
 /* Legend */
 .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; padding: 8px 0; }
 .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
 .legend-swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
-.region-note { font-size: 11px; color: var(--text-secondary); margin-top: 8px; font-style: italic; }
-
-.card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 </style>

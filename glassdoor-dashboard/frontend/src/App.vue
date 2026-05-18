@@ -24,28 +24,8 @@
       <header class="top-bar">
         <h2 class="app-title">Glassdoor Multi-Company Dashboard</h2>
         <div class="header-right">
-          <el-select
-            :model-value="dashboardStore.selectedRunId"
-            @change="(val: string) => dashboardStore.selectRun(val)"
-            placeholder="Select run"
-            size="small"
-            style="width: 180px"
-          >
-            <el-option
-              v-for="run in dashboardStore.runs"
-              :key="run.id"
-              :label="run.label"
-              :value="run.id"
-            />
-          </el-select>
-          <el-button
-            class="theme-toggle"
-            circle
-            size="small"
-            @click="themeStore.toggle()"
-          >
-            {{ themeStore.mode === 'dark' ? '☀' : '🌙' }}
-          </el-button>
+          <span class="header-quarter">{{ currentQuarter }}</span>
+          <button class="gear-btn" @click="themeStore.toggle()" :title="themeStore.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">&#9881;</button>
         </div>
       </header>
       <div class="page-content">
@@ -56,12 +36,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useDashboardStore } from './stores/dashboard'
 import { useThemeStore } from './stores/theme'
 
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
+
+const currentQuarter = computed(() => {
+  const now = new Date()
+  const q = Math.ceil((now.getMonth() + 1) / 3)
+  return `${now.getFullYear()} Q${q}`
+})
 
 onMounted(() => {
   dashboardStore.fetchRuns()
@@ -172,7 +158,17 @@ html, body, #app {
 
 .app-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
 .header-right { display: flex; align-items: center; gap: 12px; }
-.theme-toggle { font-size: 16px; }
+.header-quarter { font-size: 13px; color: var(--text-secondary); }
+.gear-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+.gear-btn:hover { color: var(--text-primary); }
 
 .page-content { padding: 24px; flex: 1; overflow-y: auto; }
 
