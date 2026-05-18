@@ -497,25 +497,23 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
     all_data = []
     port_counts = {}
 
-    from tqdm import tqdm
-    # Windows 相容：ascii=True 避免編碼問題，dynamic_ncols=False 固定寬度
-    pbar = tqdm(total=total_tasks, desc='Scraping', unit='tasks',
-                ncols=100, ascii=True, position=0, leave=True)
+    _last_printed = 0
 
-    def _update_pbar():
-        """更新進度條，計算總完成數"""
+    def _print_progress(force=False):
+        """Print simple text progress for dashboard parsing."""
+        nonlocal _last_printed
         total_completed = sum(p['completed'] for p in _progress.values())
-        pbar.n = total_completed
-        # 顯示各 port 狀態
-        status_parts = []
+        if total_completed == _last_printed and not force:
+            return
+        _last_printed = total_completed
+        parts = []
         for port in sorted(_progress.keys()):
             p = _progress[port]
             if p['finished']:
-                status_parts.append(f"P{port}:OK({p['completed']})")
+                parts.append(f"P{port}:OK({p['completed']})")
             else:
-                status_parts.append(f"P{port}:{p['completed']}")
-        pbar.set_postfix_str(' | '.join(status_parts))
-        pbar.refresh()
+                parts.append(f"P{port}:{p['completed']}")
+        print(f"[PROGRESS] {total_completed}/{total_tasks} | {' | '.join(parts)}", flush=True)
 
     executor = ThreadPoolExecutor(max_workers=len(ports))
     futures = {
@@ -533,34 +531,29 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                         data = f.result()
                         all_data += data
                         port_counts[port] = len(data)
-                        pbar.write(f"[port {port}] 完成 {len(data)} 筆  log: {port_logs[port]}")
+                        print(f"[DONE] Port {port} completed {len(data)} entries  log: {port_logs[port]}", flush=True)
                     except Exception as e:
-                        pbar.write(f"[port {port}] 發生錯誤: {e}")
+                        print(f"[ERROR] Port {port} error: {e}", flush=True)
                     done_futures.append(f)
                     _progress[port]['finished'] = True
 
-            # 移除已完成
             for f in done_futures:
                 del futures[f]
 
-            # 更新顯示
-            _update_pbar()
+            _print_progress()
 
             if futures:
-                time.sleep(0.5)  # 0.5s 刷新一次
+                time.sleep(3)
 
     except KeyboardInterrupt:
-        pbar.close()
-        print("\n⚠ 收到 Ctrl+C，正在中止所有 worker...")
+        print("\n[WARN] Ctrl+C received, stopping workers...", flush=True)
         for f in futures:
             f.cancel()
         executor.shutdown(wait=False, cancel_futures=True)
         raise
 
-    pbar.close()
-
     elapsed = time.time() - total_start
-    print(f"\n⏱ 平行總耗時 {elapsed:.0f}s，共 {len(all_data)} 筆")
+    print(f"\n[DONE] Parallel scraping completed in {elapsed:.0f}s, {len(all_data)} entries total", flush=True)
 
     # 將各 port log 合並追加到主 log
     import sys as _sys
@@ -569,7 +562,7 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
         try:
             with open(main_log, 'a', encoding='utf-8') as mf:
                 mf.write(f"\n{'='*60}\n")
-                mf.write(f"各 Port 詳細 Log\n")
+                mf.write(f"Per-Port Detailed Logs\n")
                 mf.write(f"{'='*60}\n")
                 for port in ports:
                     plog = port_logs[port]

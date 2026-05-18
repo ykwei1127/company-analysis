@@ -1,0 +1,168 @@
+"""Scraper control API – launch, monitor, and check login status."""
+
+import asyncio
+import os
+import subprocess
+import sys
+import time
+import socket
+from pathlib import Path
+from typing import Optional
+
+from fastapi import APIRouter
+
+router = APIRouter(tags=["scraper"])
+
+# State
+_scraper_state = {
+    "running": False,
+    "logs": [],
+    "process": None,
+    "start_time": None,
+}
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+SCRAPER_SCRIPT = PROJECT_ROOT / "glassdoor_scraper_unified.py"
+
+
+def _find_chrome_path() -> Optional[str]:
+    """Find Chrome executable."""
+    candidates = [
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
+    ]
+    for p in candidates:
+        if os.path.isfile(p):
+            return p
+    return None
+
+
+def _is_port_open(port: int) -> bool:
+    """Check if a port is open (Chrome debug port)."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(1)
+        return s.connect_ex(("127.0.0.1", port)) == 0
+
+
+@router.get("/scraper/status")
+def scraper_status():
+    """Get current scraper status and logs."""
+    # Check if process is still alive
+    proc = _scraper_state["process"]
+    if proc and proc.poll() is not None:
+        _scraper_state["running"] = False
+        _scraper_state["process"] = None
+
+    return {
+        "running": _scraper_state["running"],
+        "logs": _scraper_state["logs"][-200:],  # last 200 lines
+        "start_time": _scraper_state["start_time"],
+    }
+
+
+@router.post("/scraper/start")
+async def scraper_start(ports: str = "9222", mode: str = "matched"):
+    """Start the scraper process."""
+    if _scraper_state["running"]:
+        return {"error": "Scraper is already running"}
+
+    port_list = [int(p.strip()) for p in ports.split(",")]
+
+    # Verify Chrome debug ports are open
+    closed_ports = [p for p in port_list if not _is_port_open(p)]
+    if closed_ports:
+        return {"error": f"Chrome debug ports not open: {closed_ports}. Please start Chrome with --remote-debugging-port first."}
+
+    _scraper_state["logs"] = []
+    _scraper_state["running"] = True
+    _scraper_state["start_time"] = time.time()
+
+    # Build command
+    cmd = [
+        sys.executable, str(SCRAPER_SCRIPT),
+        "--mode", mode,
+        "--ports", ",".join(str(p) for p in port_list),
+    ]
+
+    # Launch process
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+        cwd=str(PROJECT_ROOT),
+    )
+    _scraper_state["process"] = proc
+
+    # Read output in background
+    asyncio.get_event_loop().run_in_executor(None, _read_output, proc)
+
+    return {"status": "started", "ports": port_list, "mode": mode}
+
+
+@router.post("/scraper/stop")
+def scraper_stop():
+    """Stop the running scraper."""
+    proc = _scraper_state["process"]
+    if proc and proc.poll() is None:
+        proc.terminate()
+        _scraper_state["logs"].append("[SYSTEM] Scraper terminated by user")
+    _scraper_state["running"] = False
+    _scraper_state["process"] = None
+    return {"status": "stopped"}
+
+
+@router.get("/scraper/check-login")
+def check_login(port: int = 9222):
+    """Check if Glassdoor login is active on given Chrome debug port."""
+    if not _is_port_open(port):
+        return {"logged_in": False, "error": f"Port {port} not open"}
+
+    try:
+        import urllib.request
+        import json
+        # Get list of tabs from Chrome DevTools
+        url = f"http://127.0.0.1:{port}/json"
+        with urllib.request.urlopen(url, timeout=3) as resp:
+            tabs = json.loads(resp.read())
+
+        glassdoor_tabs = [t for t in tabs if "glassdoor" in t.get("url", "").lower()]
+        if not glassdoor_tabs:
+            return {"logged_in": False, "message": "No Glassdoor tab found. Please navigate to glassdoor.com and log in."}
+
+        # Check if any tab is on a login page
+        login_indicators = ["login", "signin", "sign-in"]
+        for tab in glassdoor_tabs:
+            tab_url = tab.get("url", "").lower()
+            if any(ind in tab_url for ind in login_indicators):
+                return {"logged_in": False, "message": "Glassdoor login page detected. Please log in."}
+
+        return {"logged_in": True, "message": f"Glassdoor session active on port {port}"}
+    except Exception as e:
+        return {"logged_in": False, "error": str(e)}
+
+
+@router.get("/scraper/chrome-status")
+def chrome_status():
+    """Check Chrome debug instances."""
+    ports = [9222, 9223, 9224]
+    results = {}
+    for port in ports:
+        results[port] = _is_port_open(port)
+    return results
+
+
+def _read_output(proc: subprocess.Popen):
+    """Background reader for scraper stdout."""
+    try:
+        for line in proc.stdout:
+            line = line.rstrip("\n")
+            if line:
+                _scraper_state["logs"].append(line)
+    except Exception:
+        pass
+    finally:
+        _scraper_state["running"] = False
+        _scraper_state["process"] = None
