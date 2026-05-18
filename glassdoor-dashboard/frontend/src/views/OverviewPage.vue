@@ -54,17 +54,19 @@ import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/compon
 import { CanvasRenderer } from 'echarts/renderers'
 import { getOverview } from '../api'
 import { useDashboardStore } from '../stores/dashboard'
+import { useThemeStore } from '../stores/theme'
 import type { CompanyOverview } from '../types'
 
 use([BarChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer])
 
 const store = useDashboardStore()
+const themeStore = useThemeStore()
 const companies = ref<CompanyOverview[]>([])
 
 const kpis = computed(() => {
   const n = companies.value.length
   if (!n) return []
-  const avgOverall = companies.value.reduce((s, c) => s + (c.overall || 0), 0) / n
+  const avgOverall = companies.value.reduce((s: number, c: CompanyOverview) => s + (c.overall || 0), 0) / n
   const top = companies.value[0]
   return [
     { label: 'Companies', value: n },
@@ -75,18 +77,27 @@ const kpis = computed(() => {
 
 const barOption = computed(() => {
   const sorted = [...companies.value].sort((a, b) => (b.overall || 0) - (a.overall || 0))
+  const isDark = themeStore.mode === 'dark'
+  const textColor = isDark ? '#A0A0A0' : '#606060'
+  const gridColor = isDark ? '#2A2A2A' : '#E0E0E0'
+
   return {
     backgroundColor: 'transparent',
-    tooltip: { trigger: 'axis' },
-    grid: { left: 140, right: 20, top: 10, bottom: 30 },
-    xAxis: { type: 'value', min: 2, max: 5, axisLabel: { color: '#888' }, splitLine: { lineStyle: { color: '#2a2a2a' } } },
-    yAxis: { type: 'category', data: sorted.map(c => c.company).reverse(), axisLabel: { color: '#ccc', fontSize: 12 } },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: isDark ? '#1A1A1A' : '#FFF',
+      borderColor: isDark ? '#2A2A2A' : '#E0E0E0',
+      textStyle: { color: isDark ? '#F5F5F5' : '#1A1A1A' },
+    },
+    grid: { left: 140, right: 50, top: 10, bottom: 30 },
+    xAxis: { type: 'value', min: 2, max: 5, axisLabel: { color: textColor }, splitLine: { lineStyle: { color: gridColor } } },
+    yAxis: { type: 'category', data: sorted.map(c => c.company).reverse(), axisLabel: { color: textColor, fontSize: 12 } },
     series: [{
       type: 'bar',
       data: sorted.map(c => c.overall || 0).reverse(),
       barWidth: 18,
       itemStyle: { color: '#409eff', borderRadius: [0, 4, 4, 0] },
-      label: { show: true, position: 'right', color: '#ccc', fontSize: 11, formatter: (p: any) => p.value?.toFixed(1) },
+      label: { show: true, position: 'right', color: textColor, fontSize: 11, formatter: (p: any) => p.value?.toFixed(1) },
     }],
   }
 })

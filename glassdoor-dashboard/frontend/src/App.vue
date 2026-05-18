@@ -1,5 +1,5 @@
 <template>
-  <div class="app-layout dark">
+  <div class="app-layout">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-brand">Glassdoor</div>
@@ -23,21 +23,29 @@
     <main class="main-content">
       <header class="top-bar">
         <h2 class="app-title">Glassdoor Multi-Company Dashboard</h2>
-        <div class="run-selector">
+        <div class="header-right">
           <el-select
-            :model-value="store.selectedRunId"
-            @change="(val: string) => store.selectRun(val)"
+            :model-value="dashboardStore.selectedRunId"
+            @change="(val: string) => dashboardStore.selectRun(val)"
             placeholder="Select run"
             size="small"
             style="width: 180px"
           >
             <el-option
-              v-for="run in store.runs"
+              v-for="run in dashboardStore.runs"
               :key="run.id"
               :label="run.label"
               :value="run.id"
             />
           </el-select>
+          <el-button
+            class="theme-toggle"
+            circle
+            size="small"
+            @click="themeStore.toggle()"
+          >
+            {{ themeStore.mode === 'dark' ? '☀' : '🌙' }}
+          </el-button>
         </div>
       </header>
       <div class="page-content">
@@ -50,32 +58,64 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useDashboardStore } from './stores/dashboard'
+import { useThemeStore } from './stores/theme'
 
-const store = useDashboardStore()
+const dashboardStore = useDashboardStore()
+const themeStore = useThemeStore()
 
 onMounted(() => {
-  store.fetchRuns()
+  dashboardStore.fetchRuns()
 })
 </script>
 
 <style>
-:root {
-  --bg-primary: #0d0d0d;
+/* ── Dark Mode (default) ── */
+:root,
+[data-theme="dark"] {
+  --bg-primary: #0A0A0A;
   --bg-secondary: #141414;
-  --bg-card: #1a1a1a;
-  --text-primary: #e0e0e0;
-  --text-secondary: #888;
-  --border-color: #2a2a2a;
+  --bg-card: #1A1A1A;
+  --bg-card-hover: #222222;
+  --bg-sidebar: #111111;
+  --border-color: #2A2A2A;
+  --text-primary: #F5F5F5;
+  --text-secondary: #A0A0A0;
+  --text-muted: #666666;
   --accent-blue: #409eff;
   --accent-blue-light: #66b1ff;
+  --accent-green: #4ADE80;
+  --accent-red: #F87171;
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* ── Light Mode ── */
+[data-theme="light"] {
+  --bg-primary: #F5F5F7;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F0F2;
+  --bg-sidebar: #FAFAFA;
+  --border-color: #E0E0E0;
+  --text-primary: #1A1A1A;
+  --text-secondary: #606060;
+  --text-muted: #999999;
+  --accent-blue: #409eff;
+  --accent-blue-light: #0088E0;
+  --accent-green: #16A34A;
+  --accent-red: #DC2626;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
+  transition: background 0.3s, color 0.3s;
 }
 
 .app-layout {
@@ -86,10 +126,11 @@ body {
 /* Sidebar */
 .sidebar {
   width: 180px;
-  background: var(--bg-secondary);
+  background: var(--bg-sidebar);
   border-right: 1px solid var(--border-color);
   padding: 16px 0;
   flex-shrink: 0;
+  transition: background 0.3s;
 }
 
 .sidebar-brand {
@@ -112,7 +153,7 @@ body {
   transition: all 0.2s;
 }
 
-.nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+.nav-item:hover { color: var(--text-primary); background: var(--bg-card-hover); }
 .nav-item.active { color: var(--accent-blue-light); background: rgba(64,158,255,0.08); border-left: 3px solid var(--accent-blue); }
 .nav-icon { font-size: 16px; width: 20px; text-align: center; }
 
@@ -126,15 +167,22 @@ body {
   padding: 12px 24px;
   border-bottom: 1px solid var(--border-color);
   background: var(--bg-secondary);
+  transition: background 0.3s;
 }
 
-.app-title { font-size: 16px; font-weight: 600; }
+.app-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.theme-toggle { font-size: 16px; }
 
 .page-content { padding: 24px; flex: 1; overflow-y: auto; }
 
-/* Element Plus dark overrides */
-.el-card { background: var(--bg-card) !important; border-color: var(--border-color) !important; color: var(--text-primary) !important; }
-.el-card__header { border-bottom-color: var(--border-color) !important; }
-.el-table { --el-table-bg-color: var(--bg-card); --el-table-tr-bg-color: var(--bg-card); --el-table-header-bg-color: #1f1f1f; --el-table-border-color: var(--border-color); --el-table-text-color: var(--text-primary); --el-table-header-text-color: var(--text-secondary); }
+/* Element Plus overrides using CSS vars */
+.el-card { background: var(--bg-card) !important; border-color: var(--border-color) !important; color: var(--text-primary) !important; transition: background 0.3s; }
+.el-card__header { border-bottom-color: var(--border-color) !important; color: var(--text-primary) !important; }
+.el-table { --el-table-bg-color: var(--bg-card); --el-table-tr-bg-color: var(--bg-card); --el-table-header-bg-color: var(--bg-secondary); --el-table-border-color: var(--border-color); --el-table-text-color: var(--text-primary); --el-table-header-text-color: var(--text-secondary); }
+.el-table .el-table__row:hover > td { background: var(--bg-card-hover) !important; }
 .el-select { --el-fill-color-blank: var(--bg-card); --el-text-color-regular: var(--text-primary); --el-border-color: var(--border-color); }
+.el-tag { border-color: var(--border-color); }
+.el-input__wrapper { background-color: var(--bg-card) !important; box-shadow: 0 0 0 1px var(--border-color) inset !important; }
+.el-input__inner { color: var(--text-primary) !important; }
 </style>

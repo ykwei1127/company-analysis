@@ -74,14 +74,15 @@ import { ref, computed, onMounted, watch } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { RadarChart } from 'echarts/charts'
-import { TooltipComponent, LegendComponent } from 'echarts/components'
+import { TooltipComponent, LegendComponent, RadarComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import { getOverview } from '../api'
 import { useDashboardStore } from '../stores/dashboard'
+import { useThemeStore } from '../stores/theme'
 import type { CompanyOverview } from '../types'
 import { type DimensionKey, DIMENSION_LABELS } from '../types'
 
-use([RadarChart, TooltipComponent, LegendComponent, CanvasRenderer])
+use([RadarChart, TooltipComponent, LegendComponent, RadarComponent, CanvasRenderer])
 
 const COMPANY_COLORS: Record<string, string> = {
   ASUS: '#00bcd4',
@@ -102,6 +103,7 @@ const COMPANY_COLORS: Record<string, string> = {
 const DEFAULT_COMPANIES = ['ASUS', 'NVIDIA', 'Google', 'Dell Technologies', 'HP Inc.', 'Acer']
 
 const store = useDashboardStore()
+const themeStore = useThemeStore()
 const companies = ref<CompanyOverview[]>([])
 const selectedCompanies = ref<string[]>([...DEFAULT_COMPANIES])
 const companyA = ref('ASUS')
@@ -122,31 +124,42 @@ const getRadarValue = (c: CompanyOverview, d: DimensionKey): number => {
   return val
 }
 
-const radarOption = computed(() => ({
-  backgroundColor: 'transparent',
-  tooltip: { trigger: 'item' },
-  legend: { show: false },
-  radar: {
-    indicator: DIMS.map(d => ({ name: DIMENSION_LABELS[d], max: 5, min: 2 })),
-    axisName: { color: '#A0A0A0', fontSize: 12 },
-    splitLine: { lineStyle: { color: '#2A2A2A' } },
-    splitArea: { show: false },
-    axisLine: { lineStyle: { color: '#333' } },
-    radius: '65%',
-  },
-  series: [{
-    type: 'radar',
-    data: visibleCompanies.value.map(c => ({
-      name: c.company,
-      value: DIMS.map(d => getRadarValue(c, d)),
-      lineStyle: { color: COMPANY_COLORS[c.company] ?? '#555', width: 2 },
-      areaStyle: { color: (COMPANY_COLORS[c.company] ?? '#555') + '18' },
-      itemStyle: { color: COMPANY_COLORS[c.company] ?? '#555' },
-      symbol: 'circle',
-      symbolSize: 5,
-    })),
-  }],
-}))
+const radarOption = computed(() => {
+  const isDark = themeStore.mode === 'dark'
+  const textColor = isDark ? '#A0A0A0' : '#606060'
+  const lineColor = isDark ? '#2A2A2A' : '#E0E0E0'
+
+  return {
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: isDark ? '#1A1A1A' : '#FFF',
+      borderColor: isDark ? '#2A2A2A' : '#E0E0E0',
+      textStyle: { color: isDark ? '#F5F5F5' : '#1A1A1A' },
+    },
+    legend: { show: false },
+    radar: {
+      indicator: DIMS.map(d => ({ name: DIMENSION_LABELS[d], max: 5, min: 2 })),
+      axisName: { color: textColor, fontSize: 12 },
+      splitLine: { lineStyle: { color: lineColor } },
+      splitArea: { show: false },
+      axisLine: { lineStyle: { color: lineColor } },
+      radius: '65%',
+    },
+    series: [{
+      type: 'radar',
+      data: visibleCompanies.value.map(c => ({
+        name: c.company,
+        value: DIMS.map(d => getRadarValue(c, d)),
+        lineStyle: { color: COMPANY_COLORS[c.company] ?? '#555', width: 2 },
+        areaStyle: { color: (COMPANY_COLORS[c.company] ?? '#555') + '18' },
+        itemStyle: { color: COMPANY_COLORS[c.company] ?? '#555' },
+        symbol: 'circle',
+        symbolSize: 5,
+      })),
+    }],
+  }
+})
 
 const gapData = computed(() => {
   const a = companies.value.find(c => c.company === companyA.value)

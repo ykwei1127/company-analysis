@@ -36,7 +36,7 @@ def get_overview(run: Optional[str] = Query(None)):
     result = []
     for _, row in global_df.iterrows():
         item = {
-            "company": row.get("company"),
+            "company": _safe_str(row, "company"),
             "overall": _safe_float(row, "overall"),
             "culture": _safe_float(row, "culture"),
             "wlb": _safe_float(row, "wlb"),
@@ -68,9 +68,9 @@ def get_overview_by_location(run: Optional[str] = Query(None)):
     result = []
     for _, row in df.iterrows():
         item = {
-            "company": row.get("company"),
-            "baseline_location": row.get("baseline_location", "Global"),
-            "country": row.get("country"),
+            "company": _safe_str(row, "company"),
+            "baseline_location": _safe_str(row, "baseline_location") or "Global",
+            "country": _safe_str(row, "country"),
             "overall": _safe_float(row, "overall"),
             "culture": _safe_float(row, "culture"),
             "wlb": _safe_float(row, "wlb"),
@@ -107,3 +107,13 @@ def _safe_int(row, col) -> Optional[int]:
         return int(float(val))
     except (ValueError, TypeError):
         return None
+
+
+def _safe_str(row, col) -> Optional[str]:
+    import math
+    val = row.get(col)
+    if val is None:
+        return None
+    if isinstance(val, float) and math.isnan(val):
+        return None
+    return str(val)

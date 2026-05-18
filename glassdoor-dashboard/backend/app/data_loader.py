@@ -82,10 +82,38 @@ def load_ratings(run_id: Optional[str] = None) -> pd.DataFrame:
     })
     df = df.rename(columns=rename_map)
 
-    # Ensure numeric columns
-    numeric_cols = list(DIM_COLS.keys()) + ["recommend", "ceo_approval", "total_reviews"]
+    # Parse company name: CSV may have "Dell Technologies - Global" format
+    if "company" in df.columns:
+        # Extract pure company name by removing " - Location" suffix
+        df["company"] = df["company"].apply(_extract_company_name)
+
+    # Clean percentage and comma formatting before numeric conversion
+    pct_cols = ["recommend", "ceo_approval"]
+    for col in pct_cols:
+        if col in df.columns:
+            df[col] = df[col].astype(str).str.replace("%", "", regex=False).str.strip()
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    if "total_reviews" in df.columns:
+        df["total_reviews"] = df["total_reviews"].astype(str).str.replace(",", "", regex=False).str.strip()
+        df["total_reviews"] = pd.to_numeric(df["total_reviews"], errors="coerce")
+
+    # Ensure other numeric columns
+    numeric_cols = list(DIM_COLS.keys())
     for col in numeric_cols:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
     return df
+
+
+def _extract_company_name(raw: str) -> str:
+    """Extract company name from 'Company - Location' format."""
+    if not isinstance(raw, str):
+        return str(raw)
+    # Split on " - " and take everything before the last " - "
+    # Handle cases like "Dell Technologies - Fremont, CA"
+    parts = raw.split(" - ")
+    if len(parts) >= 2:
+        return " - ".join(parts[:-1])
+    return raw
