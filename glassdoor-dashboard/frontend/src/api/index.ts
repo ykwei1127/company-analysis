@@ -13,3 +13,5 @@ export const startScraper = (ports: string, mode: string) => api.post('/scraper/
 export const stopScraper = () => api.post('/scraper/stop')
 export const checkLogin = (port: number) => api.get('/scraper/check-login', { params: { port } })
 export const getChromeStatus = () => api.get('/scraper/chrome-status')
+export const launchChrome = (port: number) => api.post('/scraper/launch-chrome', null, { params: { port } })
+export const closeAllChrome = () => api.post('/scraper/close-chrome')

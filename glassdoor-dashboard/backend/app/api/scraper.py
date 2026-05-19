@@ -21,7 +21,7 @@ _scraper_state = {
     "start_time": None,
 }
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
+PROJECT_ROOT = Path(__file__).resolve().parents[4]
 SCRAPER_SCRIPT = PROJECT_ROOT / "glassdoor_scraper_unified.py"
 
 
@@ -78,14 +78,18 @@ async def scraper_start(ports: str = "9222", mode: str = "matched"):
     _scraper_state["running"] = True
     _scraper_state["start_time"] = time.time()
 
-    # Build command
+    # Build command — always use manual mode (attach to existing Chrome)
     cmd = [
         sys.executable, str(SCRAPER_SCRIPT),
-        "--mode", mode,
+        "--mode", "manual",
+        "--task", mode,  # mode from frontend is actually the task type (matched/baseline)
         "--ports", ",".join(str(p) for p in port_list),
+        "--no-confirm",
     ]
 
-    # Launch process
+    # Launch process with UTF-8 encoding
+    env = os.environ.copy()
+    env["PYTHONUTF8"] = "1"
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
@@ -93,6 +97,9 @@ async def scraper_start(ports: str = "9222", mode: str = "matched"):
         text=True,
         bufsize=1,
         cwd=str(PROJECT_ROOT),
+        env=env,
+        encoding="utf-8",
+        errors="replace",
     )
     _scraper_state["process"] = proc
 
@@ -104,10 +111,19 @@ async def scraper_start(ports: str = "9222", mode: str = "matched"):
 
 @router.post("/scraper/stop")
 def scraper_stop():
-    """Stop the running scraper."""
+    """Stop the running scraper and all child processes (ChromeDriver etc.)."""
     proc = _scraper_state["process"]
     if proc and proc.poll() is None:
-        proc.terminate()
+        # Kill the entire process tree so ChromeDriver children are also terminated
+        try:
+            import psutil
+            parent = psutil.Process(proc.pid)
+            for child in parent.children(recursive=True):
+                child.kill()
+            parent.kill()
+        except Exception:
+            # Fallback: just terminate the main process
+            proc.kill()
         _scraper_state["logs"].append("[SYSTEM] Scraper terminated by user")
     _scraper_state["running"] = False
     _scraper_state["process"] = None
@@ -152,6 +168,79 @@ def chrome_status():
     for port in ports:
         results[port] = _is_port_open(port)
     return results
+
+
+@router.post("/scraper/close-chrome")
+def close_chrome():
+    """Close all Chrome debug instances launched by this dashboard."""
+    import psutil
+    closed = []
+    for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+        try:
+            if proc.info['name'] and 'chrome' in proc.info['name'].lower():
+                cmdline = proc.info.get('cmdline') or []
+                cmdline_str = ' '.join(cmdline)
+                if '--remote-debugging-port=' in cmdline_str:
+                    proc.kill()
+                    closed.append(proc.info['pid'])
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+    return {"status": "closed", "pids": closed}
+
+
+@router.post("/scraper/launch-chrome")
+def launch_chrome(port: int = 9222):
+    """Launch Chrome with remote debugging on the given port, navigating to Glassdoor ASUS page."""
+    if _is_port_open(port):
+        return {"status": "already_running", "message": f"Chrome already running on port {port}"}
+
+    chrome_path = _find_chrome_path()
+    if not chrome_path:
+        return {"status": "error", "message": "Chrome executable not found"}
+
+    # Find the actual ASUS Glassdoor URL from matched data
+    test_url = _get_asus_glassdoor_url()
+
+    user_data_dir = os.path.expandvars(r"%USERPROFILE%\selenium\ChromeProfile" + (str(port) if port != 9222 else ""))
+    cmd = [
+        chrome_path,
+        f"--remote-debugging-port={port}",
+        f"--user-data-dir={user_data_dir}",
+        test_url,
+    ]
+    try:
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return {"status": "launched", "message": f"Chrome launched on port {port} → Glassdoor ASUS page"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+def _get_asus_glassdoor_url() -> str:
+    """Get ASUS Glassdoor review URL from data files."""
+    import json
+    import glob
+    # Check both matched and locations files
+    patterns = [
+        str(PROJECT_ROOT / "data" / "asus_locations.json"),
+        str(PROJECT_ROOT / "data" / "*_matched.json"),
+    ]
+    files = []
+    for pat in patterns:
+        files.extend(glob.glob(pat))
+    for f in files:
+        try:
+            with open(f, 'r', encoding='utf-8') as fh:
+                data = json.load(fh)
+                if isinstance(data, list):
+                    for item in data:
+                        company = item.get('company', '') or ''
+                        if 'ASUS' in company.upper() or 'asus' in f.lower():
+                            url = item.get('url') or item.get('glassdoor_url', '')
+                            if url and 'glassdoor.com' in url:
+                                return url
+        except Exception:
+            continue
+    return "https://www.glassdoor.com/Reviews/ASUS-Reviews-E40093.htm"
 
 
 def _read_output(proc: subprocess.Popen):

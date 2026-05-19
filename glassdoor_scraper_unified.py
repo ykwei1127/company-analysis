@@ -32,6 +32,7 @@ class GlassdoorScraper:
             _log_fn: 可選的 logging 函式 (msg, end) → 供平行模式各 port 獨立記錄
         """
         self.mode = mode
+        self._port = chrome_debugger_port
         self._log = _log_fn if _log_fn else lambda msg='', end='\n': print(msg, end=end)
         chrome_options = Options()
         
@@ -49,7 +50,48 @@ class GlassdoorScraper:
         
         self.driver = webdriver.Chrome(options=chrome_options)
         self.wait = WebDriverWait(self.driver, 15)
-        
+
+    def _is_blocked(self):
+        """Check if the current page is a Cloudflare / 'Humans only' block page."""
+        try:
+            page_source = self.driver.page_source
+            indicators = ['Humans only', 'Just a moment', 'Checking your browser',
+                          'cf-challenge', 'cloudflare', 'Verify you are human']
+            return any(ind.lower() in page_source.lower() for ind in indicators)
+        except Exception:
+            return False
+
+    def _wait_if_blocked(self, context='', timeout=300):
+        """If Cloudflare block is detected, pause and wait for user to manually pass verification.
+
+        Returns:
+            True if page recovered (or was never blocked), False if timed out.
+        """
+        if not self._is_blocked():
+            return True
+        port = self._port
+        msg = f"[BLOCKED] Port {port} 被 Cloudflare 攔截（{context}），請手動通過驗證..."
+        self._log(msg)
+        print(msg, flush=True)
+        wait_count = 0
+        while self._is_blocked():
+            time.sleep(10)
+            wait_count += 1
+            elapsed = wait_count * 10
+            if elapsed >= timeout:
+                msg = f"[BLOCKED] Port {port} 超過 {timeout}s 未恢復，暫停此 port，任務轉移給其他 port"
+                self._log(msg)
+                print(msg, flush=True)
+                return False
+            if wait_count % 6 == 0:
+                msg = f"[BLOCKED] Port {port} 仍被攔截，已等待 {elapsed}s..."
+                self._log(msg)
+                print(msg, flush=True)
+        msg = f"[BLOCKED] Port {port} 已恢復，繼續抓取"
+        self._log(msg)
+        print(msg, flush=True)
+        return True
+
     def extract_rating_data(self, url, company_name):
         """
         從 Glassdoor 頁面提取評分數據
@@ -67,6 +109,11 @@ class GlassdoorScraper:
         
         try:
             self.driver.get(url)
+
+            # 偵測 Cloudflare / "Humans only" 攔截頁面
+            if not self._wait_if_blocked(company_name):
+                # Timed out — return sentinel so caller can stop this port
+                return 'BLOCKED_TIMEOUT'
 
             # 等 Overall 評分出現（最多 8 秒），取代固定 sleep(5)
             data = {
@@ -229,6 +276,8 @@ class GlassdoorScraper:
                 country = entry.get('baseline_country')
                 display_name = f"{company} - {baseline_loc}"
                 data = self.extract_rating_data(url, display_name)
+                if data == 'BLOCKED_TIMEOUT':
+                    return 'BLOCKED_TIMEOUT'
                 sleep_sec = 0.5
                 if data:
                     data['Baseline Location'] = baseline_loc
@@ -281,6 +330,8 @@ class GlassdoorScraper:
 
             display_name = f"{company_name} - {baseline_loc}"
             data = self.extract_rating_data(url, display_name)
+            if data == 'BLOCKED_TIMEOUT':
+                return 'BLOCKED_TIMEOUT'
             sleep_sec = 0.5
             if data:
                 data['Baseline Location'] = baseline_loc
@@ -370,14 +421,14 @@ class GlassdoorScraper:
             pass
 
 
-def _worker(port, tasks, mode, headless, log_path=None, _progress=None):
+def _worker(port, task_queue, mode, headless, log_path=None, _progress=None):
     """
-    單一執行緒的工作函式，負責一個 Chrome port 的所有任務。
-    輸出收集到獨立 buffer，不修改全域 sys.stdout，避免多 thread 交錯。
+    單一執行緒的工作函式，從共享 task_queue 取任務。
+    若被 Cloudflare 攔截超時，剩餘任務留在 queue 給其他 port。
 
     Args:
         port: Chrome debug port
-        tasks: list of dict，每筆含 type('baseline'|'matched'), 以及對應參數
+        task_queue: queue.Queue，共享任務佇列
         mode: scraper mode
         headless: bool
         log_path: 此 port 專屬的 log 路徑，None 則不寫檔
@@ -388,8 +439,9 @@ def _worker(port, tasks, mode, headless, log_path=None, _progress=None):
     """
     import io
     import threading
+    import queue
 
-    buf = io.StringIO()  # 仍保留一份給最後合併主 log 用
+    buf = io.StringIO()
     _lock = threading.Lock()
     _log_file = None
 
@@ -403,19 +455,23 @@ def _worker(port, tasks, mode, headless, log_path=None, _progress=None):
             buf.write(s)
             if _log_file:
                 _log_file.write(s)
-                _log_file.flush()  # 即時 flush 到磁碟
+                _log_file.flush()
 
     scraper = GlassdoorScraper(mode=mode, headless=headless,
                                chrome_debugger_port=port, _log_fn=_log)
     results = []
+    blocked_out = False
     try:
-        total = len(tasks)
-        for i, task in enumerate(tasks):
-            # 更新進度
+        while True:
+            try:
+                task = task_queue.get_nowait()
+            except queue.Empty:
+                break
+
             task_name = task.get('company_name', task.get('file', 'unknown'))
             if task.get('location_filter'):
                 task_name += f" [{task['location_filter']}]"
-            # 定義 progress callback，每筆 entry 完成後更新 _progress
+
             def _progress_fn(entry_name):
                 if _progress is not None:
                     with threading.Lock():
@@ -423,40 +479,57 @@ def _worker(port, tasks, mode, headless, log_path=None, _progress=None):
                         _progress[port]['current'] = entry_name
 
             if task['type'] == 'baseline':
-                results += scraper.scrape_from_baseline_json(
+                data = scraper.scrape_from_baseline_json(
                     task['file'], task['company_name'],
                     location_filter=task.get('location_filter'),
                     _progress_fn=_progress_fn
                 )
             elif task['type'] == 'matched':
-                results += scraper.scrape_from_matched_json([task['file']], _progress_fn=_progress_fn)
+                data = scraper.scrape_from_matched_json([task['file']], _progress_fn=_progress_fn)
+            else:
+                data = []
+
+            # Check if scraper hit a block timeout (sentinel returned inside results)
+            if data == 'BLOCKED_TIMEOUT' or (isinstance(data, list) and 'BLOCKED_TIMEOUT' in data):
+                # Put this task back in the queue for other ports
+                task_queue.put(task)
+                _log(f"[BLOCKED] Port {port} 任務 {task_name} 已放回佇列")
+                print(f"[BLOCKED] Port {port} 任務 {task_name} 已放回佇列", flush=True)
+                blocked_out = True
+                break
+
+            if isinstance(data, list):
+                results += data
+
+            task_queue.task_done()
 
     finally:
         scraper.close()
         if _log_file:
             _log_file.close()
-        # 標記完成
         if _progress is not None:
             with threading.Lock():
                 _progress[port]['finished'] = True
+                if blocked_out:
+                    _progress[port]['blocked'] = True
     return results
 
 
 def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                     mode='manual', headless=False, log_ts=None):
     """
-    將任務平均分配給多個 Chrome port 並平行執行。
-    每個 port 獨立寫 log，完成後合並到主 log。
+    使用共享任務佇列讓多個 Chrome port 平行執行。
+    被 Cloudflare 攔截超時的 port 會停止，剩餘任務由其他 port 接手。
 
     Returns:
         list of dict
     """
     import threading
+    import queue as queue_mod
 
     tasks_all = []
 
     if include_baseline and os.path.exists(baseline_file):
-        # 把 ASUS baseline 拆成每個地區一個 task，分散分配避免照成瓶頃
         with open(baseline_file, encoding='utf-8') as _f:
             _entries = json.load(_f)
         for _e in _entries:
@@ -474,23 +547,19 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
     if not tasks_all:
         return []
 
-    # 平均分配到各 port
-    buckets = [[] for _ in ports]
-    for i, task in enumerate(tasks_all):
-        buckets[i % len(ports)].append(task)
+    # Shared task queue
+    task_queue = queue_mod.Queue()
+    for task in tasks_all:
+        task_queue.put(task)
 
     ts = log_ts or ''
     port_logs = {port: f'logs/run_{ts}_port{port}.txt' for port in ports}
 
-    # 進度追蹤（空 bucket 直接標記完成）
+    # 進度追蹤
     _progress = {}
-    for port, bucket in zip(ports, buckets):
-        if bucket:
-            _progress[port] = {'completed': 0, 'current': 'init', 'finished': False}
-        else:
-            _progress[port] = {'completed': 0, 'current': '-', 'finished': True}
+    for port in ports:
+        _progress[port] = {'completed': 0, 'current': 'init', 'finished': False, 'blocked': False}
 
-    # 總任務數（先不精確計算，用一個預估值或動態更新）
     total_tasks = len(tasks_all) * 10  # 粗略估計每個 task 平均 10 筆 entries
 
     total_start = time.time()
@@ -509,7 +578,9 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
         parts = []
         for port in sorted(_progress.keys()):
             p = _progress[port]
-            if p['finished']:
+            if p.get('blocked'):
+                parts.append(f"P{port}:BLOCKED({p['completed']})")
+            elif p['finished']:
                 parts.append(f"P{port}:OK({p['completed']})")
             else:
                 parts.append(f"P{port}:{p['completed']}")
@@ -517,8 +588,8 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
 
     executor = ThreadPoolExecutor(max_workers=len(ports))
     futures = {
-        executor.submit(_worker, port, bucket, mode, headless, port_logs[port], _progress): port
-        for port, bucket in zip(ports, buckets) if bucket
+        executor.submit(_worker, port, task_queue, mode, headless, port_logs[port], _progress): port
+        for port in ports
     }
 
     try:
@@ -531,7 +602,9 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                         data = f.result()
                         all_data += data
                         port_counts[port] = len(data)
-                        print(f"[DONE] Port {port} completed {len(data)} entries  log: {port_logs[port]}", flush=True)
+                        blocked = _progress[port].get('blocked', False)
+                        status = "BLOCKED-OUT" if blocked else "completed"
+                        print(f"[DONE] Port {port} {status} {len(data)} entries  log: {port_logs[port]}", flush=True)
                     except Exception as e:
                         print(f"[ERROR] Port {port} error: {e}", flush=True)
                     done_futures.append(f)
@@ -539,6 +612,12 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
 
             for f in done_futures:
                 del futures[f]
+
+            # If there are still tasks in queue but all workers are done, some ports blocked out.
+            # Check if we should report remaining tasks.
+            if not futures and not task_queue.empty():
+                remaining = task_queue.qsize()
+                print(f"[WARN] {remaining} tasks remaining in queue but all ports stopped (blocked). These tasks were not completed.", flush=True)
 
             _print_progress()
 
@@ -587,7 +666,10 @@ class TeeLogger:
         _sys.stdout = self
 
     def write(self, message):
-        self._terminal.write(message)
+        try:
+            self._terminal.write(message)
+        except UnicodeEncodeError:
+            self._terminal.write(message.encode(self._terminal.encoding or 'utf-8', errors='replace').decode(self._terminal.encoding or 'utf-8', errors='replace'))
         self._file.write(message)
 
     def flush(self):
@@ -648,7 +730,16 @@ def load_config():
 
 def main():
     import glob
+    import argparse
     from datetime import datetime
+
+    parser = argparse.ArgumentParser(description='Glassdoor Scraper')
+    parser.add_argument('--mode', choices=['manual', 'auto'], default=None, help='Chrome connection mode (manual=attach to existing, auto=launch new)')
+    parser.add_argument('--task', choices=['matched', 'baseline'], default=None, help='Scraping task type')
+    parser.add_argument('--ports', default=None, help='Comma-separated Chrome debug ports')
+    parser.add_argument('--no-confirm', action='store_true', help='Skip interactive confirmation prompt')
+    args = parser.parse_args()
+
     _main_start = time.time()
     _ts = datetime.now().strftime('%Y%m%d_%H%M')
     _log_txt = f'logs/run_{_ts}.txt'
@@ -660,7 +751,8 @@ def main():
     config = load_config()
     scraper_config = getattr(config, 'SCRAPER_CONFIG', {}) if config else {}
     output_config = getattr(config, 'OUTPUT_CONFIG', {}) if config else {}
-    mode = scraper_config.get('mode', 'manual')
+    mode = args.mode or scraper_config.get('mode', 'manual')
+    task = args.task or 'matched'  # matched or baseline
     headless = scraper_config.get('headless', False)
     _base_output = output_config.get('filename', 'data/glassdoor_ratings.xlsx')
     _stem, _ext = os.path.splitext(_base_output)
@@ -669,7 +761,7 @@ def main():
     # 優先使用 data/*_matched.json（company_finder 產生的結果）
     matched_files = sorted(glob.glob('data/*_matched.json'))
 
-    if mode == 'manual':
+    if mode == 'manual' and not args.no_confirm:
         print("\n" + "="*60)
         print("手動模式 - 使用已登入的 Chrome")
         print("="*60)
@@ -680,9 +772,13 @@ def main():
         print("準備好後按 Enter 繼續...")
         input()
 
-    include_baseline = getattr(config, 'INCLUDE_BASELINE', False) if config else False
+    include_baseline = (task == 'baseline') or (getattr(config, 'INCLUDE_BASELINE', False) if config else False)
     baseline_file = 'data/asus_locations.json'
-    parallel_ports = getattr(config, 'PARALLEL_PORTS', []) if config else []
+    # CLI --ports overrides config
+    if args.ports:
+        parallel_ports = [int(p.strip()) for p in args.ports.split(',')]
+    else:
+        parallel_ports = getattr(config, 'PARALLEL_PORTS', []) if config else []
 
     # 單一 port 或空清單 → 單一模式；多個 port → 平行模式
     use_parallel = len(parallel_ports) > 1

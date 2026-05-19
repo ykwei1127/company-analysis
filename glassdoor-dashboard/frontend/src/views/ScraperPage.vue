@@ -9,14 +9,17 @@
         <div v-for="(open, port) in chromeStatus" :key="port" class="port-status">
           <span class="port-label">Port {{ port }}</span>
           <el-tag :type="open ? 'success' : 'danger'" size="small">{{ open ? 'Connected' : 'Offline' }}</el-tag>
+          <el-button v-if="!open" size="small" type="primary" plain @click="handleLaunchChrome(Number(port))" :loading="launchingPort === Number(port)">Launch</el-button>
         </div>
         <el-button size="small" @click="refreshChromeStatus" :loading="checkingChrome">Refresh</el-button>
+        <el-button size="small" type="primary" @click="handleLaunchAll" :loading="launchingAll" :disabled="offlinePorts.length === 0">Launch All</el-button>
+        <el-button size="small" type="danger" plain @click="handleCloseAll" :loading="closingAll" :disabled="connectedPorts.length === 0">Close All</el-button>
       </div>
 
       <!-- Login check -->
-      <div class="login-status" v-if="loginResult">
-        <el-tag :type="loginResult.logged_in ? 'success' : 'warning'" size="small">
-          {{ loginResult.message || loginResult.error || 'Unknown' }}
+      <div class="login-status" v-if="loginResults.length > 0">
+        <el-tag v-for="r in loginResults" :key="r.port" :type="r.logged_in ? 'success' : 'warning'" size="small" style="margin-right: 8px">
+          {{ r.message }}
         </el-tag>
       </div>
     </el-card>
@@ -27,7 +30,11 @@
       <div class="scraper-controls">
         <div class="control-group">
           <label>Ports:</label>
-          <el-input v-model="ports" size="small" style="width: 160px" placeholder="9222,9223" />
+          <el-checkbox-group v-model="selectedPorts" size="small">
+            <el-checkbox v-for="port in ALL_PORTS" :key="port" :label="port" :value="port" :disabled="!chromeStatus[port]">
+              {{ port }}
+            </el-checkbox>
+          </el-checkbox-group>
         </div>
         <div class="control-group">
           <label>Mode:</label>
@@ -36,9 +43,9 @@
             <el-option label="Baseline" value="baseline" />
           </el-select>
         </div>
-        <el-button type="primary" size="small" @click="handleStart" :loading="starting" :disabled="isRunning">Start</el-button>
+        <el-button type="primary" size="small" @click="handleStart" :loading="starting" :disabled="isRunning || selectedPorts.length === 0">Start</el-button>
         <el-button type="danger" size="small" @click="handleStop" :disabled="!isRunning">Stop</el-button>
-        <el-button size="small" @click="checkLoginStatus">Check Login</el-button>
+        <el-button size="small" @click="checkLoginStatus" :disabled="selectedPorts.length === 0">Check Login</el-button>
       </div>
     </el-card>
 
@@ -52,8 +59,19 @@
         </div>
       </template>
 
+      <!-- Blocked alert -->
+      <el-alert v-if="blockedPorts.length > 0" type="error" :closable="false" show-icon style="margin-bottom: 12px">
+        <template #title>
+          Port {{ blockedPorts.join(', ') }} 被 Cloudflare 攔截！請到 Chrome 視窗手動通過驗證，通過後爬蟲會自動繼續。
+        </template>
+      </el-alert>
+
       <!-- Progress bar -->
-      <el-progress v-if="progressPercent > 0" :percentage="progressPercent" :status="progressStatus" :stroke-width="8" style="margin-bottom: 12px" />
+      <el-progress v-if="progressPercent > 0" :percentage="progressPercent" :status="progressStatus" :stroke-width="8" style="margin-bottom: 8px" />
+      <div v-if="isRunning && progressPercent > 0" class="time-info">
+        <span>Elapsed: {{ elapsedStr }}</span>
+        <span v-if="etaStr">ETA: {{ etaStr }}</span>
+      </div>
 
       <!-- Log output -->
       <div class="log-container" ref="logContainer">
@@ -67,28 +85,42 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus } from '../api'
+import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus, launchChrome, closeAllChrome } from '../api'
 
-const ports = ref('9222')
+const ALL_PORTS = [9222, 9223, 9224]
+const selectedPorts = ref<number[]>([9222])
 const mode = ref('matched')
 const isRunning = ref(false)
 const starting = ref(false)
 const logs = ref<string[]>([])
 const chromeStatus = ref<Record<number, boolean>>({})
 const checkingChrome = ref(false)
-const loginResult = ref<{ logged_in: boolean; message?: string; error?: string } | null>(null)
+const launchingPort = ref<number | null>(null)
+const launchingAll = ref(false)
+const offlinePorts = computed(() => ALL_PORTS.filter(p => !chromeStatus.value[p]))
+const connectedPorts = computed(() => ALL_PORTS.filter(p => chromeStatus.value[p]))
+const closingAll = ref(false)
+const loginResults = ref<{ port: number; logged_in: boolean; message: string }[]>([])
 const logContainer = ref<HTMLElement | null>(null)
 const autoScroll = ref(true)
 let pollTimer: ReturnType<typeof setInterval> | null = null
+const startTime = ref<number>(0)
+const elapsedSeconds = ref(0)
+let elapsedTimer: ReturnType<typeof setInterval> | null = null
 
 const visibleLogLines = computed(() => logs.value.slice(-200))
 
-const progressPercent = computed(() => {
+const progressInfo = computed(() => {
   for (let i = logs.value.length - 1; i >= 0; i--) {
     const m = logs.value[i].match(/\[PROGRESS\]\s*(\d+)\/(\d+)/)
-    if (m) return Math.round((parseInt(m[1]) / parseInt(m[2])) * 100)
+    if (m) return { current: parseInt(m[1]), total: parseInt(m[2]) }
   }
-  return 0
+  return { current: 0, total: 0 }
+})
+
+const progressPercent = computed(() => {
+  const { current, total } = progressInfo.value
+  return total > 0 ? Math.round((current / total) * 100) : 0
 })
 
 const progressStatus = computed(() => {
@@ -96,12 +128,84 @@ const progressStatus = computed(() => {
   return '' as const
 })
 
+const elapsedStr = computed(() => formatDuration(elapsedSeconds.value))
+
+const etaStr = computed(() => {
+  const { current, total } = progressInfo.value
+  if (current <= 0 || elapsedSeconds.value <= 0) return ''
+  const rate = elapsedSeconds.value / current
+  const remaining = Math.round(rate * (total - current))
+  return formatDuration(remaining)
+})
+
+function formatDuration(sec: number): string {
+  const h = Math.floor(sec / 3600)
+  const m = Math.floor((sec % 3600) / 60)
+  const s = sec % 60
+  if (h > 0) return `${h}h ${m}m ${s}s`
+  if (m > 0) return `${m}m ${s}s`
+  return `${s}s`
+}
+
+const blockedPorts = computed(() => {
+  const ports = new Set<string>()
+  // Check last 50 lines for active blocks
+  const recent = logs.value.slice(-50)
+  for (const line of recent) {
+    const m = line.match(/\[BLOCKED\] Port (\S+) 被/)
+    if (m) ports.add(m[1])
+    const r = line.match(/\[BLOCKED\] Port (\S+) 已恢復/)
+    if (r) ports.delete(r[1])
+  }
+  return Array.from(ports)
+})
+
 const logClass = (line: string) => {
+  if (line.includes('[BLOCKED]')) return 'log-blocked'
   if (line.includes('[ERROR]') || line.includes('Error')) return 'log-error'
   if (line.includes('[WARN]') || line.includes('Warning')) return 'log-warn'
   if (line.includes('[PROGRESS]')) return 'log-progress'
   if (line.includes('[DONE]') || line.includes('completed')) return 'log-success'
   return ''
+}
+
+async function handleLaunchChrome(port: number) {
+  launchingPort.value = port
+  try {
+    await launchChrome(port)
+    await new Promise(r => setTimeout(r, 2000))
+    await refreshChromeStatus()
+    autoSelectConnected()
+  } catch { /* ignore */ }
+  launchingPort.value = null
+}
+
+async function handleLaunchAll() {
+  launchingAll.value = true
+  try {
+    for (const port of offlinePorts.value) {
+      await launchChrome(port)
+    }
+    await new Promise(r => setTimeout(r, 3000))
+    await refreshChromeStatus()
+    autoSelectConnected()
+  } catch { /* ignore */ }
+  launchingAll.value = false
+}
+
+async function handleCloseAll() {
+  closingAll.value = true
+  try {
+    await closeAllChrome()
+    await new Promise(r => setTimeout(r, 2000))
+    await refreshChromeStatus()
+    autoSelectConnected()
+  } catch { /* ignore */ }
+  closingAll.value = false
+}
+
+function autoSelectConnected() {
+  selectedPorts.value = ALL_PORTS.filter(p => chromeStatus.value[p])
 }
 
 async function refreshChromeStatus() {
@@ -114,24 +218,31 @@ async function refreshChromeStatus() {
 }
 
 async function checkLoginStatus() {
-  const portNum = parseInt(ports.value.split(',')[0])
-  try {
-    const { data } = await checkLogin(portNum)
-    loginResult.value = data
-  } catch (e: any) {
-    loginResult.value = { logged_in: false, error: e.message }
+  if (selectedPorts.value.length === 0) return
+  loginResults.value = []
+  for (const port of selectedPorts.value) {
+    try {
+      const { data } = await checkLogin(port)
+      loginResults.value.push({ port, logged_in: data.logged_in, message: data.message || data.error || `Port ${port}: Unknown` })
+    } catch (e: any) {
+      loginResults.value.push({ port, logged_in: false, message: `Port ${port}: ${e.message}` })
+    }
   }
 }
 
 async function handleStart() {
   starting.value = true
   try {
-    const { data } = await startScraper(ports.value, mode.value)
+    const portsStr = selectedPorts.value.join(',')
+    const { data } = await startScraper(portsStr, mode.value)
     if (data.error) {
       logs.value = [data.error]
     } else {
       isRunning.value = true
       logs.value = []
+      startTime.value = Date.now()
+      elapsedSeconds.value = 0
+      startElapsedTimer()
       startPolling()
     }
   } catch (e: any) {
@@ -145,6 +256,7 @@ async function handleStop() {
     await stopScraper()
     isRunning.value = false
     stopPolling()
+    stopElapsedTimer()
   } catch { /* ignore */ }
 }
 
@@ -155,7 +267,7 @@ function startPolling() {
       const { data } = await getScraperStatus()
       logs.value = data.logs
       isRunning.value = data.running
-      if (!data.running) stopPolling()
+      if (!data.running) { stopPolling(); stopElapsedTimer() }
       if (autoScroll.value) {
         nextTick(() => {
           if (logContainer.value) logContainer.value.scrollTop = logContainer.value.scrollHeight
@@ -169,19 +281,36 @@ function stopPolling() {
   if (pollTimer) { clearInterval(pollTimer); pollTimer = null }
 }
 
-onMounted(() => {
-  refreshChromeStatus()
+function startElapsedTimer() {
+  stopElapsedTimer()
+  elapsedTimer = setInterval(() => {
+    elapsedSeconds.value = Math.round((Date.now() - startTime.value) / 1000)
+  }, 1000)
+}
+
+function stopElapsedTimer() {
+  if (elapsedTimer) { clearInterval(elapsedTimer); elapsedTimer = null }
+}
+
+onMounted(async () => {
+  await refreshChromeStatus()
+  // Auto-select connected ports
+  selectedPorts.value = ALL_PORTS.filter(p => chromeStatus.value[p])
   // Check if scraper already running
   getScraperStatus().then(({ data }) => {
     if (data.running) {
       isRunning.value = true
       logs.value = data.logs
+      // Restore start time from backend
+      startTime.value = data.start_time ? data.start_time * 1000 : Date.now()
+      elapsedSeconds.value = Math.round((Date.now() - startTime.value) / 1000)
+      startElapsedTimer()
       startPolling()
     }
   }).catch(() => {})
 })
 
-onUnmounted(stopPolling)
+onUnmounted(() => { stopPolling(); stopElapsedTimer() })
 </script>
 
 <style scoped>
@@ -196,6 +325,8 @@ onUnmounted(stopPolling)
 .scraper-controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .control-group { display: flex; align-items: center; gap: 6px; }
 .control-group label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
+
+.time-info { display: flex; gap: 24px; font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
 
 .log-container {
   max-height: 400px;
@@ -213,4 +344,5 @@ onUnmounted(stopPolling)
 .log-warn { color: #e6a23c; }
 .log-progress { color: #67c23a; }
 .log-success { color: #67c23a; font-weight: 600; }
+.log-blocked { color: #f56c6c; font-weight: 600; background: rgba(245,108,108,0.1); padding: 2px 4px; border-radius: 3px; }
 </style>

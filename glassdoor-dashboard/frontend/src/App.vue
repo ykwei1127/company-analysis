@@ -5,16 +5,16 @@
       <div class="sidebar-brand">Glassdoor</div>
       <nav class="sidebar-nav">
         <router-link to="/overview" class="nav-item" active-class="active">
-          <span class="nav-icon">&#9776;</span> Overview
+          <el-icon class="nav-icon"><DataBoard /></el-icon> Overview
         </router-link>
         <router-link to="/comparison" class="nav-item" active-class="active">
-          <span class="nav-icon">&#8644;</span> Comparison
+          <el-icon class="nav-icon"><TrendCharts /></el-icon> Comparison
         </router-link>
         <router-link to="/locations" class="nav-item" active-class="active">
-          <span class="nav-icon">&#9873;</span> Locations
+          <el-icon class="nav-icon"><Location /></el-icon> Locations
         </router-link>
         <router-link to="/scraper" class="nav-item" active-class="active">
-          <span class="nav-icon">&#9881;</span> Scraper
+          <el-icon class="nav-icon"><Monitor /></el-icon> Scraper
         </router-link>
       </nav>
     </aside>
@@ -24,7 +24,20 @@
       <header class="top-bar">
         <h2 class="app-title">Glassdoor Multi-Company Dashboard</h2>
         <div class="header-right">
-          <span class="header-quarter">{{ currentQuarter }}</span>
+          <el-select
+            :model-value="dashboardStore.selectedRunId"
+            @change="(val: string) => dashboardStore.selectRun(val)"
+            placeholder="Select run"
+            size="small"
+            style="width: 180px"
+          >
+            <el-option
+              v-for="run in dashboardStore.runs"
+              :key="run.id"
+              :label="run.label"
+              :value="run.id"
+            />
+          </el-select>
           <button class="gear-btn" @click="themeStore.toggle()" :title="themeStore.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">&#9881;</button>
         </div>
       </header>
@@ -36,18 +49,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { DataBoard, TrendCharts, Location, Monitor } from '@element-plus/icons-vue'
 import { useDashboardStore } from './stores/dashboard'
 import { useThemeStore } from './stores/theme'
 
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
-
-const currentQuarter = computed(() => {
-  const now = new Date()
-  const q = Math.ceil((now.getMonth() + 1) / 3)
-  return `${now.getFullYear()} Q${q}`
-})
 
 onMounted(() => {
   dashboardStore.fetchRuns()
@@ -158,7 +166,6 @@ html, body, #app {
 
 .app-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
 .header-right { display: flex; align-items: center; gap: 12px; }
-.header-quarter { font-size: 13px; color: var(--text-secondary); }
 .gear-btn {
   background: none;
   border: none;
@@ -175,8 +182,21 @@ html, body, #app {
 /* Element Plus overrides using CSS vars */
 .el-card { background: var(--bg-card) !important; border-color: var(--border-color) !important; color: var(--text-primary) !important; transition: background 0.3s; }
 .el-card__header { border-bottom-color: var(--border-color) !important; color: var(--text-primary) !important; }
-.el-table { --el-table-bg-color: var(--bg-card); --el-table-tr-bg-color: var(--bg-card); --el-table-header-bg-color: var(--bg-secondary); --el-table-border-color: var(--border-color); --el-table-text-color: var(--text-primary); --el-table-header-text-color: var(--text-secondary); }
-.el-table .el-table__row:hover > td { background: var(--bg-card-hover) !important; }
+.el-table {
+  --el-table-bg-color: var(--bg-card);
+  --el-table-tr-bg-color: var(--bg-card);
+  --el-table-header-bg-color: var(--bg-secondary);
+  --el-table-border-color: var(--border-color);
+  --el-table-text-color: var(--text-primary);
+  --el-table-header-text-color: var(--text-secondary);
+  --el-table-row-hover-bg-color: var(--bg-card-hover);
+  --el-table-current-row-bg-color: var(--bg-card-hover);
+  --el-fill-color-lighter: var(--bg-secondary);
+}
+.el-table th.el-table__cell { background-color: var(--bg-secondary) !important; }
+.el-table td.el-table__cell { background-color: var(--bg-card) !important; }
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell { background-color: var(--bg-secondary) !important; }
+.el-table .el-table__row:hover > td.el-table__cell { background-color: var(--bg-card-hover) !important; }
 .el-select { --el-fill-color-blank: var(--bg-card); --el-text-color-regular: var(--text-primary); --el-border-color: var(--border-color); }
 .el-tag { border-color: var(--border-color); }
 .el-input__wrapper { background-color: var(--bg-card) !important; box-shadow: 0 0 0 1px var(--border-color) inset !important; }
