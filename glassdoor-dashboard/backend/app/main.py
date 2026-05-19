@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import overview, ratings, scraper
+from app.api import overview, ratings, scraper, settings
 
 app = FastAPI(title="Glassdoor Dashboard API")
 
@@ -16,6 +16,7 @@ app.add_middleware(
 app.include_router(overview.router, prefix="/api")
 app.include_router(ratings.router, prefix="/api")
 app.include_router(scraper.router, prefix="/api")
+app.include_router(settings.router, prefix="/api")
 
 
 @app.get("/api/health")

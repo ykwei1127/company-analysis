@@ -12,6 +12,7 @@ const routes = [
   { path: '/comparison', component: () => import('./views/ComparisonPage.vue') },
   { path: '/locations', component: () => import('./views/LocationPage.vue') },
   { path: '/scraper', component: () => import('./views/ScraperPage.vue') },
+  { path: '/settings', component: () => import('./views/SettingsPage.vue') },
 ]
 
 const router = createRouter({

@@ -16,6 +16,9 @@
         <router-link to="/scraper" class="nav-item" active-class="active">
           <el-icon class="nav-icon"><Monitor /></el-icon> Scraper
         </router-link>
+        <router-link to="/settings" class="nav-item" active-class="active">
+          <el-icon class="nav-icon"><Setting /></el-icon> Settings
+        </router-link>
       </nav>
     </aside>
 
@@ -50,7 +53,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { DataBoard, TrendCharts, Location, Monitor } from '@element-plus/icons-vue'
+import { DataBoard, TrendCharts, Location, Monitor, Setting } from '@element-plus/icons-vue'
 import { useDashboardStore } from './stores/dashboard'
 import { useThemeStore } from './stores/theme'
 
@@ -201,4 +204,11 @@ html, body, #app {
 .el-tag { border-color: var(--border-color); }
 .el-input__wrapper { background-color: var(--bg-card) !important; box-shadow: 0 0 0 1px var(--border-color) inset !important; }
 .el-input__inner { color: var(--text-primary) !important; }
+.el-tabs__nav-wrap::after { background-color: var(--border-color) !important; }
+.el-tabs__item { color: var(--text-secondary) !important; font-size: 14px; }
+.el-tabs__item.is-active { color: var(--accent-blue-light) !important; }
+.el-tabs__item:hover { color: var(--text-primary) !important; }
+.el-tabs__active-bar { background-color: var(--accent-blue) !important; }
+.el-tabs__content { color: var(--text-primary) !important; padding-top: 16px; }
+.el-divider { border-top-color: var(--border-color) !important; }
 </style>

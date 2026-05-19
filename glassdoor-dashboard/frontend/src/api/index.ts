@@ -15,3 +15,17 @@ export const checkLogin = (port: number) => api.get('/scraper/check-login', { pa
 export const getChromeStatus = () => api.get('/scraper/chrome-status')
 export const launchChrome = (port: number) => api.post('/scraper/launch-chrome', null, { params: { port } })
 export const closeAllChrome = () => api.post('/scraper/close-chrome')
+
+// Settings
+export const getConfig = () => api.get('/settings/config')
+export const updateConfig = (payload: any) => api.post('/settings/config', payload)
+export const getCompanies = () => api.get('/settings/companies')
+export const removeCompany = (filename: string) => api.delete(`/settings/companies/${filename}`)
+export const getCompaniesToMatch = () => api.get('/settings/companies-to-match')
+export const addCompanyToMatch = (name: string) => api.post('/settings/companies-to-match/add', null, { params: { name } })
+export const removeCompanyToMatch = (name: string) => api.post('/settings/companies-to-match/remove', null, { params: { name } })
+export const getBaseline = () => api.get('/settings/baseline')
+export const runFinderMatch = () => api.post('/settings/finder/match')
+export const runFinderExplore = () => api.post('/settings/finder/explore')
+export const getFinderStatus = () => api.get('/settings/finder/status')
+export const stopFinder = () => api.post('/settings/finder/stop')
