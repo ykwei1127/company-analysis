@@ -5,16 +5,62 @@
     <el-tabs v-model="activeTab">
       <!-- Tab 1: Companies -->
       <el-tab-pane label="Companies" name="companies">
-        <!-- Company Finder -->
+        <!-- Step 1: Baseline Management -->
         <div class="section">
           <div class="section-header">
-            <h3 class="section-title">Company Finder</h3>
-            <div>
-              <el-button size="small" type="primary" @click="handleMatch" :loading="finderRunning" :disabled="finderRunning">Run Match</el-button>
-              <el-button size="small" @click="handleExplore" :loading="finderRunning" :disabled="finderRunning">Run Explore</el-button>
-              <el-button size="small" type="danger" plain @click="handleStopFinder" :disabled="!finderRunning">Stop</el-button>
+            <h3 class="section-title">Step 1: Baseline Setup</h3>
+            <el-tag v-if="baselineExists" type="success" size="small">Ready</el-tag>
+            <el-tag v-else type="warning" size="small">Missing</el-tag>
+          </div>
+          <p style="font-size: 13px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+            Create baseline location list (usually ASUS). Run once. All companies will be matched against this baseline.
+          </p>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <el-button
+              size="small"
+              @click="handleExplore"
+              :loading="finderRunning && currentTask === 'explore'"
+              :disabled="finderRunning"
+            >
+              <el-icon><Refresh /></el-icon> Run Explore (Create Baseline)
+            </el-button>
+            <el-button size="small" text @click="activeTab = 'baseline'">View Baseline →</el-button>
+          </div>
+        </div>
+
+        <el-divider />
+
+        <!-- Step 2: Match Companies -->
+        <div class="section">
+          <div class="section-header">
+            <h3 class="section-title">Step 2: Match Companies</h3>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <el-select v-model="matchMode" size="small" style="width: 110px">
+                <el-option value="country" label="Country Mode" />
+                <el-option value="city" label="City Mode" />
+              </el-select>
+              <el-button
+                size="small"
+                type="primary"
+                @click="handleMatch"
+                :loading="finderRunning && currentTask === 'match'"
+                :disabled="finderRunning || !baselineExists"
+              >
+                Run Match
+              </el-button>
+              <el-button
+                size="small"
+                type="danger"
+                plain
+                @click="handleStopFinder"
+                :disabled="!finderRunning"
+              >Stop</el-button>
             </div>
           </div>
+          <p style="font-size: 13px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+            <strong>Country Mode:</strong> Uses country-level IN codes. Fast and consistent comparison baseline (recommended)<br>
+            <strong>City Mode:</strong> Finds city-level reviews in same country. May mismatch due to different cities
+          </p>
 
           <div class="finder-info">
             <p><strong>Companies to Match:</strong></p>
@@ -39,9 +85,50 @@
             </div>
           </div>
 
-          <div v-if="finderLogs.length > 0" class="log-container">
+          <div v-if="finderRunning" style="margin: 8px 0; display: flex; align-items: center; gap: 8px;">
+            <el-icon class="is-loading"><Loading /></el-icon>
+            <span style="font-size: 13px; color: var(--el-text-color-secondary);">
+              {{ currentTask === 'match' ? 'Matching...' : currentTask === 'explore' ? 'Exploring...' : 'Scanning...' }}
+              ({{ finderLogs.length }} lines)
+            </span>
+          </div>
+          <div v-if="finderLogs.length > 0" ref="logContainerRef" class="log-container">
             <div v-for="(line, i) in finderLogs.slice(-100)" :key="i" class="log-line">{{ line }}</div>
           </div>
+        </div>
+
+        <el-divider />
+
+        <!-- Step 3: Discovery (Advanced) -->
+        <div class="section">
+          <div class="section-header">
+            <h3 class="section-title">Step 3: Discovery (Optional)</h3>
+          </div>
+          <p style="font-size: 13px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+            Scan {{ totalScanCountries }} countries worldwide to find where the company has reviews (not limited by baseline). Use to discover new regions or verify coverage.
+          </p>
+          <el-collapse style="margin-bottom: 12px;">
+            <el-collapse-item title="View countries to scan (by region)" name="1">
+              <div v-for="group in scanCountryGroups" :key="group.region" style="margin-bottom: 16px;">
+                <div style="font-weight: 600; font-size: 13px; color: var(--el-text-color-primary); margin-bottom: 8px; border-bottom: 1px solid var(--el-border-color-light); padding-bottom: 4px;">
+                  {{ group.region }} ({{ group.countries.length }})
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  <el-tag v-for="country in group.countries" :key="country" size="small" type="info">{{ country }}</el-tag>
+                </div>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+          <el-button
+            size="small"
+            type="warning"
+            plain
+            @click="handleScan"
+            :loading="finderRunning && currentTask === 'scan'"
+            :disabled="finderRunning"
+          >
+            <el-icon><Search /></el-icon> Scan All Countries (~{{ Math.round(totalScanCountries * 3 * companiesToMatch.length / 60) }} min)
+          </el-button>
         </div>
 
         <el-divider />
@@ -54,8 +141,13 @@
           </div>
           <el-table :data="companies" size="small" stripe>
             <el-table-column prop="name" label="Company" />
+            <el-table-column prop="mode" label="Mode" width="90">
+              <template #default="{ row }">
+                <el-tag size="small" :type="row.mode === 'country' ? 'success' : 'info'">{{ row.mode }}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column prop="entries" label="Entries" width="80" />
-            <el-table-column prop="file" label="File" width="240" />
+            <el-table-column prop="file" label="File" width="260" />
             <el-table-column label="Action" width="90">
               <template #default="{ row }">
                 <el-popconfirm title="Remove this company?" @confirm="handleRemove(row.file)">
@@ -76,6 +168,42 @@
             <h3 class="section-title">ASUS Baseline Locations</h3>
             <el-tag size="small">{{ baselineLocations.length }} locations</el-tag>
           </div>
+          <el-alert
+            type="info"
+            :closable="false"
+            style="margin-bottom: 16px;"
+          >
+            <template #title>
+              <strong>What is a Baseline Location?</strong>
+            </template>
+            <div style="font-size: 13px; line-height: 1.6;">
+              Baseline locations are the reference regions used for cross-company comparison.
+              When you run <strong>Match</strong>, all companies are compared against these same locations
+              to ensure consistent benchmarking. For example, if "Taipei, Taiwan" is in the baseline,
+              Match will try to find reviews for every company in Taiwan (country-level) or Taipei (city-level).
+              <br><br>
+              <strong>Source:</strong>
+              <a href="https://www.glassdoor.com/Location/All-ASUS-Office-Locations-E40093.htm" target="_blank" style="color: var(--el-color-primary);">
+                ASUS Office Locations on Glassdoor →
+              </a>
+              <br>
+              <strong>Usage:</strong> Match mode uses this list to know which regions to search for in other companies.
+            </div>
+          </el-alert>
+          <el-alert
+            type="warning"
+            :closable="false"
+            style="margin-bottom: 16px;"
+          >
+            <template #default>
+              <div style="font-size: 13px;">
+                <strong>Note:</strong> ASUS Glassdoor shows <strong>27</strong> office locations, but this baseline contains <strong>{{ baselineLocations.length }}</strong> entries.
+                The extra 2 are:
+                <el-tag size="small" type="warning" style="margin: 0 4px;">Global</el-tag> (worldwide reviews summary) and
+                <el-tag size="small" type="warning" style="margin: 0 4px;">Taiwan</el-tag> (country-level aggregate, not a city office).
+              </div>
+            </template>
+          </el-alert>
           <el-table :data="baselineLocations" size="small" stripe max-height="500">
             <el-table-column prop="location" label="Location" width="180" />
             <el-table-column prop="country" label="Country" width="120" />
@@ -125,14 +253,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick, computed } from 'vue'
+import { Loading, Refresh, Search } from '@element-plus/icons-vue'
 import {
   getConfig, updateConfig, getCompanies, removeCompany,
   getCompaniesToMatch, addCompanyToMatch, removeCompanyToMatch, getBaseline,
-  runFinderMatch, runFinderExplore, getFinderStatus, stopFinder
+  runFinderMatch, runFinderScan, runFinderExplore, getFinderStatus, stopFinder
 } from '../api'
 
 const activeTab = ref('companies')
+
+// Countries for Scan mode grouped by region (matching COUNTRY_IN_CODES in company_finder.py)
+const scanCountryGroups = ref([
+  {
+    region: 'North America',
+    countries: ['United States', 'Canada', 'Mexico']
+  },
+  {
+    region: 'Europe',
+    countries: ['United Kingdom', 'France', 'Germany', 'Spain', 'Italy', 'Netherlands', 'Hungary', 'Poland',
+      'Czech Republic', 'Turkey', 'Sweden', 'Switzerland', 'Austria', 'Belgium', 'Denmark', 'Finland',
+      'Ireland', 'Norway', 'Portugal', 'Romania', 'Greece', 'Ukraine', 'Russia']
+  },
+  {
+    region: 'Asia Pacific',
+    countries: ['India', 'Japan', 'South Korea', 'China', 'Taiwan', 'Singapore', 'Malaysia', 'Thailand',
+      'Indonesia', 'Philippines', 'Vietnam', 'Australia', 'New Zealand', 'Hong Kong']
+  },
+  {
+    region: 'Middle East',
+    countries: ['United Arab Emirates', 'Israel', 'Saudi Arabia']
+  },
+  {
+    region: 'South America',
+    countries: ['Brazil', 'Chile', 'Argentina', 'Colombia', 'Peru']
+  },
+  {
+    region: 'Africa',
+    countries: ['South Africa', 'Nigeria', 'Egypt']
+  },
+])
+
+const totalScanCountries = computed(() =>
+  scanCountryGroups.value.reduce((sum, g) => sum + g.countries.length, 0)
+)
 
 // ─── Config ─────────────────────────────────────────────
 const configLoaded = ref(false)
@@ -206,16 +370,49 @@ async function handleRemoveFromMatch(name: string) {
 // ─── Finder ─────────────────────────────────────────────
 const finderRunning = ref(false)
 const finderLogs = ref<string[]>([])
+const matchMode = ref('country')
+const logContainerRef = ref<HTMLElement | null>(null)
+const currentTask = ref<'match' | 'explore' | 'scan' | null>(null)
+const baselineExists = ref(false)
+
+// Check if baseline file exists
+async function checkBaseline() {
+  try {
+    const { data } = await getBaseline()
+    baselineExists.value = data && data.length > 0
+  } catch {
+    baselineExists.value = false
+  }
+}
+
+// Auto-scroll log to bottom
+watch(finderLogs, () => {
+  nextTick(() => {
+    if (logContainerRef.value) {
+      logContainerRef.value.scrollTop = logContainerRef.value.scrollHeight
+    }
+  })
+}, { deep: true })
 let finderPoll: ReturnType<typeof setInterval> | null = null
 
 async function handleMatch() {
-  await runFinderMatch()
+  currentTask.value = 'match'
+  await runFinderMatch(matchMode.value)
+  finderRunning.value = true
+  finderLogs.value = []
+  startFinderPolling()
+}
+
+async function handleScan() {
+  currentTask.value = 'scan'
+  await runFinderScan()
   finderRunning.value = true
   finderLogs.value = []
   startFinderPolling()
 }
 
 async function handleExplore() {
+  currentTask.value = 'explore'
   await runFinderExplore()
   finderRunning.value = true
   finderLogs.value = []
@@ -238,6 +435,8 @@ function startFinderPolling() {
       if (!data.running) {
         stopFinderPolling()
         loadCompanies()
+        checkBaseline()  // Recheck baseline after task completes
+        currentTask.value = null
       }
     } catch { /* ignore */ }
   }, 2000)
@@ -263,6 +462,7 @@ onMounted(() => {
   loadCompanies()
   loadCompaniesToMatch()
   loadBaseline()
+  checkBaseline()
 })
 
 onUnmounted(stopFinderPolling)

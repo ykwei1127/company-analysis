@@ -222,7 +222,7 @@ def _get_asus_glassdoor_url() -> str:
     # Check both matched and locations files
     patterns = [
         str(PROJECT_ROOT / "data" / "asus_locations.json"),
-        str(PROJECT_ROOT / "data" / "*_matched.json"),
+        str(PROJECT_ROOT / "data" / "*_matched*.json"),
     ]
     files = []
     for pat in patterns:

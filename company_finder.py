@@ -54,6 +54,70 @@ class TeeLogger:
 CHROME_DEBUG_PORT = 9222
 BASELINE_FILE = 'data/asus_locations.json'  # 基準地區清單
 
+# 比對模式：'city'（原始邏輯，用同國家城市 IC code）或 'country'（國家級 IN code）
+MATCH_MODE = 'country'
+
+# Glassdoor 國家 IN codes（固定值）
+COUNTRY_IN_CODES = {
+    # 北美
+    'United States': '1',
+    'Canada': '3',
+    'Mexico': '173',
+    # 歐洲
+    'United Kingdom': '4',
+    'France': '86',
+    'Germany': '96',
+    'Spain': '219',
+    'Italy': '121',
+    'Netherlands': '178',
+    'Hungary': '113',
+    'Poland': '197',
+    'Czech Republic': '62',
+    'Turkey': '244',
+    'Sweden': '223',
+    'Switzerland': '226',
+    'Austria': '15',
+    'Belgium': '21',
+    'Denmark': '63',
+    'Finland': '85',
+    'Ireland': '119',
+    'Norway': '186',
+    'Portugal': '199',
+    'Romania': '200',
+    'Greece': '100',
+    'Ukraine': '246',
+    'Russia': '201',
+    # 亞太
+    'India': '115',
+    'Japan': '126',
+    'South Korea': '135',
+    'China': '52',
+    'Taiwan': '240',
+    'Singapore': '215',
+    'Malaysia': '170',
+    'Thailand': '239',
+    'Indonesia': '116',
+    'Philippines': '196',
+    'Vietnam': '251',
+    'Australia': '16',
+    'New Zealand': '180',
+    'Hong Kong': '109',
+    # 中東
+    'United Arab Emirates': '247',
+    'Israel': '120',
+    'Saudi Arabia': '207',
+    # 南美
+    'Brazil': '36',
+    'Chile': '51',
+    'Argentina': '11',
+    'Colombia': '56',
+    'Peru': '195',
+    # 非洲
+    'South Africa': '216',
+    'Nigeria': '183',
+    'Egypt': '73',
+}
+
 # 首次探索用（explore 模式）
 EXPLORE_CONFIG = {
     'name': 'ASUS',
@@ -334,6 +398,201 @@ class CompanyFinder:
         return results
 
     # ----------------------------------------------------------------
+    # Country-level 比對模式
+    # ----------------------------------------------------------------
+    def match_by_country(self, company_config, baseline_locations):
+        """
+        以國家級 IN code 直接拼 URL 取得每家公司在各國的 review 頁面。
+        不需要載入 Office Locations 頁，速度快且比較基準一致。
+
+        Returns:
+            list of dict，每筆對應一個基準國家
+        """
+        numeric_id = re.sub(r'[^\d]', '', company_config['company_id'])
+        company_name = company_config['name']
+        if company_config.get('slug'):
+            slug = company_config['slug']
+        elif company_config.get('locations_url'):
+            try:
+                slug = company_config['locations_url'].split('All-')[1].split('-Office-')[0]
+            except (IndexError, AttributeError):
+                slug = company_name.replace(' ', '-')
+        else:
+            slug = company_name.replace(' ', '-')
+        global_review_url = company_config.get('global_review_url')
+
+        # 收集需要比對的國家（從 baseline 中有 review 的地區）
+        baseline_found = [loc for loc in baseline_locations if loc['status'] == 'found']
+
+        # 去重國家（一個國家只比一次）
+        seen_countries = set()
+        country_baselines = []
+        for loc in baseline_found:
+            if loc['location'] == 'Global':
+                country_baselines.append(loc)
+                continue
+            country = loc['country']
+            if country and country not in seen_countries:
+                seen_countries.add(country)
+                country_baselines.append(loc)
+
+        results = []
+        print(f"\n國家級比對模式：{company_name}，共 {len(country_baselines)} 筆（Global + {len(seen_countries)} 國）")
+
+        for i, baseline in enumerate(country_baselines, 1):
+            ref_location = baseline['location']
+            ref_country = baseline.get('country')
+
+            # Global
+            if ref_location == 'Global':
+                print(f"  [{i}/{len(country_baselines)}] Global")
+                if global_review_url:
+                    print(f"    ✅ {global_review_url}")
+                    results.append({
+                        'baseline_location': 'Global',
+                        'baseline_country': None,
+                        'company': company_name,
+                        'matched_city': 'Global',
+                        'url': global_review_url,
+                        'reviews_count': None,
+                        'status': 'found',
+                    })
+                else:
+                    results.append({
+                        'baseline_location': 'Global',
+                        'baseline_country': None,
+                        'company': company_name,
+                        'matched_city': None,
+                        'url': None,
+                        'reviews_count': None,
+                        'status': 'no_review_url',
+                    })
+                continue
+
+            # 國家級 — 用 IN code probe
+            in_code = COUNTRY_IN_CODES.get(ref_country)
+            print(f"  [{i}/{len(country_baselines)}] {ref_country} (IN={in_code or '?'})")
+
+            if not in_code:
+                print(f"    ⚠️  無 IN code mapping，跳過")
+                results.append({
+                    'baseline_location': ref_location,
+                    'baseline_country': ref_country,
+                    'company': company_name,
+                    'matched_city': None,
+                    'url': None,
+                    'reviews_count': None,
+                    'status': 'no_in_code',
+                })
+                continue
+
+            # 拼 country-level review URL
+            country_label = ref_country.replace(' ', '-')
+            probe_url, probe_count = self._probe_url_by_ic(
+                slug, numeric_id, country_label,
+                {'code': in_code, 'type': 'IN'}
+            )
+
+            if probe_url:
+                print(f"    ✅ {probe_url}")
+                results.append({
+                    'baseline_location': ref_location,
+                    'baseline_country': ref_country,
+                    'company': company_name,
+                    'matched_city': ref_country,  # country-level
+                    'url': probe_url,
+                    'reviews_count': probe_count,
+                    'status': 'found',
+                })
+            else:
+                print(f"    ➖ {company_name} 在 {ref_country} 無 review 頁面")
+                results.append({
+                    'baseline_location': ref_location,
+                    'baseline_country': ref_country,
+                    'company': company_name,
+                    'matched_city': None,
+                    'url': None,
+                    'reviews_count': None,
+                    'status': 'not_in_company',
+                })
+            time.sleep(3)
+
+        return results
+
+    # ----------------------------------------------------------------
+    # Scan All Countries
+    # ----------------------------------------------------------------
+    def scan_all_countries(self, company_config):
+        """
+        掃描 COUNTRY_IN_CODES 中所有國家，找出該公司有 review 的國家。
+        不需要 baseline，直接 probe 每個國家的 IN code。
+
+        Returns:
+            list of dict，每筆一個國家（含 found/not_found status）
+        """
+        numeric_id = re.sub(r'[^\d]', '', company_config['company_id'])
+        company_name = company_config['name']
+        if company_config.get('slug'):
+            slug = company_config['slug']
+        elif company_config.get('locations_url'):
+            try:
+                slug = company_config['locations_url'].split('All-')[1].split('-Office-')[0]
+            except (IndexError, AttributeError):
+                slug = company_name.replace(' ', '-')
+        else:
+            slug = company_name.replace(' ', '-')
+        global_review_url = company_config.get('global_review_url')
+
+        results = []
+        countries = list(COUNTRY_IN_CODES.items())
+        print(f"\n全國家掃描：{company_name}，共 {len(countries)} 國")
+
+        # Global first
+        if global_review_url:
+            results.append({
+                'country': 'Global',
+                'in_code': None,
+                'company': company_name,
+                'url': global_review_url,
+                'reviews_count': None,
+                'status': 'found',
+            })
+            print(f"  [0/{len(countries)}] Global ✅")
+
+        for i, (country, in_code) in enumerate(countries, 1):
+            country_label = country.replace(' ', '-')
+            probe_url, probe_count = self._probe_url_by_ic(
+                slug, numeric_id, country_label,
+                {'code': in_code, 'type': 'IN'}
+            )
+
+            if probe_url:
+                print(f"  [{i}/{len(countries)}] {country} ✅ ({probe_count or '?'} reviews)")
+                results.append({
+                    'country': country,
+                    'in_code': in_code,
+                    'company': company_name,
+                    'url': probe_url,
+                    'reviews_count': probe_count,
+                    'status': 'found',
+                })
+            else:
+                print(f"  [{i}/{len(countries)}] {country} ✗")
+                results.append({
+                    'country': country,
+                    'in_code': in_code,
+                    'company': company_name,
+                    'url': None,
+                    'reviews_count': None,
+                    'status': 'not_found',
+                })
+            time.sleep(3)
+
+        found = sum(1 for r in results if r['status'] == 'found')
+        print(f"\n  結果：{found}/{len(results)} 個國家有 review")
+        return results
+
+    # ----------------------------------------------------------------
     # 共用工具方法
     # ----------------------------------------------------------------
     def _scroll_to_bottom(self):
@@ -435,6 +694,19 @@ class CompanyFinder:
                 ic_map[loc['location']] = {'code': m.group(2), 'type': m.group(1)}
         return ic_map
 
+    def _is_rate_limited(self):
+        """偵測 Glassdoor rate limit 頁面（Help Us Protect Glassdoor）"""
+        try:
+            title = self.driver.title.strip().lower()
+            if 'security' in title:
+                return True
+            page_source = self.driver.page_source[:2000].lower()
+            if 'help us protect glassdoor' in page_source:
+                return True
+        except Exception:
+            pass
+        return False
+
     def _probe_url_by_ic(self, slug, numeric_id, city_label, code_info):
         """用 IC/IN Code 直接拼出 Review URL，載入後確認頁面是否有效。
         code_info: {'code': '3271041', 'type': 'IC'} 或 {'code': '218', 'type': 'IN'}
@@ -456,6 +728,22 @@ class CompanyFinder:
             )
         except Exception:
             pass
+
+        # 偵測 rate limit，等待後重試一次
+        if self._is_rate_limited():
+            print(f"    ⚠️  Rate limited! 等待 60 秒後重試...")
+            time.sleep(60)
+            self.driver.get(url)
+            try:
+                WebDriverWait(self.driver, 8).until(
+                    lambda d: d.current_url != 'about:blank' and d.execute_script('return document.readyState') == 'complete'
+                )
+            except Exception:
+                pass
+            if self._is_rate_limited():
+                print(f"    ❌ 仍被封鎖，跳過")
+                return None, None
+
         final_url = self.driver.current_url
         # 如果被 redirect 到其他頁則無效
         if f'_{code_type}{code}' not in final_url:
@@ -645,9 +933,13 @@ def run_explore():
         finder.close()
 
 
-def run_match():
+def run_match(match_mode=None):
+    """
+    執行比對。match_mode 可為 'city' 或 'country'，預設讀取 MATCH_MODE 全域設定。
+    """
+    mode_used = match_mode or MATCH_MODE
     print("=" * 60)
-    print("模式：比對新公司 vs 基準地區")
+    print(f"模式：比對新公司 vs 基準地區（{mode_used} level）")
     print("=" * 60)
 
     # 載入基準地區
@@ -684,29 +976,72 @@ def run_match():
             print(f"\n{'='*60}")
             print(f"正在處理：{company_name}")
             _t0 = _time.time()
-            results = finder.match_against_baseline(company_config, baseline_found)
+
+            if mode_used == 'country':
+                results = finder.match_by_country(company_config, baseline_found)
+            else:
+                results = finder.match_against_baseline(company_config, baseline_found)
+
             _elapsed = _time.time() - _t0
             finder.print_match_results(results, company_name)
+            suffix = '_matched_country.json' if mode_used == 'country' else '_matched.json'
             finder.save_results(results, company_name,
-                                output_file=f"data/{company_name.lower().replace(' ', '_')}_matched.json")
+                                output_file=f"data/{company_name.lower().replace(' ', '_')}{suffix}")
             print(f"  ⏱  {company_name} 耗時：{_elapsed:.0f}s")
             all_company_results[company_name] = results
 
-        # 產生彙整 config.py 片段
+        # 彙整摘要
         print(f"\n{'='*60}")
-        print("config.py 更新內容：")
+        print("比對摘要：")
         print(f"{'='*60}")
         for company_name, results in all_company_results.items():
-            print(f"\n    # {company_name}")
-            for r in results:
-                key = f"'{company_name} {r['baseline_location']} reviews'"
-                if r['url']:
-                    val = f"'{r['url']}'"
-                elif r['status'] == 'not_in_company':
-                    val = "''  # 無此國家辦公室"
-                else:
-                    val = "''  # 有辦公室但無地區 Review 頁面"
-                print(f"    {key}: {val},")
+            found = sum(1 for r in results if r['status'] == 'found')
+            print(f"  {company_name}: {found}/{len(results)} 個地區有 review")
+
+    except Exception as e:
+        print(f"\n錯誤：{e}")
+        import traceback; traceback.print_exc()
+    finally:
+        _total = _time.time() - _total_start
+        print(f"\n{'='*60}")
+        print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+        print(f"{'='*60}")
+        finder.close()
+
+
+def run_scan():
+    """掃描所有國家，找出 COMPANIES_TO_MATCH 中每家公司有 review 的國家。"""
+    print("=" * 60)
+    print("模式：全國家掃描（Scan All Countries）")
+    print(f"掃描 {len(COUNTRY_IN_CODES)} 個國家")
+    print("=" * 60)
+
+    if not COMPANIES_TO_MATCH:
+        print("請在 COMPANIES_TO_MATCH 中加入要掃描的公司名稱")
+        return
+
+    import time as _time
+    _total_start = _time.time()
+
+    finder = CompanyFinder(CHROME_DEBUG_PORT)
+
+    try:
+        for company_entry in COMPANIES_TO_MATCH:
+            if isinstance(company_entry, str):
+                company_config = finder.search_company(company_entry)
+                if not company_config:
+                    print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
+                    continue
+            else:
+                company_config = company_entry
+            company_name = company_config['name']
+            print(f"\n{'='*60}")
+            print(f"掃描：{company_name}")
+
+            results = finder.scan_all_countries(company_config)
+            # 儲存完整掃描結果
+            finder.save_results(results, company_name,
+                                output_file=f"data/{company_name.lower().replace(' ', '_')}_scan.json")
 
     except Exception as e:
         print(f"\n錯誤：{e}")
@@ -721,6 +1056,13 @@ def run_match():
 
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'match'
+    # 支援 --mode city/country 覆蓋 MATCH_MODE
+    match_mode_override = None
+    if '--mode' in sys.argv:
+        idx = sys.argv.index('--mode')
+        if idx + 1 < len(sys.argv):
+            match_mode_override = sys.argv[idx + 1]
+
     os.makedirs('logs', exist_ok=True)
     log_path = f"logs/company_finder_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
     logger = TeeLogger(log_path)
@@ -729,8 +1071,10 @@ if __name__ == '__main__':
         if mode == 'explore':
             run_explore()
         elif mode == 'match':
-            run_match()
+            run_match(match_mode=match_mode_override)
+        elif mode == 'scan':
+            run_scan()
         else:
-            print(f"未知模式：{mode}，請使用 explore 或 match")
+            print(f"未知模式：{mode}，請使用 explore、match 或 scan")
     finally:
         logger.close()

@@ -769,8 +769,8 @@ def main():
     _stem, _ext = os.path.splitext(_base_output)
     output_file = f"{_stem}_{_ts}{_ext}"
 
-    # 優先使用 data/*_matched.json（company_finder 產生的結果）
-    matched_files = sorted(glob.glob('data/*_matched.json'))
+    # 優先使用 data/*_matched*.json（company_finder 產生的結果，含 city 和 country 模式）
+    matched_files = sorted(glob.glob('data/*_matched*.json'))
 
     if mode == 'manual' and not args.no_confirm:
         print("\n" + "="*60)

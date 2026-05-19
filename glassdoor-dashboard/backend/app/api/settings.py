@@ -54,11 +54,14 @@ def update_config(payload: dict):
 
 @router.get("/settings/companies")
 def list_companies():
-    """List all matched companies (from data/*_matched.json files)."""
+    """List all matched companies (from data/*_matched*.json files)."""
     companies = []
-    matched_files = sorted(glob.glob(str(DATA_DIR / "*_matched.json")))
+    matched_files = sorted(glob.glob(str(DATA_DIR / "*_matched*.json")))
     for f in matched_files:
-        name = os.path.basename(f).replace("_matched.json", "").replace("_", " ").title()
+        basename = os.path.basename(f)
+        # Derive display name: remove suffix like _matched.json or _matched_country.json
+        name = basename.replace("_matched_country.json", "").replace("_matched.json", "").replace("_", " ").title()
+        mode_label = "country" if "_country" in basename else "city"
         try:
             with open(f, 'r', encoding='utf-8') as fh:
                 data = json.load(fh)
@@ -67,8 +70,9 @@ def list_companies():
             entry_count = 0
         companies.append({
             "name": name,
-            "file": os.path.basename(f),
+            "file": basename,
             "entries": entry_count,
+            "mode": mode_label,
         })
     return {"companies": companies}
 
@@ -77,7 +81,7 @@ def list_companies():
 def remove_company(filename: str):
     """Remove a company's matched JSON file."""
     filepath = DATA_DIR / filename
-    if filepath.exists() and filename.endswith("_matched.json"):
+    if filepath.exists() and ("_matched" in filename and filename.endswith(".json")):
         filepath.unlink()
         return {"status": "deleted", "file": filename}
     return {"status": "error", "message": "File not found or invalid"}
@@ -89,12 +93,55 @@ _finder_state = {"process": None, "logs": [], "running": False}
 
 
 @router.post("/settings/finder/match")
-def run_match(companies: Optional[List[str]] = None):
-    """Run company_finder.py match mode. Optionally pass specific company names."""
+def run_match(companies: Optional[List[str]] = None, match_mode: Optional[str] = None):
+    """Run company_finder.py match mode. match_mode: 'city' or 'country'."""
     if _finder_state["running"]:
         return {"status": "already_running"}
 
     cmd = [sys.executable, str(COMPANY_FINDER_SCRIPT), "match"]
+    if match_mode in ('city', 'country'):
+        cmd += ['--mode', match_mode]
+    env = os.environ.copy()
+    env["PYTHONUTF8"] = "1"
+
+    _finder_state["logs"] = []
+    _finder_state["running"] = True
+
+    import threading
+
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        encoding='utf-8',
+        errors='replace',
+    )
+    _finder_state["process"] = proc
+
+    def _reader():
+        try:
+            for line in proc.stdout:
+                line = line.rstrip('\n')
+                if line:
+                    _finder_state["logs"].append(line)
+        except Exception:
+            pass
+        finally:
+            _finder_state["running"] = False
+
+    threading.Thread(target=_reader, daemon=True).start()
+    return {"status": "started"}
+
+
+@router.post("/settings/finder/scan")
+def run_scan():
+    """Run company_finder.py scan mode (scan all countries)."""
+    if _finder_state["running"]:
+        return {"status": "already_running"}
+
+    cmd = [sys.executable, str(COMPANY_FINDER_SCRIPT), "scan"]
     env = os.environ.copy()
     env["PYTHONUTF8"] = "1"
 
