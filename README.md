@@ -46,9 +46,9 @@ venv\Scripts\python company_finder.py explore
 
 ---
 
-### Step 2：對新公司比對 22 個基準地區
+### Step 2：對新公司比對 29 個基準地區
 
-ASUS 的 22 個有效地區為比較基準（存於 `asus_locations.json`）。
+ASUS 的 29 個有效地區為比較基準（存於 `asus_locations.json`），包含 27 個城市辦公室 + Global（整體評論）+ Taiwan（國家級別）。
 
 在 `company_finder.py` 的 `COMPANIES_TO_MATCH` 填入公司名稱（只需填名稱，ID 和 URL 自動搜尋）：
 
@@ -70,7 +70,7 @@ venv\Scripts\python company_finder.py match
 | status | 說明 |
 |--------|------|
 | `found` | 找到該地區的 Review URL |
-| `no_review_url` | 該公司在此國家有辦公室，但無地區 Review 頁 |
+| `no_review_url` | 該公司在此國家有辦公室，但無地區 Review 頁（可能為 Taiwan） |
 | `not_in_company` | 該公司在此國家無辦公室 |
 
 ---
@@ -106,10 +106,11 @@ venv\Scripts\python glassdoor_scraper_unified.py
 
 ## 22 個基準地區（來自 ASUS）
 
-| 城市 | 國家 |
-|------|------|
-| Global | — |
-| Fremont, CA | United States |
+| 類型 | 城市 | 國家 |
+|------|------|------|
+| 🌐 Global | Global | — |
+| 🇹🇼 Country | Taiwan | Taiwan |
+| 🏢 City | Fremont, CA | United States |
 | Markham, ON | Canada |
 | Barcelona | Spain |
 | Budapest | Hungary |
@@ -158,7 +159,7 @@ venv\Scripts\python glassdoor_scraper_unified.py
 
 ## Web Dashboard
 
-互動式 Dashboard，可在瀏覽器中檢視評分數據、啟動爬蟲、管理公司清單。
+互動式 Dashboard，可在瀏覽器中檢視評分數據、啟動爬蟲、管理公司清單，支援多種 **Match Mode** 和 **Source Mode** 篩選。
 
 ### 啟動方式
 
@@ -175,11 +176,27 @@ cd glassdoor-dashboard
 
 | 頁面 | 說明 |
 |------|------|
-| Overview | 各公司 Global 評分一覽 |
+| Overview | 各公司 Global 評分一覽，顯示 Match Mode 標籤 |
 | Comparison | 雷達圖跨公司比較 |
 | Locations | 地區評分熱力圖 |
-| Scraper | Chrome 狀態、啟動/停止爬蟲、即時 log |
-| Settings | 公司管理（新增/刪除/Match/Explore）、Baseline 地區、爬蟲設定 |
+| Scraper | Chrome 狀態、啟動/停止爬蟲、**Source Mode 篩選**、公司選擇 |
+| Settings | 公司管理（勾選列表）、**Match Mode 選擇**（City/Country）、Baseline 地區 |
+
+### Match Mode（比對模式）
+
+| 模式 | 說明 | 使用時機 |
+|------|------|----------|
+| **Country Mode** | 使用國家級別 IN 代碼（如 E40093_IN223） | 推薦！快速、一致性高 |
+| **City Mode** | 尋找城市級別評論（如 Taipei） | 需要精確城市比對時 |
+| **Discovery/Scan** | 掃描 51 個國家，不限基準地區 | 探索新區域或驗證覆蓋率 |
+
+### Source Mode（數據來源篩選）
+
+Scraper 頁面可選擇要抓取的數據來源：
+- **All** - 所有匹配檔案
+- **Country** - 僅抓取 Country Mode 產生的 `_matched_country.json`
+- **City** - 僅抓取 City Mode 產生的 `_matched.json`
+- **Discovery** - 僅抓取 Scan 產生的 `_scan.json`
 
 ### 刪除爬取紀錄
 
@@ -190,6 +207,9 @@ cd glassdoor-dashboard
 ## 注意事項
 
 - 必須保持 Chrome 以 debug 模式開啟並登入 Glassdoor（單一模式用 port 9222；平行模式需同時開 9222/9223/9224）
+- **Baseline 結構**：包含 27 城市 + Global（整體評論）+ Taiwan（國家級別），共 29 個條目
+- **公司選擇**：Settings 頁面使用勾選列表選擇要比對的公司，可全選/清除
+- **全局狀態**：頂部狀態欄顯示正在執行的任務（Explore/Match/Scan），任何頁面都可見
 - Glassdoor 有 paywall，未登入時部分數據會被遮擋
 - 各城市頁面之間採動態延遲：成功抓取 1.5s，失敗 0.5s，優化整體速度
 - Cloudflare 偵測：頁面載入後若 title 為 "Just a moment..." 會自動等待最多 5 秒讓 JS challenge 通過
