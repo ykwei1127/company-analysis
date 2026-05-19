@@ -188,6 +188,89 @@ class CompanyFinder:
         print(f"找到 {len(city_links)} 個城市辦公室")
 
         results = []
+
+        # 1. 首先加入 Global（整體公司評論）
+        print("\n[Global] 正在抓取整體公司評論頁面...")
+        global_url = f"https://www.glassdoor.com/Reviews/ASUS-Reviews-E{numeric_id}.htm"
+        self.driver.get(global_url)
+        time.sleep(2)
+        global_review_url = None
+        try:
+            # 檢測是否有重定向到地區頁面，或停留在主頁面
+            current_url = self.driver.current_url
+            if f'E{numeric_id}' in current_url and 'Location' not in current_url:
+                global_review_url = current_url.split('?')[0]
+                print(f"  ✅ Global URL: {global_review_url}")
+            else:
+                # 嘗試從頁面找主要評論連結
+                review_link = self.driver.find_element(By.CSS_SELECTOR, f'a[href*="/Reviews/"][href*="E{numeric_id}"]')
+                if review_link:
+                    global_review_url = review_link.get_attribute('href').split('?')[0]
+                    print(f"  ✅ Global URL (from link): {global_review_url}")
+        except Exception:
+            pass
+
+        if global_review_url:
+            results.append({
+                'location': 'Global',
+                'country': 'Global',
+                'page_heading': company_name,
+                'heading_is_generic': False,
+                'list_rating': None,
+                'address': 'Global',
+                'url': global_review_url,
+                'reviews_count': None,
+                'status': 'found',
+            })
+        else:
+            results.append({
+                'location': 'Global',
+                'country': 'Global',
+                'page_heading': company_name,
+                'heading_is_generic': True,
+                'list_rating': None,
+                'address': 'Global',
+                'url': None,
+                'reviews_count': None,
+                'status': 'no_review_url',
+            })
+
+        # 2. 加入 Taiwan（國家級別）- 從 IN_223 代碼建立
+        print("\n[Taiwan] 加入國家級別台灣評論頁面...")
+        taiwan_url = f"https://www.glassdoor.com/Reviews/ASUS-Taiwan-Reviews-E{numeric_id}_IN223.htm"
+        # 驗證 URL 是否存在（直接嘗試訪問）
+        self.driver.get(taiwan_url)
+        time.sleep(2)
+        taiwan_exists = 'E40093' in self.driver.current_url and 'Taiwan' in self.driver.current_url
+
+        if taiwan_exists:
+            print(f"  ✅ Taiwan URL: {taiwan_url}")
+            results.append({
+                'location': 'Taiwan',
+                'country': 'Taiwan',
+                'page_heading': f'{company_name} Taiwan',
+                'heading_is_generic': False,
+                'list_rating': None,
+                'address': 'Taiwan',
+                'url': taiwan_url,
+                'reviews_count': None,
+                'status': 'found',
+            })
+        else:
+            print(f"  ⚠️  Taiwan URL 可能不存在或需要驗證")
+            results.append({
+                'location': 'Taiwan',
+                'country': 'Taiwan',
+                'page_heading': f'{company_name} Taiwan',
+                'heading_is_generic': True,
+                'list_rating': None,
+                'address': 'Taiwan',
+                'url': taiwan_url,  # 仍然保存 URL 讓使用者可以手動檢測
+                'reviews_count': None,
+                'status': 'found',  # 假設存在，實際 match 時會驗證
+            })
+
+        # 3. 抓取各城市辦公室
         for i, (city_name, city_info) in enumerate(city_links.items(), 1):
             city_loc_url = city_info['url']
             list_rating = city_info['list_rating']

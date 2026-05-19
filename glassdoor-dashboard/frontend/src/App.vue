@@ -56,6 +56,26 @@
           <button class="gear-btn" @click="themeStore.toggle()" :title="themeStore.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">&#9881;</button>
         </div>
       </header>
+
+      <!-- Global Finder Status Bar -->
+      <div v-if="finderStore.isRunning" class="finder-status-bar">
+        <div class="finder-status-content">
+          <el-icon class="is-loading" style="font-size: 16px;"><Loading /></el-icon>
+          <span class="finder-status-title">{{ finderStore.statusTitle }}</span>
+          <span class="finder-status-text">{{ finderStore.statusText }}</span>
+          <span class="finder-status-meta">({{ finderStore.logs.length }} lines, {{ finderStore.elapsedTime }})</span>
+          <el-button 
+            size="small" 
+            type="danger" 
+            plain 
+            @click="handleStopFinder"
+            style="margin-left: 12px;"
+          >
+            Stop
+          </el-button>
+        </div>
+      </div>
+
       <div class="page-content">
         <router-view />
       </div>
@@ -65,12 +85,24 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { DataBoard, TrendCharts, Location, Monitor, Setting, Delete } from '@element-plus/icons-vue'
+import { DataBoard, TrendCharts, Location, Monitor, Setting, Delete, Loading } from '@element-plus/icons-vue'
 import { useDashboardStore } from './stores/dashboard'
 import { useThemeStore } from './stores/theme'
+import { useFinderStore } from './stores/finder'
+import { stopFinder } from './api'
 
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
+const finderStore = useFinderStore()
+
+async function handleStopFinder() {
+  try {
+    await stopFinder()
+    finderStore.stop()
+  } catch (e) {
+    console.error('Failed to stop finder', e)
+  }
+}
 
 onMounted(() => {
   dashboardStore.fetchRuns()
@@ -193,6 +225,34 @@ html, body, #app {
 .gear-btn:hover { color: var(--text-primary); }
 
 .page-content { padding: 24px; flex: 1; overflow-y: auto; }
+
+/* Global Finder Status Bar */
+.finder-status-bar {
+  background: var(--el-color-warning-light-9);
+  border-bottom: 1px solid var(--el-color-warning-light-5);
+  padding: 8px 24px;
+}
+
+.finder-status-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.finder-status-title {
+  font-weight: 600;
+  color: var(--el-color-warning-dark-2);
+}
+
+.finder-status-text {
+  color: var(--el-text-color-regular);
+}
+
+.finder-status-meta {
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
 
 /* Element Plus overrides using CSS vars */
 .el-card { background: var(--bg-card) !important; border-color: var(--border-color) !important; color: var(--text-primary) !important; transition: background 0.3s; }
