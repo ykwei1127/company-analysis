@@ -117,6 +117,7 @@ def run_match(
         cmd += ['--mode', match_mode]
     env = os.environ.copy()
     env["PYTHONUTF8"] = "1"
+    env["PYTHONUNBUFFERED"] = "1"
     # Pass selected companies via env var (comma-separated)
     if companies_list:
         env["FINDER_COMPANIES"] = ",".join(companies_list)
@@ -169,6 +170,7 @@ def run_scan(companies: Optional[List[str]] = None):
     cmd = [str(VENV_PYTHON), str(COMPANY_FINDER_SCRIPT), "scan"]
     env = os.environ.copy()
     env["PYTHONUTF8"] = "1"
+    env["PYTHONUNBUFFERED"] = "1"
     # Pass selected companies via env var
     if companies:
         env["FINDER_COMPANIES"] = ",".join(companies)

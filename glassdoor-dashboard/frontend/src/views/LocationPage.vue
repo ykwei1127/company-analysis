@@ -33,7 +33,7 @@
             </thead>
             <tbody>
               <tr v-for="loc in pivotLocations" :key="loc">
-                <td class="loc-col">{{ loc }}</td>
+                <td class="loc-col">{{ locationDisplayLabel[loc] || loc }}</td>
                 <td v-for="company in pivotCompanies" :key="company">
                   <span v-if="getPivotValue(loc, company) != null" class="pivot-cell" :style="heatStyle(getPivotValue(loc, company)!)">
                     {{ getPivotValue(loc, company)!.toFixed(2) }}
@@ -162,6 +162,22 @@ const pivotCompanies = computed(() => {
 const pivotLocations = computed(() => {
   const locs = new Set(allRatings.value.map(r => r.baseline_location).filter(Boolean))
   return [...locs].sort()
+})
+
+// Map baseline_location → display label
+// For country-mode entries, show the country name instead of the city baseline
+const locationDisplayLabel = computed(() => {
+  const map: Record<string, string> = {}
+  for (const r of allRatings.value) {
+    if (!r.baseline_location) continue
+    if (map[r.baseline_location]) continue
+    if (r.source_mode === 'country' && r.country && r.baseline_location.toLowerCase() !== 'global') {
+      map[r.baseline_location] = r.country
+    } else {
+      map[r.baseline_location] = r.baseline_location
+    }
+  }
+  return map
 })
 
 const getPivotValue = (loc: string, company: string): number | null => {

@@ -373,6 +373,7 @@ class GlassdoorScraper:
                 data['Actual City'] = baseline_loc
                 data['Country'] = country
                 data['Review URL'] = url
+                data['Source Mode'] = 'baseline'
                 all_data.append(data)
                 if data.get('Overall') is not None:
                     sleep_sec = 1.5
@@ -527,7 +528,7 @@ def _worker(port, task_queue, mode, headless, log_path=None, _progress=None):
             except queue.Empty:
                 break
 
-            task_name = task.get('company_name', task.get('file', 'unknown'))
+            task_name = task.get('name') or task.get('company_name', task.get('file', 'unknown'))
             if task.get('location_filter'):
                 task_name += f" [{task['location_filter']}]"
 
@@ -543,8 +544,33 @@ def _worker(port, task_queue, mode, headless, log_path=None, _progress=None):
                     location_filter=task.get('location_filter'),
                     _progress_fn=_progress_fn
                 )
-            elif task['type'] == 'matched':
-                data = scraper.scrape_from_matched_json([task['file']], _progress_fn=_progress_fn)
+            elif task['type'] == 'matched_entry':
+                entry = task['entry']
+                src_mode = task['source_mode']
+                company = entry['company']
+                baseline_loc = entry.get('baseline_location') or entry.get('country', 'Unknown')
+                actual_city = entry.get('matched_city') or baseline_loc
+                url = entry['url']
+                country = entry.get('baseline_country') or entry.get('country')
+                display_name = f"{company} - {baseline_loc}"
+                raw = scraper.extract_rating_data(url, display_name)
+                if raw == 'BLOCKED_TIMEOUT':
+                    data = 'BLOCKED_TIMEOUT'
+                else:
+                    sleep_sec = 0.5
+                    if raw:
+                        raw['Baseline Location'] = baseline_loc
+                        raw['Actual City'] = actual_city
+                        raw['Country'] = country
+                        raw['Review URL'] = url
+                        raw['Source Mode'] = src_mode
+                        if raw.get('Overall') is not None:
+                            sleep_sec = 1.5
+                        data = [raw]
+                    else:
+                        data = []
+                    _progress_fn(display_name)
+                    time.sleep(sleep_sec)
             else:
                 data = []
 
@@ -588,6 +614,12 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
 
     tasks_all = []
 
+    # If asus_matched_country.json is in matched_files, skip the city-level baseline to avoid mixing granularities
+    asus_country_in_matched = any('asus_matched_country' in os.path.basename(f) for f in matched_files)
+    if include_baseline and asus_country_in_matched:
+        print("[INFO] asus_matched_country.json 已在 matched files 中，略過 city-level baseline 避免重複")
+        include_baseline = False
+
     if include_baseline and os.path.exists(baseline_file):
         with open(baseline_file, encoding='utf-8') as _f:
             _entries = json.load(_f)
@@ -601,7 +633,27 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                 })
 
     for f in matched_files:
-        tasks_all.append({'type': 'matched', 'file': f})
+        basename = os.path.basename(f)
+        if '_matched_country.json' in basename:
+            src_mode = 'country'
+        elif '_scan.json' in basename:
+            src_mode = 'scan'
+        elif '_matched.json' in basename:
+            src_mode = 'city'
+        else:
+            src_mode = 'unknown'
+        with open(f, encoding='utf-8') as _fh:
+            _entries = json.load(_fh)
+        for _e in _entries:
+            if _e.get('status') != 'found' or not _e.get('url'):
+                continue
+            _baseline_loc = _e.get('baseline_location') or _e.get('country', 'Unknown')
+            tasks_all.append({
+                'type': 'matched_entry',
+                'entry': _e,
+                'source_mode': src_mode,
+                'name': f"{_e['company']} - {_baseline_loc}",
+            })
 
     if not tasks_all:
         return []
@@ -619,18 +671,8 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
     for port in ports:
         _progress[port] = {'completed': 0, 'current': 'init', 'finished': False, 'blocked': False}
 
-    # 計算實際總 entry 數（從所有文件中統計有效 entries）
-    total_entries = 0
-    for task in tasks_all:
-        if task['type'] == 'baseline':
-            with open(task['file'], encoding='utf-8') as f:
-                entries = json.load(f)
-            total_entries += len([e for e in entries if e.get('status') == 'found' and e.get('url')])
-        else:  # matched file
-            with open(task['file'], encoding='utf-8') as f:
-                entries = json.load(f)
-            total_entries += len([e for e in entries if e.get('status') == 'found' and e.get('url')])
-    total_tasks = total_entries  # Use actual entry count, not estimation
+    # Each task is now a single entry — total is simply len(tasks_all)
+    total_tasks = len(tasks_all)
 
     total_start = time.time()
     all_data = []
@@ -905,8 +947,12 @@ def main():
             data = []
 
             if include_baseline and os.path.exists(baseline_file):
-                print(f"\n[INCLUDE_BASELINE=True] 抓取基準公司 ASUS：{baseline_file}\n")
-                data += scraper.scrape_from_baseline_json(baseline_file, company_name='ASUS')
+                asus_country_in_matched = any('asus_matched_country' in os.path.basename(f) for f in matched_files)
+                if asus_country_in_matched:
+                    print("[INFO] asus_matched_country.json 已在 matched files 中，略過 city-level baseline 避免重複")
+                else:
+                    print(f"\n[INCLUDE_BASELINE=True] 抓取基準公司 ASUS：{baseline_file}\n")
+                    data += scraper.scrape_from_baseline_json(baseline_file, company_name='ASUS')
 
             if matched_files:
                 print(f"\n找到 matched JSON：{matched_files}")

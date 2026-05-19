@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { InfoFilled, Refresh } from '@element-plus/icons-vue'
 import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus, launchChrome, closeAllChrome, getCompanies } from '../api'
 
@@ -151,9 +151,14 @@ let elapsedTimer: ReturnType<typeof setInterval> | null = null
 
 const visibleLogLines = computed(() => logs.value.slice(-200))
 
+const filteredCompanies = computed(() => {
+  if (sourceMode.value === 'all') return availableCompanies.value
+  return availableCompanies.value.filter(c => c.mode === sourceMode.value)
+})
+
 const companyOptions = computed(() => {
-  return availableCompanies.value.map(c => ({
-    label: `${c.name} (${c.mode})`,
+  return filteredCompanies.value.map(c => ({
+    label: c.name,
     value: c.name
   }))
 })
@@ -352,6 +357,14 @@ function startElapsedTimer() {
 function stopElapsedTimer() {
   if (elapsedTimer) { clearInterval(elapsedTimer); elapsedTimer = null }
 }
+
+// When sourceMode changes, clear selected companies that no longer match
+watch(sourceMode, () => {
+  if (sourceMode.value !== 'all') {
+    const validNames = new Set(filteredCompanies.value.map(c => c.name))
+    selectedCompanies.value = selectedCompanies.value.filter(n => validNames.has(n))
+  }
+})
 
 onMounted(async () => {
   await refreshChromeStatus()

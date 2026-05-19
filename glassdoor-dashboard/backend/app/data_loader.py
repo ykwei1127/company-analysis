@@ -104,6 +104,7 @@ def load_ratings(run_id: Optional[str] = None) -> pd.DataFrame:
         "Recommend to a Friend": "recommend",
         "Total Reviews": "total_reviews",
         "Review URL": "review_url",
+        "Source Mode": "source_mode",
     })
     df = df.rename(columns=rename_map)
 
@@ -133,51 +134,31 @@ def load_ratings(run_id: Optional[str] = None) -> pd.DataFrame:
 
 
 def get_run_metadata(run_id: Optional[str] = None) -> dict:
-    """Get metadata about a run including source modes from matched files."""
-    csv_path = _find_csv(run_id)
-    if csv_path is None:
+    """Get metadata about a run including source modes from the CSV."""
+    df = load_ratings(run_id)
+    if df.empty:
         return {"modes": [], "companies": []}
-    
-    # Extract run timestamp from CSV path (e.g., glassdoor_ratings_20260519_2254.csv)
-    run_timestamp = csv_path.stem.replace("glassdoor_ratings_", "")
-    
-    # Find corresponding JSON log file
-    logs_dir = PROJECT_ROOT / "logs"
-    json_files = sorted(logs_dir.glob(f"run_{run_timestamp}*.json"))
-    
-    if not json_files:
-        return {"modes": [], "companies": []}
-    
-    # Load the JSON log
-    try:
-        with open(json_files[0], 'r', encoding='utf-8') as f:
-            log_data = json.load(f)
-    except Exception:
-        return {"modes": [], "companies": []}
-    
-    # Extract companies and their modes from matched_files
-    companies = []
+
     modes = set()
-    for mf in log_data.get("matched_files", []):
-        filename = mf.get("filename", "")
-        company_name = mf.get("company", "")
-        # Determine mode from filename
-        if "_country" in filename:
-            mode = "country"
-        elif "_matched" in filename:
-            mode = "city"
-        else:
-            mode = "unknown"
-        modes.add(mode)
-        companies.append({
-            "name": company_name,
-            "mode": mode,
-            "filename": filename
-        })
-    
+    companies = []
+
+    def _normalize_mode(m: str) -> str:
+        # 'baseline' is the ASUS city-level reference — treat as 'city' for grouping
+        return 'city' if m == 'baseline' else m
+
+    if "source_mode" in df.columns and "company" in df.columns:
+        for company, grp in df.groupby("company"):
+            raw_mode = grp["source_mode"].dropna().iloc[0] if not grp["source_mode"].dropna().empty else "unknown"
+            mode = _normalize_mode(raw_mode)
+            modes.add(mode)
+            companies.append({"name": company, "mode": mode})
+    elif "company" in df.columns:
+        for company in df["company"].unique():
+            companies.append({"name": company, "mode": "unknown"})
+
     return {
         "modes": sorted(list(modes)),
-        "companies": companies
+        "companies": companies,
     }
 
 

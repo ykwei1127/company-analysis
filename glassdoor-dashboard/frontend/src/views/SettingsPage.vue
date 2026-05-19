@@ -101,8 +101,12 @@
                 :value="c.name"
                 style="margin: 0;"
                 border
+                :disabled="c.name === 'ASUS' && matchMode === 'city'"
               >
                 {{ c.name }}
+                <el-tooltip v-if="c.name === 'ASUS' && matchMode === 'city'" content="ASUS city-level baseline already exists (asus_locations.json)" placement="top">
+                  <el-icon style="margin-left: 4px; color: var(--el-color-info);"><InfoFilled /></el-icon>
+                </el-tooltip>
               </el-checkbox>
             </el-checkbox-group>
             <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center;">
@@ -292,7 +296,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
-import { Loading, Refresh, Search } from '@element-plus/icons-vue'
+import { Loading, Refresh, Search, InfoFilled } from '@element-plus/icons-vue'
 import { useFinderStore } from '../stores/finder'
 import { 
   getCompanies, 
@@ -440,6 +444,13 @@ const finderStore = useFinderStore()
 
 // 本地狀態（僅供本頁使用）
 const matchMode = ref('country')
+
+// When switching to city mode, deselect ASUS automatically
+watch(matchMode, (mode) => {
+  if (mode === 'city') {
+    selectedMatchCompanies.value = selectedMatchCompanies.value.filter(n => n !== 'ASUS')
+  }
+})
 const logContainerRef = ref<HTMLElement | null>(null)
 const baselineExists = ref(false)
 

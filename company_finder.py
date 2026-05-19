@@ -37,6 +37,7 @@ class TeeLogger:
 
     def write(self, data):
         self._stdout.write(data)
+        self._stdout.flush()  # Flush pipe immediately for real-time streaming
         self._file.write(data)
         self._file.flush()  # Flush immediately for real-time updates
 
@@ -128,6 +129,13 @@ EXPLORE_CONFIG = {
 
 # 比對模式：只需填入公司名稱，ID 和 URL 會自動從 Glassdoor 搜尋
 COMPANIES_TO_MATCH = [
+    {
+        'name': 'ASUS',
+        'company_id': 'E40093',
+        'locations_url': 'https://www.glassdoor.com/Location/All-ASUS-Office-Locations-E40093.htm',
+        'global_review_url': 'https://www.glassdoor.com/Reviews/ASUS-Reviews-E40093.htm',
+        'slug': 'ASUS',
+    },
     'NVIDIA',
     'TSMC',
     'MSI',
