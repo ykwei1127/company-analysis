@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-05-19
+### Added
+- **Settings & Companies page** (Dashboard)
+  - Tab-based UI: Companies, Baseline Locations, Scraper Config
+  - Add/remove companies to `COMPANIES_TO_MATCH` dynamically from UI
+  - Run Match / Explore from dashboard with live log streaming
+  - Matched companies table with remove button
+  - ASUS baseline locations table
+- **Delete run** button next to run selector (removes CSV, XLSX, and all log files)
+- LAN access: Vite and uvicorn now bind to `0.0.0.0`
+
+### Fixed
+- Cloudflare false positive detection: removed generic 'just a moment' from body check, now only checks page title
+- Added smart wait (up to 5s) after page load for Cloudflare JS challenge auto-pass instead of fixed 3s sleep
+- Dark theme overrides for `el-tabs` component
+
 ## 2026-05-18
 ### Added
 - **Web Dashboard** (`glassdoor-dashboard/`)

@@ -54,10 +54,16 @@ class GlassdoorScraper:
     def _is_blocked(self):
         """Check if the current page is a Cloudflare / 'Humans only' block page."""
         try:
-            page_source = self.driver.page_source
-            indicators = ['Humans only', 'Just a moment', 'Checking your browser',
-                          'cf-challenge', 'cloudflare', 'Verify you are human']
-            return any(ind.lower() in page_source.lower() for ind in indicators)
+            page_source = self.driver.page_source.lower()
+            # Only match actual challenge page indicators, not generic CDN references
+            # Note: 'just a moment' removed from body check (too many false positives);
+            # it is caught by the title check below instead.
+            indicators = ['humans only', 'checking your browser',
+                          'cf-challenge-running', 'verify you are human',
+                          'cf-turnstile', 'challenge-platform']
+            # Additional check: page title is typically "Just a moment..." on block pages
+            title_blocked = self.driver.title.strip().lower() in ['just a moment...', 'attention required']
+            return title_blocked or any(ind in page_source for ind in indicators)
         except Exception:
             return False
 
@@ -109,6 +115,11 @@ class GlassdoorScraper:
         
         try:
             self.driver.get(url)
+            # 給 Cloudflare JS challenge 短暫時間自動通過（最多 5 秒）
+            for _ in range(5):
+                if self.driver.title.strip().lower() not in ['just a moment...', 'attention required', '']:
+                    break
+                time.sleep(1)
 
             # 偵測 Cloudflare / "Humans only" 攔截頁面
             if not self._wait_if_blocked(company_name):

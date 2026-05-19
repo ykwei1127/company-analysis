@@ -156,11 +156,43 @@ venv\Scripts\python glassdoor_scraper_unified.py
 
 ---
 
+## Web Dashboard
+
+互動式 Dashboard，可在瀏覽器中檢視評分數據、啟動爬蟲、管理公司清單。
+
+### 啟動方式
+
+```powershell
+cd glassdoor-dashboard
+.\start.ps1
+```
+
+- **Frontend**: http://localhost:5173（Vue 3 + Element Plus）
+- **Backend**: http://localhost:8000/docs（FastAPI）
+- 預設 bind `0.0.0.0`，區域網路其他電腦可用 `http://<你的IP>:5173` 連入
+
+### 頁面功能
+
+| 頁面 | 說明 |
+|------|------|
+| Overview | 各公司 Global 評分一覽 |
+| Comparison | 雷達圖跨公司比較 |
+| Locations | 地區評分熱力圖 |
+| Scraper | Chrome 狀態、啟動/停止爬蟲、即時 log |
+| Settings | 公司管理（新增/刪除/Match/Explore）、Baseline 地區、爬蟲設定 |
+
+### 刪除爬取紀錄
+
+在頂部 run 下拉選單旁的 🗑️ 按鈕可刪除選中的 run（CSV、XLSX、log 全部刪除）。
+
+---
+
 ## 注意事項
 
 - 必須保持 Chrome 以 debug 模式開啟並登入 Glassdoor（單一模式用 port 9222；平行模式需同時開 9222/9223/9224）
 - Glassdoor 有 paywall，未登入時部分數據會被遮擋
 - 各城市頁面之間採動態延遲：成功抓取 1.5s，失敗 0.5s，優化整體速度
-- 平行模式會顯示 tqdm 進度條，即時顯示各 port 完成的 entries 數
+- Cloudflare 偵測：頁面載入後若 title 為 "Just a moment..." 會自動等待最多 5 秒讓 JS challenge 通過
+- 若 Cloudflare 真正攔截（需人工驗證），scraper 會暫停該 port 並將任務轉移給其他 port
 - 日誌即時 flush 到磁碟，crash 不會丟失已完成的紀錄
 - 若搜尋到的公司 ID 有誤（如 Compal Electronics 誤抓為 Delta Electronics），`company_finder.py` 會以 `all()` 比對所有關鍵字避免誤判，但仍建議執行後確認 `*_matched.json` 的 Global URL 是否正確
