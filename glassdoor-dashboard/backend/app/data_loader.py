@@ -32,6 +32,31 @@ def list_runs() -> list[dict]:
     return runs
 
 
+def delete_run(run_id: str) -> dict:
+    """Delete all files associated with a run (CSV, XLSX, logs)."""
+    deleted = []
+    if run_id == "latest":
+        # Delete the default files
+        for ext in ["csv", "xlsx"]:
+            f = OUTPUT_DIR / f"glassdoor_ratings.{ext}"
+            if f.exists():
+                f.unlink()
+                deleted.append(f.name)
+    else:
+        # Delete timestamped output files
+        for ext in ["csv", "xlsx"]:
+            f = OUTPUT_DIR / f"glassdoor_ratings_{run_id}.{ext}"
+            if f.exists():
+                f.unlink()
+                deleted.append(f.name)
+        # Delete associated log files
+        if LOGS_DIR.exists():
+            for f in LOGS_DIR.glob(f"run_{run_id}*"):
+                f.unlink()
+                deleted.append(f.name)
+    return {"deleted": deleted, "count": len(deleted)}
+
+
 def _find_csv(run_id: Optional[str] = None) -> Optional[Path]:
     """Find the CSV file for a given run_id, or the latest."""
     if run_id and run_id != "latest":

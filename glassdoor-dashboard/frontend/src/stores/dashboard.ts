@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getRuns } from '../api'
+import { getRuns, deleteRun } from '../api'
 
 export const useDashboardStore = defineStore('dashboard', () => {
   const runs = ref<{ id: string; label: string }[]>([])
@@ -22,5 +22,13 @@ export const useDashboardStore = defineStore('dashboard', () => {
     selectedRunId.value = id || ''
   }
 
-  return { runs, selectedRunId, fetchRuns, selectRun }
+  async function removeRun(id: string) {
+    await deleteRun(id)
+    if (selectedRunId.value === id) {
+      selectedRunId.value = ''
+    }
+    await fetchRuns()
+  }
+
+  return { runs, selectedRunId, fetchRuns, selectRun, removeRun }
 })

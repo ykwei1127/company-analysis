@@ -3,6 +3,7 @@ import axios from 'axios'
 const api = axios.create({ baseURL: '/api' })
 
 export const getRuns = () => api.get('/runs')
+export const deleteRun = (runId: string) => api.delete(`/runs/${runId}`)
 export const getOverview = (run?: string) => api.get('/overview', { params: { run } })
 export const getOverviewByLocation = (run?: string) => api.get('/overview/by-location', { params: { run } })
 export const getRatings = (run?: string, company?: string) => api.get('/ratings', { params: { run, company } })

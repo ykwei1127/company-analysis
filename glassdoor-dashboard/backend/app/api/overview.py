@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Query
 from typing import Optional
 
-from app.data_loader import load_ratings, list_runs
+from app.data_loader import load_ratings, list_runs, delete_run
 
 router = APIRouter(tags=["overview"])
 
@@ -12,6 +12,12 @@ router = APIRouter(tags=["overview"])
 def get_runs():
     """List available scrape runs."""
     return list_runs()
+
+
+@router.delete("/runs/{run_id}")
+def remove_run(run_id: str):
+    """Delete a scrape run and all its associated files."""
+    return delete_run(run_id)
 
 
 @router.get("/overview")

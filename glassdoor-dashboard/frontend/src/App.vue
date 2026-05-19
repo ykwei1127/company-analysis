@@ -41,6 +41,18 @@
               :value="run.id"
             />
           </el-select>
+          <el-popconfirm
+            :title="`Delete run '${dashboardStore.selectedRunId}'?`"
+            @confirm="dashboardStore.removeRun(dashboardStore.selectedRunId)"
+            confirm-button-text="Delete"
+            cancel-button-text="Cancel"
+          >
+            <template #reference>
+              <el-button size="small" type="danger" plain :disabled="!dashboardStore.selectedRunId" title="Delete this run">
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </template>
+          </el-popconfirm>
           <button class="gear-btn" @click="themeStore.toggle()" :title="themeStore.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">&#9881;</button>
         </div>
       </header>
@@ -53,7 +65,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { DataBoard, TrendCharts, Location, Monitor, Setting } from '@element-plus/icons-vue'
+import { DataBoard, TrendCharts, Location, Monitor, Setting, Delete } from '@element-plus/icons-vue'
 import { useDashboardStore } from './stores/dashboard'
 import { useThemeStore } from './stores/theme'
 
