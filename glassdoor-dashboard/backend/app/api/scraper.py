@@ -62,8 +62,15 @@ def scraper_status():
 
 
 @router.post("/scraper/start")
-async def scraper_start(ports: str = "9222", mode: str = "matched"):
-    """Start the scraper process."""
+async def scraper_start(ports: str = "9222", mode: str = "matched", source_mode: str = "all", companies: Optional[str] = None):
+    """Start the scraper process.
+
+    Args:
+        ports: Comma-separated Chrome debug ports
+        mode: 'matched' or 'baseline'
+        source_mode: 'all', 'country', 'city', or 'scan' (filter for matched mode)
+        companies: Comma-separated company names to filter (e.g., "ASUS,NVIDIA")
+    """
     if _scraper_state["running"]:
         return {"error": "Scraper is already running"}
 
@@ -86,6 +93,14 @@ async def scraper_start(ports: str = "9222", mode: str = "matched"):
         "--ports", ",".join(str(p) for p in port_list),
         "--no-confirm",
     ]
+
+    # Add source mode filter if specified (for matched mode only)
+    if mode == "matched" and source_mode and source_mode != "all":
+        cmd.extend(["--source-mode", source_mode])
+
+    # Add company filter if specified
+    if companies:
+        cmd.extend(["--companies", companies])
 
     # Launch process with UTF-8 encoding
     env = os.environ.copy()

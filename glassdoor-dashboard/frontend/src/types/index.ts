@@ -24,6 +24,7 @@ export interface CompanyOverview {
   recommend: number | null
   ceo_approval: number | null
   total_reviews: number | null
+  source_mode: 'city' | 'country' | 'scan' | 'unknown'
 }
 
 export interface LocationRating {
@@ -40,4 +41,5 @@ export interface LocationRating {
   recommend: number | null
   ceo_approval: number | null
   total_reviews: number | null
+  source_mode: 'city' | 'country' | 'scan' | 'unknown'
 }

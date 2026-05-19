@@ -37,11 +37,47 @@
           </el-checkbox-group>
         </div>
         <div class="control-group">
-          <label>Mode:</label>
-          <el-select v-model="mode" size="small" style="width: 140px">
-            <el-option label="Matched" value="matched" />
-            <el-option label="Baseline" value="baseline" />
+          <label>Data Source:</label>
+          <el-select v-model="mode" size="small" style="width: 160px">
+            <el-option label="Company Reviews" value="matched" />
+            <el-option label="ASUS Baseline Only" value="baseline" />
           </el-select>
+        </div>
+        <div class="control-group">
+          <label>Match Mode:</label>
+          <el-select v-model="sourceMode" size="small" style="width: 140px" :disabled="mode !== 'matched'">
+            <el-option label="All" value="all" />
+            <el-option label="Country" value="country" />
+            <el-option label="City" value="city" />
+            <el-option label="Discovery" value="scan" />
+          </el-select>
+          <el-tooltip v-if="mode === 'baseline'" content="ASUS Baseline has no Match Mode filter">
+            <el-icon style="margin-left: 4px; color: var(--el-text-color-secondary);"><info-filled /></el-icon>
+          </el-tooltip>
+        </div>
+        <div class="control-group" v-if="mode === 'matched'" style="flex-wrap: wrap;">
+          <label>Companies:</label>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <el-select-v2
+              v-model="selectedCompanies"
+              :options="companyOptions"
+              placeholder="All companies (click to select)"
+              size="small"
+              style="width: 280px"
+              multiple
+              collapse-tags
+              :max-collapse-tags="2"
+            />
+            <el-tooltip content="Select specific companies to scrape. Empty = all companies.">
+              <el-icon style="color: var(--el-text-color-secondary);"><info-filled /></el-icon>
+            </el-tooltip>
+            <el-button size="small" text @click="loadAvailableCompanies" :loading="loadingCompanies">
+              <el-icon><refresh /></el-icon>
+            </el-button>
+            <el-button v-if="selectedCompanies.length > 0" size="small" text @click="selectedCompanies = []">
+              Clear
+            </el-button>
+          </div>
         </div>
         <el-button type="primary" size="small" @click="handleStart" :loading="starting" :disabled="isRunning || selectedPorts.length === 0">Start</el-button>
         <el-button type="danger" size="small" @click="handleStop" :disabled="!isRunning">Stop</el-button>
@@ -85,11 +121,16 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus, launchChrome, closeAllChrome } from '../api'
+import { InfoFilled, Refresh } from '@element-plus/icons-vue'
+import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus, launchChrome, closeAllChrome, getCompanies } from '../api'
 
 const ALL_PORTS = [9222, 9223, 9224]
 const selectedPorts = ref<number[]>([9222])
 const mode = ref('matched')
+const sourceMode = ref('all')  // 'all', 'country', 'city', 'scan'
+const availableCompanies = ref<{name: string, file: string, mode: string}[]>([])
+const selectedCompanies = ref<string[]>([])  // Empty means all companies
+const loadingCompanies = ref(false)
 const isRunning = ref(false)
 const starting = ref(false)
 const logs = ref<string[]>([])
@@ -109,6 +150,25 @@ const elapsedSeconds = ref(0)
 let elapsedTimer: ReturnType<typeof setInterval> | null = null
 
 const visibleLogLines = computed(() => logs.value.slice(-200))
+
+const companyOptions = computed(() => {
+  return availableCompanies.value.map(c => ({
+    label: `${c.name} (${c.mode})`,
+    value: c.name
+  }))
+})
+
+async function loadAvailableCompanies() {
+  loadingCompanies.value = true
+  try {
+    const { data } = await getCompanies()
+    availableCompanies.value = data
+    // Don't reset selectedCompanies - keep user's selection
+  } catch (e) {
+    console.error('Failed to load companies', e)
+  }
+  loadingCompanies.value = false
+}
 
 const progressInfo = computed(() => {
   for (let i = logs.value.length - 1; i >= 0; i--) {
@@ -234,7 +294,8 @@ async function handleStart() {
   starting.value = true
   try {
     const portsStr = selectedPorts.value.join(',')
-    const { data } = await startScraper(portsStr, mode.value)
+    const companiesStr = selectedCompanies.value.length > 0 ? selectedCompanies.value.join(',') : undefined
+    const { data } = await startScraper(portsStr, mode.value, sourceMode.value, companiesStr)
     if (data.error) {
       logs.value = [data.error]
     } else {
@@ -294,6 +355,8 @@ function stopElapsedTimer() {
 
 onMounted(async () => {
   await refreshChromeStatus()
+  // Load available companies
+  await loadAvailableCompanies()
   // Auto-select connected ports
   selectedPorts.value = ALL_PORTS.filter(p => chromeStatus.value[p])
   // Check if scraper already running

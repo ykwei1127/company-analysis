@@ -80,23 +80,35 @@ class GlassdoorScraper:
         self._log(msg)
         print(msg, flush=True)
         wait_count = 0
-        while self._is_blocked():
-            time.sleep(10)
+        while True:
+            time.sleep(5)  # Check more frequently (was 10s)
             wait_count += 1
-            elapsed = wait_count * 10
+            elapsed = wait_count * 5
+
+            # Refresh page state by getting current URL and title
+            try:
+                current_url = self.driver.current_url
+                # Refresh page source to detect if user manually passed verification
+                if not self._is_blocked():
+                    msg = f"[BLOCKED] Port {port} 已恢復，繼續抓取"
+                    self._log(msg)
+                    print(msg, flush=True)
+                    return True
+            except Exception:
+                pass
+
             if elapsed >= timeout:
                 msg = f"[BLOCKED] Port {port} 超過 {timeout}s 未恢復，暫停此 port，任務轉移給其他 port"
                 self._log(msg)
                 print(msg, flush=True)
                 return False
-            if wait_count % 6 == 0:
+
+            if wait_count % 12 == 0:  # Log every 60s (was every 60s but now more frequent checks)
                 msg = f"[BLOCKED] Port {port} 仍被攔截，已等待 {elapsed}s..."
                 self._log(msg)
                 print(msg, flush=True)
-        msg = f"[BLOCKED] Port {port} 已恢復，繼續抓取"
-        self._log(msg)
-        print(msg, flush=True)
-        return True
+                # Hint to user
+                print(f"  💡 Tip: Please check Chrome window on port {port} and complete the CAPTCHA/verification if needed.")
 
     def extract_rating_data(self, url, company_name):
         """
@@ -273,6 +285,17 @@ class GlassdoorScraper:
         count = 0
 
         for json_file in json_files:
+            # Detect source mode from filename
+            basename = os.path.basename(json_file)
+            if '_matched_country.json' in basename:
+                source_mode = 'country'
+            elif '_scan.json' in basename:
+                source_mode = 'scan'
+            elif '_matched.json' in basename:
+                source_mode = 'city'
+            else:
+                source_mode = 'unknown'
+
             with open(json_file, encoding='utf-8') as f:
                 entries = json.load(f)
 
@@ -280,11 +303,11 @@ class GlassdoorScraper:
                 if entry['status'] != 'found' or not entry.get('url'):
                     continue
                 company = entry['company']
-                baseline_loc = entry['baseline_location']
+                baseline_loc = entry.get('baseline_location') or entry.get('country', 'Unknown')
                 actual_city = entry.get('matched_city') or baseline_loc
                 url = entry['url']
 
-                country = entry.get('baseline_country')
+                country = entry.get('baseline_country') or entry.get('country')
                 display_name = f"{company} - {baseline_loc}"
                 data = self.extract_rating_data(url, display_name)
                 if data == 'BLOCKED_TIMEOUT':
@@ -295,6 +318,7 @@ class GlassdoorScraper:
                     data['Actual City'] = actual_city
                     data['Country'] = country
                     data['Review URL'] = url
+                    data['Source Mode'] = source_mode  # city / country / scan
                     all_data.append(data)
                     # 成功且有關鍵欄位才等較久，否則短等待
                     if data.get('Overall') is not None:
@@ -373,12 +397,13 @@ class GlassdoorScraper:
             return
         
         df = pd.DataFrame(data)
-        
+
         # 調整列順序（相容有無 Location 欄位）
-        base_cols = ['Company', 'Baseline Location', 'Country', 'Actual City', 'Review URL', 'Overall', 'Recommend',
-                     'CEO Approval', 'Total Reviews', 'Diversity & Inclusion', 'Work/Life Balance',
-                     'Compensation and Benefits', 'Culture & Values',
-                     'Career Opportunities', 'Senior Management']
+        # Source Mode 放前面方便識別
+        base_cols = ['Company', 'Source Mode', 'Baseline Location', 'Country', 'Actual City', 'Review URL',
+                     'Overall', 'Recommend', 'CEO Approval', 'Total Reviews',
+                     'Diversity & Inclusion', 'Work/Life Balance', 'Compensation and Benefits',
+                     'Culture & Values', 'Career Opportunities', 'Senior Management']
         columns_order = [c for c in base_cols if c in df.columns]
         df = df[columns_order]
         
@@ -404,12 +429,35 @@ class GlassdoorScraper:
             cell.alignment = Alignment(horizontal='center', vertical='center')
         
         # 設置列寬
-        col_widths = {'A': 30, 'B': 22, 'C': 22, 'D': 10, 'E': 12,
-                      'F': 14, 'G': 20, 'H': 18, 'I': 24, 'J': 16,
-                      'K': 22, 'L': 18}
+        col_widths = {'A': 30, 'B': 15, 'C': 22, 'D': 22, 'E': 10, 'F': 12,
+                      'G': 14, 'H': 20, 'I': 18, 'J': 24, 'K': 16,
+                      'L': 22, 'M': 18}
         for col, width in col_widths.items():
             ws.column_dimensions[col].width = width
-        
+
+        # Color coding for Source Mode column
+        mode_colors = {
+            'city': 'CCE5FF',      # Light blue
+            'country': 'D4EDDA',    # Light green
+            'scan': 'FFF3CD',       # Light orange
+            'unknown': 'F8D7DA'     # Light red
+        }
+
+        # Find Source Mode column index
+        source_mode_col = None
+        for idx, cell in enumerate(ws[1], start=1):
+            if cell.value == 'Source Mode':
+                source_mode_col = idx
+                break
+
+        # Apply colors to Source Mode column
+        if source_mode_col:
+            for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
+                cell = row[source_mode_col - 1]  # 0-indexed
+                mode = cell.value
+                if mode in mode_colors:
+                    cell.fill = PatternFill(start_color=mode_colors[mode], end_color=mode_colors[mode], fill_type='solid')
+
         # 居中對齊數據
         for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
             for cell in row:
@@ -748,6 +796,8 @@ def main():
     parser.add_argument('--mode', choices=['manual', 'auto'], default=None, help='Chrome connection mode (manual=attach to existing, auto=launch new)')
     parser.add_argument('--task', choices=['matched', 'baseline'], default=None, help='Scraping task type')
     parser.add_argument('--ports', default=None, help='Comma-separated Chrome debug ports')
+    parser.add_argument('--source-mode', choices=['all', 'city', 'country', 'scan'], default='all', help='Filter matched files by source mode (city/country/scan)')
+    parser.add_argument('--companies', default=None, help='Comma-separated company names to filter (e.g., "ASUS,NVIDIA")')
     parser.add_argument('--no-confirm', action='store_true', help='Skip interactive confirmation prompt')
     args = parser.parse_args()
 
@@ -764,13 +814,44 @@ def main():
     output_config = getattr(config, 'OUTPUT_CONFIG', {}) if config else {}
     mode = args.mode or scraper_config.get('mode', 'manual')
     task = args.task or 'matched'  # matched or baseline
+    source_mode_filter = args.source_mode or 'all'
+    company_filter = args.companies.split(',') if args.companies else None
     headless = scraper_config.get('headless', False)
     _base_output = output_config.get('filename', 'data/glassdoor_ratings.xlsx')
     _stem, _ext = os.path.splitext(_base_output)
     output_file = f"{_stem}_{_ts}{_ext}"
 
     # 優先使用 data/*_matched*.json（company_finder 產生的結果，含 city 和 country 模式）
+    # 根據 source_mode_filter 和 company_filter 過濾檔案
     matched_files = sorted(glob.glob('data/*_matched*.json'))
+
+    # Apply source mode filter
+    if source_mode_filter != 'all':
+        filtered = []
+        for f in matched_files:
+            basename = os.path.basename(f)
+            if source_mode_filter == 'country' and '_matched_country.json' in basename:
+                filtered.append(f)
+            elif source_mode_filter == 'city' and '_matched.json' in basename and '_country' not in basename:
+                filtered.append(f)
+            elif source_mode_filter == 'scan' and '_scan.json' in basename:
+                filtered.append(f)
+        matched_files = filtered
+        print(f"🔍 Source Mode Filter: {source_mode_filter} -> {len(matched_files)} files selected")
+
+    # Apply company name filter
+    if company_filter:
+        company_names = [c.strip().lower() for c in company_filter]
+        filtered = []
+        for f in matched_files:
+            basename = os.path.basename(f).lower()
+            # Match company name in filename (e.g., nvidia_matched.json)
+            for name in company_names:
+                if name in basename or basename.startswith(name.replace(' ', '_')):
+                    filtered.append(f)
+                    break
+        matched_files = filtered
+        print(f"🔍 Company Filter: {company_filter} -> {len(matched_files)} files selected")
 
     if mode == 'manual' and not args.no_confirm:
         print("\n" + "="*60)

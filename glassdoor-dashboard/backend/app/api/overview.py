@@ -53,6 +53,7 @@ def get_overview(run: Optional[str] = Query(None)):
             "recommend": _safe_float(row, "recommend"),
             "ceo_approval": _safe_float(row, "ceo_approval"),
             "total_reviews": _safe_int(row, "total_reviews"),
+            "source_mode": _safe_str(row, "source_mode") or "unknown",
         }
         result.append(item)
 
@@ -87,6 +88,7 @@ def get_overview_by_location(run: Optional[str] = Query(None)):
             "recommend": _safe_float(row, "recommend"),
             "ceo_approval": _safe_float(row, "ceo_approval"),
             "total_reviews": _safe_int(row, "total_reviews"),
+            "source_mode": _safe_str(row, "source_mode") or "unknown",
         }
         result.append(item)
 

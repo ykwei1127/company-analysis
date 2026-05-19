@@ -10,6 +10,44 @@
       </el-select>
     </div>
 
+    <!-- Run Info Banner -->
+    <el-alert
+      :title="`Current Run: ${currentRunId || 'Latest'}`"
+      type="info"
+      :closable="false"
+      style="margin-bottom: 16px;"
+    >
+      <div style="display: flex; gap: 24px; font-size: 13px;">
+        <span><strong>Companies:</strong> {{ filteredCompanies.length }}</span>
+        <span><strong>Match Modes:</strong>
+          <el-tag
+            v-for="mode in uniqueModes"
+            :key="mode"
+            :type="mode === 'country' ? 'success' : mode === 'scan' ? 'warning' : 'info'"
+            size="small"
+            style="margin-left: 4px;"
+          >{{ mode }}</el-tag>
+        </span>
+      </div>
+    </el-alert>
+
+    <!-- Mixed Mode Warning -->
+    <el-alert
+      v-if="hasMixedModes"
+      title="Warning: Mixed Match Modes Detected"
+      type="warning"
+      :closable="false"
+      style="margin-bottom: 16px;"
+    >
+      <div style="font-size: 13px; line-height: 1.6;">
+        This run contains data from multiple match modes ({{ uniqueModes.join(', ') }}).
+        <br>
+        Comparing city-level and country-level reviews may lead to inconsistent results.
+        <br>
+        <strong>Recommendation:</strong> Use consistent Match Mode for all companies (preferably Country).
+      </div>
+    </el-alert>
+
     <!-- KPI Cards -->
     <div class="kpi-row">
       <div class="kpi-card">
@@ -42,6 +80,18 @@
       <el-table :data="filteredCompanies" stripe style="width: 100%" :default-sort="{ prop: 'overall', order: 'descending' }">
         <el-table-column prop="rank" label="#" width="45" align="center" sortable />
         <el-table-column prop="company" label="Company" min-width="120" sortable />
+        <el-table-column prop="source_mode" label="Match" width="90" align="center" sortable>
+          <template #default="{ row }">
+            <el-tag
+              v-if="row.source_mode"
+              :type="row.source_mode === 'country' ? 'success' : row.source_mode === 'scan' ? 'warning' : 'info'"
+              size="small"
+            >
+              {{ row.source_mode }}
+            </el-tag>
+            <span v-else>—</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="overall" label="Overall" min-width="70" align="center" sortable />
         <el-table-column prop="culture" label="Culture" min-width="70" align="center" sortable />
         <el-table-column prop="wlb" label="WLB" min-width="60" align="center" sortable />
@@ -118,6 +168,17 @@ const filteredCompanies = computed(() => {
   const locData = allLocationRatings.value.filter(r => r.baseline_location === locationFilter.value)
   return locData.map((r, i) => ({ ...r, rank: i + 1 })).sort((a, b) => (b.overall || 0) - (a.overall || 0)).map((r, i) => ({ ...r, rank: i + 1 }))
 })
+
+// Extract unique source modes from current data
+const uniqueModes = computed(() => {
+  const modes = new Set(filteredCompanies.value.map(c => c.source_mode).filter(Boolean))
+  return [...modes].sort()
+})
+
+const hasMixedModes = computed(() => uniqueModes.value.length > 1)
+
+// Get current run ID from dashboard store
+const currentRunId = computed(() => store.selectedRunId || 'Latest')
 
 const asusOverall = computed(() => {
   const asus = filteredCompanies.value.find(c => c.company === 'ASUS')
