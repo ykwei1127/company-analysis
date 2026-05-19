@@ -619,7 +619,18 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
     for port in ports:
         _progress[port] = {'completed': 0, 'current': 'init', 'finished': False, 'blocked': False}
 
-    total_tasks = len(tasks_all) * 10  # 粗略估計每個 task 平均 10 筆 entries
+    # 計算實際總 entry 數（從所有文件中統計有效 entries）
+    total_entries = 0
+    for task in tasks_all:
+        if task['type'] == 'baseline':
+            with open(task['file'], encoding='utf-8') as f:
+                entries = json.load(f)
+            total_entries += len([e for e in entries if e.get('status') == 'found' and e.get('url')])
+        else:  # matched file
+            with open(task['file'], encoding='utf-8') as f:
+                entries = json.load(f)
+            total_entries += len([e for e in entries if e.get('status') == 'found' and e.get('url')])
+    total_tasks = total_entries  # Use actual entry count, not estimation
 
     total_start = time.time()
     all_data = []

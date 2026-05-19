@@ -6,15 +6,17 @@ import json
 import os
 import subprocess
 import sys
+import threading
 import glob
 from pathlib import Path
 from typing import List, Optional
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 
 router = APIRouter()
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 DATA_DIR = PROJECT_ROOT / "data"
+VENV_PYTHON = PROJECT_ROOT / "venv" / "Scripts" / "python.exe"
 CONFIG_FILE = PROJECT_ROOT / "config.py"
 COMPANY_FINDER_SCRIPT = PROJECT_ROOT / "company_finder.py"
 BASELINE_FILE = DATA_DIR / "asus_locations.json"
@@ -89,20 +91,35 @@ def remove_company(filename: str):
 
 # ─── Company Finder (Explore & Match) ──────────────────────────────
 
-_finder_state = {"process": None, "logs": [], "running": False}
+_finder_lock = threading.Lock()
+_finder_state = {
+    "process": None,
+    "logs": [],
+    "running": False,
+    "mode": None,  # 'match', 'scan', 'explore'
+}
 
 
 @router.post("/settings/finder/match")
-def run_match(companies: Optional[List[str]] = None, match_mode: Optional[str] = None):
+def run_match(
+    companies: Optional[str] = Query(None, description="Comma-separated company names"),
+    match_mode: Optional[str] = Query(None, description="Match mode: city or country")
+):
     """Run company_finder.py match mode. match_mode: 'city' or 'country'."""
+    # Parse comma-separated companies string to list
+    companies_list = [c.strip() for c in companies.split(',') if c.strip()] if companies else None
+    print(f"DEBUG: Received companies={companies_list}, match_mode={match_mode}")
     if _finder_state["running"]:
         return {"status": "already_running"}
 
-    cmd = [sys.executable, str(COMPANY_FINDER_SCRIPT), "match"]
+    cmd = [str(VENV_PYTHON), str(COMPANY_FINDER_SCRIPT), "match"]
     if match_mode in ('city', 'country'):
         cmd += ['--mode', match_mode]
     env = os.environ.copy()
     env["PYTHONUTF8"] = "1"
+    # Pass selected companies via env var (comma-separated)
+    if companies_list:
+        env["FINDER_COMPANIES"] = ",".join(companies_list)
 
     _finder_state["logs"] = []
     _finder_state["running"] = True
@@ -132,18 +149,29 @@ def run_match(companies: Optional[List[str]] = None, match_mode: Optional[str] =
             _finder_state["running"] = False
 
     threading.Thread(target=_reader, daemon=True).start()
+    
+    # Monitor thread to ensure running state is updated when process exits
+    def _monitor():
+        proc.wait()
+        _finder_state["running"] = False
+        print(f"Process exited with code {proc.returncode}")
+    
+    threading.Thread(target=_monitor, daemon=True).start()
     return {"status": "started"}
 
 
 @router.post("/settings/finder/scan")
-def run_scan():
+def run_scan(companies: Optional[List[str]] = None):
     """Run company_finder.py scan mode (scan all countries)."""
     if _finder_state["running"]:
         return {"status": "already_running"}
 
-    cmd = [sys.executable, str(COMPANY_FINDER_SCRIPT), "scan"]
+    cmd = [str(VENV_PYTHON), str(COMPANY_FINDER_SCRIPT), "scan"]
     env = os.environ.copy()
     env["PYTHONUTF8"] = "1"
+    # Pass selected companies via env var
+    if companies:
+        env["FINDER_COMPANIES"] = ",".join(companies)
 
     _finder_state["logs"] = []
     _finder_state["running"] = True
@@ -166,64 +194,48 @@ def run_scan():
             for line in proc.stdout:
                 line = line.rstrip('\n')
                 if line:
-                    _finder_state["logs"].append(line)
+                    with _finder_lock:
+                        _finder_state["logs"].append(line)
         except Exception:
             pass
         finally:
-            _finder_state["running"] = False
+            with _finder_lock:
+                _finder_state["running"] = False
 
     threading.Thread(target=_reader, daemon=True).start()
+    
+    # Monitor thread to ensure running state is updated when process exits
+    def _monitor():
+        proc.wait()
+        with _finder_lock:
+            _finder_state["running"] = False
+        print(f"Scan process exited with code {proc.returncode}")
+    
+    threading.Thread(target=_monitor, daemon=True).start()
     return {"status": "started"}
 
 
 @router.post("/settings/finder/explore")
-def run_explore():
+def run_explore(companies: Optional[List[str]] = None):
     """Run company_finder.py explore mode."""
     if _finder_state["running"]:
         return {"status": "already_running"}
 
-    cmd = [sys.executable, str(COMPANY_FINDER_SCRIPT), "explore"]
-    env = os.environ.copy()
-    env["PYTHONUTF8"] = "1"
+    cmd = [str(VENV_PYTHON), str(COMPANY_FINDER_SCRIPT), "explore"]
 
-    _finder_state["logs"] = []
-    _finder_state["running"] = True
-
-    import threading
-
-    proc = subprocess.Popen(
-        cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        cwd=str(PROJECT_ROOT),
-        env=env,
-        encoding='utf-8',
-        errors='replace',
-    )
-    _finder_state["process"] = proc
-
-    def _reader():
-        try:
-            for line in proc.stdout:
-                line = line.rstrip('\n')
-                if line:
-                    _finder_state["logs"].append(line)
-        except Exception:
-            pass
-        finally:
-            _finder_state["running"] = False
-
-    threading.Thread(target=_reader, daemon=True).start()
+    _run_finder_subprocess(cmd, "explore", companies=companies)
     return {"status": "started"}
 
 
 @router.get("/settings/finder/status")
-def finder_status():
-    """Get current status of company_finder subprocess."""
-    return {
-        "running": _finder_state["running"],
-        "logs": _finder_state["logs"],
-    }
+def get_finder_status():
+    """Return current finder subprocess status and logs."""
+    with _finder_lock:
+        return {
+            "running": _finder_state["running"],
+            "mode": _finder_state["mode"],
+            "logs": list(_finder_state["logs"]),  # Copy list to avoid race conditions
+        }
 
 
 @router.post("/settings/finder/stop")
@@ -339,7 +351,7 @@ def add_company_to_match(name: str):
 
 @router.post("/settings/companies-to-match/remove")
 def remove_company_from_match(name: str):
-    """Remove a company name from COMPANIES_TO_MATCH in company_finder.py."""
+    """Remove a company name from COMPANIES_TO_MATCH in company_finder.py and delete matched files."""
     import re
     with open(COMPANY_FINDER_SCRIPT, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -365,13 +377,21 @@ def remove_company_from_match(name: str):
         new_content = re.sub(dict_pat, '', content)
         if new_content != content:
             content = new_content
-            removed = True
-
-    if removed:
-        with open(COMPANY_FINDER_SCRIPT, 'w', encoding='utf-8') as f:
-            f.write(content)
-        return {"status": "removed", "name": name}
-    return {"status": "not_found", "message": f"{name} not found in list"}
+    
+    # Write back the modified content
+    with open(COMPANY_FINDER_SCRIPT, 'w', encoding='utf-8') as f:
+        f.write(content)
+    
+    # Also delete matched JSON files for this company
+    files_removed = []
+    safe_name = name.lower().replace(' ', '_')
+    for suffix in ['_matched.json', '_matched_country.json', '_scan.json']:
+        file_path = DATA_DIR / f"{safe_name}{suffix}"
+        if file_path.exists():
+            file_path.unlink()
+            files_removed.append(file_path.name)
+    
+    return {"removed_from_list": removed, "files_removed": files_removed}
 
 
 # ─── Helpers ────────────────────────────────────────────────────────

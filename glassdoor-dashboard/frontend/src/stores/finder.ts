@@ -7,6 +7,20 @@ export const useFinderStore = defineStore('finder', () => {
   const currentTask = ref<'explore' | 'match' | 'scan' | null>(null)
   const logs = ref<string[]>([])
   const startTime = ref<number | null>(null)
+  const elapsedTime = ref('')  // Now a ref that updates via setInterval
+  let elapsedTimer: number | null = null
+
+  // Update elapsed time every second
+  function updateElapsed() {
+    if (!startTime.value) {
+      elapsedTime.value = ''
+      return
+    }
+    const elapsed = Math.floor((Date.now() - startTime.value) / 1000)
+    const mins = Math.floor(elapsed / 60)
+    const secs = elapsed % 60
+    elapsedTime.value = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`
+  }
 
   // Getters
   const statusTitle = computed(() => {
@@ -29,26 +43,28 @@ export const useFinderStore = defineStore('finder', () => {
     return texts[currentTask.value]
   })
 
-  const elapsedTime = computed(() => {
-    if (!startTime.value) return ''
-    const elapsed = Math.floor((Date.now() - startTime.value) / 1000)
-    const mins = Math.floor(elapsed / 60)
-    const secs = elapsed % 60
-    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`
-  })
-
   // Actions
   function start(task: 'explore' | 'match' | 'scan') {
     isRunning.value = true
     currentTask.value = task
     startTime.value = Date.now()
     logs.value = []
+    elapsedTime.value = '0s'
+    // Start timer to update elapsed time every second
+    if (elapsedTimer) clearInterval(elapsedTimer)
+    elapsedTimer = window.setInterval(updateElapsed, 1000)
   }
 
   function stop() {
     isRunning.value = false
     currentTask.value = null
     startTime.value = null
+    elapsedTime.value = ''
+    // Stop timer
+    if (elapsedTimer) {
+      clearInterval(elapsedTimer)
+      elapsedTimer = null
+    }
   }
 
   function addLog(line: string) {
@@ -68,9 +84,10 @@ export const useFinderStore = defineStore('finder', () => {
     currentTask,
     logs,
     startTime,
+    elapsedTime,
     statusTitle,
     statusText,
-    elapsedTime,
+    updateElapsed,
     start,
     stop,
     addLog,

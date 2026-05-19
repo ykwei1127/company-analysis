@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Query
 from typing import Optional
 
-from app.data_loader import load_ratings, list_runs, delete_run
+from app.data_loader import load_ratings, list_runs, delete_run, get_run_metadata
 
 router = APIRouter(tags=["overview"])
 
@@ -63,6 +63,16 @@ def get_overview(run: Optional[str] = Query(None)):
         item["rank"] = i + 1
 
     return result
+
+
+@router.get("/overview/run-metadata")
+def get_run_metadata_api(run: Optional[str] = Query(None)):
+    """Return run metadata including source modes (city/country) and company list."""
+    metadata = get_run_metadata(run)
+    return {
+        "match_modes": metadata.get("modes", []),
+        "companies": metadata.get("companies", [])
+    }
 
 
 @router.get("/overview/by-location")

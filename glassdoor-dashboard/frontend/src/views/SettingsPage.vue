@@ -93,7 +93,7 @@
                 </el-button>
               </div>
             </div>
-            <el-checkbox-group v-model="selectedMatchCompanies" size="small" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <el-checkbox-group v-model="selectedMatchCompanies" size="small" style="display: flex; flex-wrap: wrap; gap: 8px;" :disabled="finderStore.isRunning">
               <el-checkbox
                 v-for="c in availableMatchCompanies"
                 :key="c.name"
@@ -394,7 +394,14 @@ async function handleRemove(name: string) {
 
 // ─── Companies to Match ─────────────────────────────────
 const availableMatchCompanies = ref<{name: string}[]>([])
-const selectedMatchCompanies = ref<string[]>([])  // 只存選中的公司名稱
+// 從 localStorage 初始化選中的公司
+const savedCompanies = localStorage.getItem('selectedMatchCompanies')
+const selectedMatchCompanies = ref<string[]>(savedCompanies ? JSON.parse(savedCompanies) : [])
+
+// 監聽變化並保存到 localStorage
+watch(selectedMatchCompanies, (newVal) => {
+  localStorage.setItem('selectedMatchCompanies', JSON.stringify(newVal))
+}, { deep: true })
 const newCompanyName = ref('')
 
 async function loadCompaniesToMatch() {
@@ -404,10 +411,6 @@ async function loadCompaniesToMatch() {
     availableMatchCompanies.value = data.companies.map((c: any) => ({ 
       name: typeof c === 'string' ? c : c.name 
     }))
-    // 預設全選（只存名字）
-    if (selectedMatchCompanies.value.length === 0) {
-      selectedMatchCompanies.value = availableMatchCompanies.value.map(c => c.name)
-    }
   } catch { /* ignore */ }
 }
 
@@ -498,28 +501,30 @@ let finderPoll: ReturnType<typeof setInterval> | null = null
 
 async function handleMatch() {
   finderStore.start('match')
+  startFinderPolling()  // Start polling immediately
   // 只跑選中的公司
   const companiesToRun = selectedMatchCompanies.value.length > 0
     ? selectedMatchCompanies.value
     : availableMatchCompanies.value.map(c => c.name)
+  console.log('Selected companies:', selectedMatchCompanies.value)
+  console.log('Companies to run:', companiesToRun)
   await runFinderMatch(matchMode.value, companiesToRun)
-  startFinderPolling()
 }
 
 async function handleScan() {
   finderStore.start('scan')
+  startFinderPolling()  // Start polling immediately
   // 使用選中的公司或全部
   const companiesToRun = selectedMatchCompanies.value.length > 0
     ? selectedMatchCompanies.value
     : availableMatchCompanies.value.map(c => c.name)
   await runFinderScan(companiesToRun)
-  startFinderPolling()
 }
 
 async function handleExplore() {
   finderStore.start('explore')
+  startFinderPolling()  // Start polling immediately
   await runFinderExplore()
-  startFinderPolling()
 }
 
 function startFinderPolling() {
@@ -527,18 +532,27 @@ function startFinderPolling() {
   finderPoll = setInterval(async function pollFinderStatus() {
     try {
       const { data } = await getFinderStatus()
+      // Check for completion BEFORE updating state
+      const wasRunning = finderStore.isRunning
+      const isRunningNow = data.running
+      
       // Update store state (which updates global status bar)
       if (data.running !== finderStore.isRunning) {
         finderStore.isRunning = data.running
       }
-      if (data.logs && data.logs.length > 0) {
-        finderStore.logs = data.logs
+      if (data.logs) {
+        finderStore.setLogs(data.logs)
       }
-      if (!data.running && finderStore.isRunning) {
-        // Task completed
+      // Detect transition from running to not running (task completed)
+      if (wasRunning && !isRunningNow) {
+        // Task completed - update final logs then stop
+        if (data.logs) {
+          finderStore.setLogs(data.logs)
+        }
         finderStore.stop()
         loadCompanies()
         checkBaseline()  // Recheck baseline after task completes
+        stopFinderPolling()
       }
     } catch (e) {
       console.error('Failed to poll status', e)

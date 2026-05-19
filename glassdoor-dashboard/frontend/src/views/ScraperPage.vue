@@ -162,7 +162,7 @@ async function loadAvailableCompanies() {
   loadingCompanies.value = true
   try {
     const { data } = await getCompanies()
-    availableCompanies.value = data
+    availableCompanies.value = data.companies || []
     // Don't reset selectedCompanies - keep user's selection
   } catch (e) {
     console.error('Failed to load companies', e)

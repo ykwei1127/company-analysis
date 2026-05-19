@@ -121,7 +121,7 @@ import { use } from 'echarts/core'
 import { BarChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
-import { getOverview, getOverviewByLocation } from '../api'
+import { getOverview, getOverviewByLocation, getRunMetadata } from '../api'
 import { useDashboardStore } from '../stores/dashboard'
 import { useThemeStore } from '../stores/theme'
 import type { CompanyOverview, LocationRating } from '../types'
@@ -154,6 +154,7 @@ const themeStore = useThemeStore()
 const companies = ref<CompanyOverview[]>([])
 const allLocationRatings = ref<LocationRating[]>([])
 const locationFilter = ref('global')
+const runMatchModes = ref<string[]>([])
 
 const locationOptions = computed(() => {
   const locs = new Set(allLocationRatings.value.map(r => r.baseline_location).filter(Boolean))
@@ -169,10 +170,9 @@ const filteredCompanies = computed(() => {
   return locData.map((r, i) => ({ ...r, rank: i + 1 })).sort((a, b) => (b.overall || 0) - (a.overall || 0)).map((r, i) => ({ ...r, rank: i + 1 }))
 })
 
-// Extract unique source modes from current data
+// Get unique match modes from run metadata
 const uniqueModes = computed(() => {
-  const modes = new Set(filteredCompanies.value.map(c => c.source_mode).filter(Boolean))
-  return [...modes].sort()
+  return runMatchModes.value
 })
 
 const hasMixedModes = computed(() => uniqueModes.value.length > 1)
@@ -244,12 +244,14 @@ const barOption = computed(() => {
 })
 
 async function loadData() {
-  const [overview, byLoc] = await Promise.all([
+  const [overview, byLoc, metadata] = await Promise.all([
     getOverview(store.selectedRunId || undefined),
     getOverviewByLocation(store.selectedRunId || undefined),
+    getRunMetadata(store.selectedRunId || 'latest'),
   ])
   companies.value = overview.data
   allLocationRatings.value = byLoc.data
+  runMatchModes.value = metadata.data.match_modes || []
 }
 
 onMounted(loadData)

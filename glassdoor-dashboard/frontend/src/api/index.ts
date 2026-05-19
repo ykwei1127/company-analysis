@@ -4,6 +4,7 @@ const api = axios.create({ baseURL: '/api' })
 
 export const getRuns = () => api.get('/runs')
 export const deleteRun = (runId: string) => api.delete(`/runs/${runId}`)
+export const getRunMetadata = (run: string) => api.get(`/overview/run-metadata?run=${run}`)
 export const getOverview = (run?: string) => api.get('/overview', { params: { run } })
 export const getOverviewByLocation = (run?: string) => api.get('/overview/by-location', { params: { run } })
 export const getRatings = (run?: string, company?: string) => api.get('/ratings', { params: { run, company } })

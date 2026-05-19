@@ -132,6 +132,55 @@ def load_ratings(run_id: Optional[str] = None) -> pd.DataFrame:
     return df
 
 
+def get_run_metadata(run_id: Optional[str] = None) -> dict:
+    """Get metadata about a run including source modes from matched files."""
+    csv_path = _find_csv(run_id)
+    if csv_path is None:
+        return {"modes": [], "companies": []}
+    
+    # Extract run timestamp from CSV path (e.g., glassdoor_ratings_20260519_2254.csv)
+    run_timestamp = csv_path.stem.replace("glassdoor_ratings_", "")
+    
+    # Find corresponding JSON log file
+    logs_dir = PROJECT_ROOT / "logs"
+    json_files = sorted(logs_dir.glob(f"run_{run_timestamp}*.json"))
+    
+    if not json_files:
+        return {"modes": [], "companies": []}
+    
+    # Load the JSON log
+    try:
+        with open(json_files[0], 'r', encoding='utf-8') as f:
+            log_data = json.load(f)
+    except Exception:
+        return {"modes": [], "companies": []}
+    
+    # Extract companies and their modes from matched_files
+    companies = []
+    modes = set()
+    for mf in log_data.get("matched_files", []):
+        filename = mf.get("filename", "")
+        company_name = mf.get("company", "")
+        # Determine mode from filename
+        if "_country" in filename:
+            mode = "country"
+        elif "_matched" in filename:
+            mode = "city"
+        else:
+            mode = "unknown"
+        modes.add(mode)
+        companies.append({
+            "name": company_name,
+            "mode": mode,
+            "filename": filename
+        })
+    
+    return {
+        "modes": sorted(list(modes)),
+        "companies": companies
+    }
+
+
 def _extract_company_name(raw: str) -> str:
     """Extract company name from 'Company - Location' format."""
     if not isinstance(raw, str):

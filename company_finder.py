@@ -38,6 +38,7 @@ class TeeLogger:
     def write(self, data):
         self._stdout.write(data)
         self._file.write(data)
+        self._file.flush()  # Flush immediately for real-time updates
 
     def flush(self):
         self._stdout.flush()
@@ -130,10 +131,6 @@ COMPANIES_TO_MATCH = [
     'NVIDIA',
     'TSMC',
     'MSI',
-    'Trend Micro',
-    'Google',
-    'Acer',
-    'Lenovo',
     'Dell Technologies',
     {
         'name': 'HP Inc.',
@@ -1016,9 +1013,10 @@ def run_explore():
         finder.close()
 
 
-def run_match(match_mode=None):
+def run_match(match_mode=None, companies=None):
     """
     執行比對。match_mode 可為 'city' 或 'country'，預設讀取 MATCH_MODE 全域設定。
+    companies: 要處理的公司列表，如果為 None 則使用 COMPANIES_TO_MATCH
     """
     mode_used = match_mode or MATCH_MODE
     print("=" * 60)
@@ -1035,7 +1033,23 @@ def run_match(match_mode=None):
         print(f"找不到基準檔案 {BASELINE_FILE}，請先執行 explore 模式")
         return
 
-    if not COMPANIES_TO_MATCH:
+    # 決定要處理的公司列表
+    companies_to_run = companies if companies is not None else COMPANIES_TO_MATCH
+    
+    # 檢查環境變數（從後端傳遞的公司列表）
+    env_companies = os.environ.get('FINDER_COMPANIES')
+    if env_companies:
+        selected_names = [n.strip() for n in env_companies.split(',') if n.strip()]
+        print(f"從環境變數讀取公司列表：{selected_names}")
+        # 從 COMPANIES_TO_MATCH 中篩選
+        companies_to_run = []
+        for entry in COMPANIES_TO_MATCH:
+            name = entry if isinstance(entry, str) else entry.get('name')
+            if name in selected_names:
+                companies_to_run.append(entry)
+        print(f"篩選後要處理的公司：{len(companies_to_run)} 個")
+    
+    if not companies_to_run:
         print("請在 COMPANIES_TO_MATCH 中加入要比對的公司名稱")
         return
 
@@ -1046,7 +1060,7 @@ def run_match(match_mode=None):
     all_company_results = {}
 
     try:
-        for company_entry in COMPANIES_TO_MATCH:
+        for company_entry in companies_to_run:
             # 支援直接填字串（公司名）或完整 dict
             if isinstance(company_entry, str):
                 company_config = finder.search_company(company_entry)
@@ -1099,7 +1113,23 @@ def run_scan():
     print(f"掃描 {len(COUNTRY_IN_CODES)} 個國家")
     print("=" * 60)
 
-    if not COMPANIES_TO_MATCH:
+    # 決定要處理的公司列表
+    companies_to_run = COMPANIES_TO_MATCH
+    
+    # 檢查環境變數（從後端傳遞的公司列表）
+    env_companies = os.environ.get('FINDER_COMPANIES')
+    if env_companies:
+        selected_names = [n.strip() for n in env_companies.split(',') if n.strip()]
+        print(f"從環境變數讀取公司列表：{selected_names}")
+        # 從 COMPANIES_TO_MATCH 中篩選
+        companies_to_run = []
+        for entry in COMPANIES_TO_MATCH:
+            name = entry if isinstance(entry, str) else entry.get('name')
+            if name in selected_names:
+                companies_to_run.append(entry)
+        print(f"篩選後要處理的公司：{len(companies_to_run)} 個")
+    
+    if not companies_to_run:
         print("請在 COMPANIES_TO_MATCH 中加入要掃描的公司名稱")
         return
 
@@ -1109,7 +1139,7 @@ def run_scan():
     finder = CompanyFinder(CHROME_DEBUG_PORT)
 
     try:
-        for company_entry in COMPANIES_TO_MATCH:
+        for company_entry in companies_to_run:
             if isinstance(company_entry, str):
                 company_config = finder.search_company(company_entry)
                 if not company_config:
