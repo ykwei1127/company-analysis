@@ -254,7 +254,7 @@
             <el-table-column prop="file" label="File" width="260" />
             <el-table-column label="Action" width="90">
               <template #default="{ row }">
-                <el-popconfirm title="Remove this file?" @confirm="handleRemove(row.name)">
+                <el-popconfirm title="Remove this file?" @confirm="handleRemove(row.file)">
                   <template #reference>
                     <el-button type="danger" size="small" plain :disabled="STATIC_MODE">Remove</el-button>
                   </template>
@@ -340,7 +340,8 @@ import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { Loading, Refresh, Search, InfoFilled } from '@element-plus/icons-vue'
 import { useFinderStore } from '../stores/finder'
 import { 
-  getCompanies, 
+  getCompanies,
+  removeCompany,
   runFinderOffice,
   runFinderCountry,
   runFinderCity,
@@ -434,10 +435,9 @@ async function loadCompanies() {
   loadingCompanies.value = false
 }
 
-async function handleRemove(name: string) {
-  await removeCompanyToMatch(name)
+async function handleRemove(filename: string) {
+  await removeCompany(filename)
   await loadCompanies()
-  await loadCompaniesToMatch()
 }
 
 // ─── Companies to Match ─────────────────────────────────
