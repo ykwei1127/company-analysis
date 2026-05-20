@@ -1,6 +1,31 @@
 # Changelog
 
-## 2026-05-20
+## 2026-05-20 (Session 2)
+
+### Added
+- **City Match mode** (`company_finder.py city`) — 第 4 種 URL 清單類型，以 ASUS 辦公室城市為基準，搜尋其他公司在同一城市的 Review URL，輸出 `*_city.json`
+- **GitHub Pages 靜態部署** — `export_static.py` 將 output/ 匯出為靜態 JSON，`npm run deploy` 部署至 GitHub Pages
+  - 靜態網站：https://ykwei1127.github.io/company-analysis/
+  - Demo Mode：Scraper / Settings 頁面可瀏覽但控制項停用，顯示「Demo Mode — Read Only」提示
+  - `.nojekyll` + `gh-pages --dotfiles` 解決 Jekyll 過濾 `_` 開頭 asset 問題
+- **爬蟲完成後自動刷新 run 選單** — `ScraperPage.vue` 偵測到爬蟲停止後，自動呼叫 `fetchRuns()` 並切換到最新 run
+
+### Fixed
+- **ASUS OVERALL / RANK KPI 顯示 `—`** — CSV 儲存的公司名為 `"Asus"`，前端 hardcode `'ASUS'` 導致比對失敗；改用 `.toLowerCase()` 比對 + `getCompanyColor()` case-insensitive helper
+- **雷達圖顏色全灰** — `COMPANY_COLORS['Asus']` 因大小寫找不到回傳 `'#555'`；`getCompanyColor()` 現在 fallback 到 palette 顏色
+- **Comparison 頁面初始不選任何公司** — `DEFAULT_SELECTED = ['ASUS']` 從不匹配；改為 `loadData()` 完成後動態初始化 `selectedCompanies`
+- **Scraper `--source-mode office` 無效** — `office` 不在 `glassdoor_scraper_unified.py` 的 choices 列表；已補上
+- **office 模式 `KeyError: 'company'`** — `parallel_scrape` 嘗試讀取 `_e['company']` 但 office 模式 entry 格式不同；修正為使用正確欄位
+- **office 模式跑了兩次 ASUS** — baseline 邏輯重複加入已在 office 清單中的 ASUS；加入 dedup 判斷
+
+### Changed
+- **Settings 頁面** — 新增 City Match 模式卡片，Build URL Lists 現在有 4 張卡（Office / Country / City / Scan）
+- **Scraper 頁面 List Type 下拉選單** — 新增 `City Match` 選項
+- **`vite.config.ts`** — 改為 factory function，static mode 使用 `/company-analysis/` base path，dev 用 `/`
+- **`api/index.ts`** — `STATIC_MODE` 開關：靜態模式讀取 JSON 檔案，scraper/settings API 回傳 noop
+- **`main.ts`** — Router 改用 `createWebHistory(import.meta.env.BASE_URL)` 支援 GitHub Pages 子路徑
+
+
 ### Changed (Breaking Refactor)
 - **Unified workflow terminology**: replaced confusing `baseline/explore/match/city` with three clear **URL list types**
   - `office` (was: explore/baseline/city) → `*_office.json`
