@@ -14,6 +14,65 @@ Vue 3 + FastAPI 互動式 Dashboard，用於檢視爬取的 Glassdoor 評分數�
 
 預設 bind `0.0.0.0`，區域網路可用 `http://<IP>:5173` 連入。
 
+---
+
+## 從零開始完整操作流程
+
+### 前置：啟動環境
+
+1. 執行 `啟動Chrome.bat`（port 9222），在開啟的 Chrome 中登入 Glassdoor
+2. 執行 `.\start.ps1` 啟動 Dashboard，打開 http://localhost:5173
+
+---
+
+### Phase 1：建立 URL 清單（只需做一次）
+
+進入 **Settings** 頁面：
+
+**Step 1 — 確認公司列表**
+- **Companies** 區塊顯示目前 `COMPANIES_TO_MATCH` 的公司
+- 輸入框可新增公司名稱 → **Add**（ID/URL 自動搜尋）
+- 勾選想要的公司
+
+**Step 2 — 建立清單**
+
+| 目標 | 按鈕 | 輸出檔案 |
+|------|------|---------|
+| 各公司辦公室城市評分 | **Build Office List** | `data/*_office.json` |
+| 各國國家級評分（推薦） | **Build Country List** | `data/*_country.json` |
+| 掃描全球哪些國家有評論 | **Build Scan List** | `data/*_scan.json` |
+
+點下去後右上角狀態列會顯示進度 log，等完成為止。
+
+**Step 3 — 確認結果**
+- 切到 **View URL Lists** tab → 選剛建好的檔案 → 確認各地區 status 為 `found`
+
+---
+
+### Phase 2：抓取評分內容（定期執行）
+
+進入 **Scraper** 頁面：
+
+1. **Chrome Ports** 確認 9222 綠燈 ✅
+2. **List Type** 選剛建的類型（如 `Country`）
+3. **Companies** 選要抓的公司（留空 = 全部）
+4. 按 **Start Scraper**，等 log 顯示完成
+5. 輸出：`output/glassdoor_ratings_YYYYMMDD_HHMM.xlsx`
+
+> **平行加速**：同時開 `啟動Chrome_9223.bat`、`啟動Chrome_9224.bat`，在 Ports 勾選 9222 + 9223 + 9224，速度提升約 3x
+
+---
+
+### Phase 3：查看結果
+
+| 頁面 | 看什麼 |
+|------|--------|
+| **Overview** | 各公司整體評分排名，頂部 run 下拉切換不同次結果 |
+| **Comparison** | 選公司 + 地區 → 雷達圖比較各維度 |
+| **Locations** | 地區熱力圖，哪個城市哪家公司分高 |
+
+---
+
 ## 頁面說明
 
 | 頁面 | 功能 |
@@ -24,17 +83,7 @@ Vue 3 + FastAPI 互動式 Dashboard，用於檢視爬取的 Glassdoor 評分數�
 | **Scraper** | Chrome 狀態管理、啟動/停止爬蟲、**List Type 篩選**、公司選擇 |
 | **Settings** | 建立 URL 清單（Office/Country/Scan）、公司管理、查看清單內容、Scraper Config |
 
-## URL 清單工作流程
-
-Settings 頁面分三種 URL 清單類型（每種只需建一次）：
-
-| 類型 | 說明 | 輸出檔案 |
-|------|------|---------|
-| **Office Location** | 從 Glassdoor 辦公室頁面抓城市級別 URL | `data/*_office.json` |
-| **Country** | 國家級別 IN 代碼 URL（推薦） | `data/*_country.json` |
-| **World Scan** | 掃描 60+ 個國家 | `data/*_scan.json` |
-
-URL 清單建好後，到 **Scraper 頁面**選擇 List Type 後啟動爬蟲定期抓取評分。
+---
 
 ## 目錄結構
 
@@ -74,4 +123,4 @@ glassdoor-dashboard/
 
 - **Frontend**: Vue 3, Element Plus, ECharts, Pinia, TypeScript
 - **Backend**: FastAPI, Pandas, uvicorn
-- **Theme**: Dark/Light 可切換
+- **Theme**: Dark/Light 可切換（Element Plus `.dark` class + CSS variables）

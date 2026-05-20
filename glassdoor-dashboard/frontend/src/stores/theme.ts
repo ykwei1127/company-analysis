@@ -15,6 +15,12 @@ export const useThemeStore = defineStore('theme', () => {
 
   watch(mode, (val) => {
     document.documentElement.setAttribute('data-theme', val)
+    // Element Plus dark mode CSS requires the 'dark' class on <html>
+    if (val === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
     localStorage.setItem('theme', val)
   }, { immediate: true })
 

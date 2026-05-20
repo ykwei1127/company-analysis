@@ -11,25 +11,21 @@
     </div>
 
     <!-- Run Info Banner -->
-    <el-alert
-      :title="`Current Run: ${currentRunId || 'Latest'}`"
-      type="info"
-      :closable="false"
-      style="margin-bottom: 16px;"
-    >
-      <div style="display: flex; gap: 24px; font-size: 13px;">
-        <span><strong>Companies:</strong> {{ filteredCompanies.length }}</span>
-        <span><strong>List Types:</strong>
-          <el-tag
-            v-for="mode in uniqueModes"
-            :key="mode"
-            :type="mode === 'country' ? 'success' : mode === 'scan' ? 'warning' : 'info'"
-            size="small"
-            style="margin-left: 4px;"
-          >{{ mode }}</el-tag>
-        </span>
-      </div>
-    </el-alert>
+    <div class="run-info-bar">
+      <span class="run-info-title">{{ currentRunId || 'Latest' }}</span>
+      <span class="run-info-divider">|</span>
+      <span><strong>Companies:</strong> {{ filteredCompanies.length }}</span>
+      <span class="run-info-divider">|</span>
+      <span><strong>List Types:</strong>
+        <el-tag
+          v-for="mode in uniqueModes"
+          :key="mode"
+          :type="mode === 'country' ? 'success' : mode === 'scan' ? 'warning' : 'info'"
+          size="small"
+          style="margin-left: 4px;"
+        >{{ mode }}</el-tag>
+      </span>
+    </div>
 
     <!-- Mixed Mode Warning -->
     <el-alert
@@ -261,6 +257,29 @@ watch(() => store.selectedRunId, loadData)
 <style scoped>
 .page-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin: 0 0 14px 0; }
 .filter-row { margin-bottom: 16px; }
+
+.run-info-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  margin-bottom: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.run-info-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: monospace;
+  font-size: 13px;
+}
+.run-info-divider {
+  color: var(--border-color);
+  font-size: 16px;
+}
 
 .kpi-row { display: flex; gap: 16px; margin-bottom: 20px; }
 .kpi-card {
