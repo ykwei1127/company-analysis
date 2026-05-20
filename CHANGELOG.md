@@ -1,7 +1,5 @@
 # Changelog
 
-# Changelog
-
 ## 2026-05-20
 ### Changed (Breaking Refactor)
 - **Unified workflow terminology**: replaced confusing `baseline/explore/match/city` with three clear **URL list types**
@@ -21,8 +19,13 @@
 - **Dark mode**: Element Plus components (el-alert, el-collapse, el-checkbox, el-popover, etc.) now correctly use dark theme
   - Root cause: `theme.ts` only set `data-theme="dark"` attribute; Element Plus requires `.dark` class on `<html>`
   - Fix: theme store now adds/removes `.dark` class alongside `data-theme` attribute
+  - Added CSS overrides in `App.vue` for el-alert, el-collapse, el-checkbox, el-form, el-popover, el-select-dropdown
 
 ### Added
+- `migrate_filenames.py` — one-time script to rename old data files to new naming convention
+- Full step-by-step tutorial in `glassdoor-dashboard/README.md` (Phase 1: URL lists → Phase 2: Scraper → Phase 3: View results)
+
+
 - `migrate_filenames.py` — one-time script to rename old data files to new naming convention
 
 ## 2026-05-19
