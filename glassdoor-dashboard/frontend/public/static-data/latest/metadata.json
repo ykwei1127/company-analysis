@@ -1,0 +1,15 @@
+{
+  "match_modes": [
+    "country"
+  ],
+  "companies": [
+    {
+      "name": "ASUS",
+      "mode": "country"
+    },
+    {
+      "name": "NVIDIA",
+      "mode": "country"
+    }
+  ]
+}

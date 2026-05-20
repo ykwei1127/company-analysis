@@ -13,10 +13,10 @@
         <router-link to="/locations" class="nav-item" active-class="active">
           <el-icon class="nav-icon"><Location /></el-icon> Locations
         </router-link>
-        <router-link to="/scraper" class="nav-item" active-class="active">
+        <router-link to="/scraper" v-if="!STATIC_MODE" class="nav-item" active-class="active">
           <el-icon class="nav-icon"><Monitor /></el-icon> Scraper
         </router-link>
-        <router-link to="/settings" class="nav-item" active-class="active">
+        <router-link to="/settings" v-if="!STATIC_MODE" class="nav-item" active-class="active">
           <el-icon class="nav-icon"><Setting /></el-icon> Settings
         </router-link>
       </nav>
@@ -42,6 +42,7 @@
             />
           </el-select>
           <el-popconfirm
+            v-if="!STATIC_MODE"
             :title="`Delete run '${dashboardStore.selectedRunId}'?`"
             @confirm="dashboardStore.removeRun(dashboardStore.selectedRunId)"
             confirm-button-text="Delete"
@@ -94,6 +95,8 @@ import { stopFinder } from './api'
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
 const finderStore = useFinderStore()
+
+const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
 
 async function handleStopFinder() {
   try {

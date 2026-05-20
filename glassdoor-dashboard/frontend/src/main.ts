@@ -6,6 +6,8 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 
 import App from './App.vue'
 
+const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
+
 const routes = [
   { path: '/', redirect: '/overview' },
   { path: '/overview', component: () => import('./views/OverviewPage.vue') },
@@ -16,9 +18,18 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
+
+// In static mode, redirect scraper/settings to overview
+if (STATIC_MODE) {
+  router.beforeEach((to) => {
+    if (to.path === '/scraper' || to.path === '/settings') {
+      return '/overview'
+    }
+  })
+}
 
 const app = createApp(App)
 app.use(createPinia())

@@ -186,15 +186,15 @@ async function loadData() {
   const { data } = await getOverview(store.selectedRunId || undefined)
   companies.value = data
   // Match DEFAULT_SELECTED against actual company names (case-insensitive)
-  const available = data.map(c => c.company)
-  const matched = available.filter(n =>
+  const available: string[] = data.map((c: CompanyOverview) => c.company)
+  const matched = available.filter((n: string) =>
     DEFAULT_SELECTED.some(d => d.toLowerCase() === n.toLowerCase())
   )
   selectedCompanies.value = matched.length > 0 ? matched : available.slice(0, 8)
   // Set gap analysis defaults
-  const asusName = available.find(n => n.toLowerCase() === 'asus')
+  const asusName = available.find((n: string) => n.toLowerCase() === 'asus')
   companyA.value = asusName ?? available[0] ?? ''
-  companyB.value = available.find(n => n !== companyA.value) ?? available[1] ?? ''
+  companyB.value = available.find((n: string) => n !== companyA.value) ?? available[1] ?? ''
 }
 
 onMounted(loadData)

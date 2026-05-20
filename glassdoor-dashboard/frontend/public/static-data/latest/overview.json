@@ -1,0 +1,32 @@
+[
+  {
+    "company": "NVIDIA",
+    "overall": 4.4,
+    "culture": 4.4,
+    "wlb": 4.0,
+    "salary": 4.4,
+    "career": 4.3,
+    "diversity": 4.4,
+    "management": 4.2,
+    "recommend": 90.0,
+    "ceo_approval": 97.0,
+    "total_reviews": 5451,
+    "source_mode": "country",
+    "rank": 1
+  },
+  {
+    "company": "ASUS",
+    "overall": 3.6,
+    "culture": 3.1,
+    "wlb": 3.2,
+    "salary": 3.2,
+    "career": 3.1,
+    "diversity": 3.3,
+    "management": 2.8,
+    "recommend": 57.0,
+    "ceo_approval": 75.0,
+    "total_reviews": 1493,
+    "source_mode": "country",
+    "rank": 2
+  }
+]
