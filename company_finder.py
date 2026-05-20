@@ -1296,8 +1296,14 @@ def run_city():
                 companies_to_run.append(entry)
         print(f"篩選後要處理的公司：{len(companies_to_run)} 個")
 
+    # City mode 以 ASUS 為基準，排除 ASUS 本身（比對自己沒有意義）
+    baseline_name = 'ASUS'
+    companies_to_run = [
+        e for e in companies_to_run
+        if (e if isinstance(e, str) else e.get('name')) != baseline_name
+    ]
     if not companies_to_run:
-        print("請在 COMPANIES_TO_MATCH 中加入要比對的公司名稱")
+        print("沒有其他公司可比對（city mode 不適用於 ASUS 本身）")
         return
 
     import time as _time

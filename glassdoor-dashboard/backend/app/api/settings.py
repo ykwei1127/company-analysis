@@ -186,12 +186,15 @@ def run_finder_country(
 
 
 @router.post("/settings/finder/scan")
-def run_finder_scan(companies: Optional[List[str]] = None):
+def run_finder_scan(
+    companies: Optional[str] = Query(None, description="Comma-separated company names"),
+):
     """Run company_finder.py scan mode (scan all countries)."""
     if _finder_state["running"]:
         return {"status": "already_running"}
+    companies_list = [c.strip() for c in companies.split(',') if c.strip()] if companies else None
     cmd = [str(VENV_PYTHON), str(COMPANY_FINDER_SCRIPT), "scan"]
-    _run_finder_subprocess(cmd, "scan", companies=companies)
+    _run_finder_subprocess(cmd, "scan", companies=companies_list)
     return {"status": "started"}
 
 
