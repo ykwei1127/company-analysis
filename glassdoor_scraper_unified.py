@@ -617,10 +617,14 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
 
     tasks_all = []
 
-    # If asus_country.json is in matched_files, skip the city-level baseline to avoid mixing granularities
-    asus_country_in_matched = any('asus_country' in os.path.basename(f) for f in matched_files)
-    if include_baseline and asus_country_in_matched:
-        print("[INFO] asus_country.json 已在 matched files 中，略過 city-level baseline 避免重複")
+    # Skip baseline if asus_office.json or asus_country.json is already in matched_files
+    # (avoids scraping ASUS twice)
+    asus_in_matched = any(
+        os.path.basename(f) in ('asus_office.json', 'asus_country.json')
+        for f in matched_files
+    )
+    if include_baseline and asus_in_matched:
+        print("[INFO] asus_office.json/asus_country.json 已在 matched files 中，略過 baseline 避免重複")
         include_baseline = False
 
     if include_baseline and os.path.exists(baseline_file):
@@ -962,9 +966,12 @@ def main():
             data = []
 
             if include_baseline and os.path.exists(baseline_file):
-                asus_country_in_files = any('asus_country' in os.path.basename(f) for f in matched_files)
-                if asus_country_in_files:
-                    print("[INFO] asus_country.json 已在 URL list files 中，略過 office-level baseline 避免重複")
+                asus_in_files = any(
+                    os.path.basename(f) in ('asus_office.json', 'asus_country.json')
+                    for f in matched_files
+                )
+                if asus_in_files:
+                    print("[INFO] asus_office.json/asus_country.json 已在 URL list files 中，略過 baseline 避免重複")
                 else:
                     print(f"\n[INCLUDE_BASELINE=True] 抓取基準公司 ASUS：{baseline_file}\n")
                     data += scraper.scrape_from_baseline_json(baseline_file, company_name='ASUS')
