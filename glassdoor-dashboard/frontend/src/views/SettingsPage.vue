@@ -626,6 +626,10 @@ onMounted(() => {
   loadCompanies()
   loadCompaniesToMatch()
   checkBaseline()
+  // Resume polling if a task was already running (e.g. user navigated away and back)
+  if (finderStore.isRunning) {
+    startFinderPolling()
+  }
 })
 
 onUnmounted(stopFinderPolling)

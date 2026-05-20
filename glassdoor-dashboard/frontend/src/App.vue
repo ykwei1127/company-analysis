@@ -62,8 +62,8 @@
         <div class="finder-status-content">
           <el-icon class="is-loading" style="font-size: 16px;"><Loading /></el-icon>
           <span class="finder-status-title">{{ finderStore.statusTitle }}</span>
-          <span class="finder-status-text">{{ finderStore.statusText }}</span>
-          <span class="finder-status-meta">({{ finderStore.logs.length }} lines, {{ finderStore.elapsedTime }})</span>
+          <span class="finder-status-meta" style="color: #aaa; font-size: 12px; max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ finderStore.lastLogLine }}</span>
+          <span class="finder-status-meta" style="color: #777; font-size: 12px; margin-left: 8px; white-space: nowrap;">{{ finderStore.elapsedTime }}</span>
           <el-button 
             size="small" 
             type="danger" 

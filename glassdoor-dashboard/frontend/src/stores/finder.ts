@@ -45,6 +45,16 @@ export const useFinderStore = defineStore('finder', () => {
     return texts[currentTask.value]
   })
 
+  // Last meaningful log line for progress display
+  const lastLogLine = computed(() => {
+    const lines = logs.value
+    for (let i = lines.length - 1; i >= 0; i--) {
+      const line = lines[i].trim()
+      if (line && line.length > 2) return line
+    }
+    return ''
+  })
+
   // Actions
   function start(task: 'office' | 'country' | 'city' | 'scan') {
     isRunning.value = true
@@ -89,6 +99,7 @@ export const useFinderStore = defineStore('finder', () => {
     elapsedTime,
     statusTitle,
     statusText,
+    lastLogLine,
     updateElapsed,
     start,
     stop,
