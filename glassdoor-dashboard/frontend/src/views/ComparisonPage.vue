@@ -15,7 +15,7 @@
           :class="{ inactive: !selectedCompanies.includes(c.company) }"
           @click="toggleCompany(c.company)"
         >
-          <span class="legend-square" :style="{ background: COMPANY_COLORS[c.company] || '#555' }"></span>
+          <span class="legend-square" :style="{ background: getCompanyColor(c.company) }"></span>
           {{ c.company }}
         </span>
       </div>
@@ -97,9 +97,16 @@ const DEFAULT_SELECTED = ['ASUS', 'NVIDIA', 'Google', 'Dell Technologies', 'HP I
 const store = useDashboardStore()
 const themeStore = useThemeStore()
 const companies = ref<CompanyOverview[]>([])
-const selectedCompanies = ref<string[]>([...DEFAULT_SELECTED])
-const companyA = ref('ASUS')
-const companyB = ref('Google')
+const selectedCompanies = ref<string[]>([])
+const companyA = ref('')
+const companyB = ref('')
+
+// Case-insensitive color lookup
+function getCompanyColor(name: string): string {
+  if (COMPANY_COLORS[name]) return COMPANY_COLORS[name]
+  const entry = Object.entries(COMPANY_COLORS).find(([k]) => k.toLowerCase() === name.toLowerCase())
+  return entry?.[1] ?? '#409eff'
+}
 
 const companyNames = computed(() => companies.value.map(c => c.company))
 
@@ -153,9 +160,9 @@ const radarOption = computed(() => {
       data: visibleCompanies.value.map(c => ({
         name: c.company,
         value: DIMS.map(d => getRadarValue(c, d)),
-        lineStyle: { color: COMPANY_COLORS[c.company] ?? '#555', width: 2 },
-        areaStyle: { color: (COMPANY_COLORS[c.company] ?? '#555') + '18' },
-        itemStyle: { color: COMPANY_COLORS[c.company] ?? '#555' },
+        lineStyle: { color: getCompanyColor(c.company), width: 2 },
+        areaStyle: { color: getCompanyColor(c.company) + '18' },
+        itemStyle: { color: getCompanyColor(c.company) },
         symbol: 'circle',
         symbolSize: 5,
       })),
@@ -178,6 +185,16 @@ const gapData = computed(() => {
 async function loadData() {
   const { data } = await getOverview(store.selectedRunId || undefined)
   companies.value = data
+  // Match DEFAULT_SELECTED against actual company names (case-insensitive)
+  const available = data.map(c => c.company)
+  const matched = available.filter(n =>
+    DEFAULT_SELECTED.some(d => d.toLowerCase() === n.toLowerCase())
+  )
+  selectedCompanies.value = matched.length > 0 ? matched : available.slice(0, 8)
+  // Set gap analysis defaults
+  const asusName = available.find(n => n.toLowerCase() === 'asus')
+  companyA.value = asusName ?? available[0] ?? ''
+  companyB.value = available.find(n => n !== companyA.value) ?? available[1] ?? ''
 }
 
 onMounted(loadData)

@@ -152,6 +152,13 @@ const allLocationRatings = ref<LocationRating[]>([])
 const locationFilter = ref('global')
 const runMatchModes = ref<string[]>([])
 
+// Case-insensitive color lookup
+function getCompanyColor(name: string): string {
+  if (COMPANY_COLORS[name]) return COMPANY_COLORS[name]
+  const entry = Object.entries(COMPANY_COLORS).find(([k]) => k.toLowerCase() === name.toLowerCase())
+  return entry?.[1] ?? '#409eff'
+}
+
 const locationOptions = computed(() => {
   const locs = new Set(allLocationRatings.value.map(r => r.baseline_location).filter(Boolean))
   locs.delete('Global')
@@ -177,13 +184,13 @@ const hasMixedModes = computed(() => uniqueModes.value.length > 1)
 const currentRunId = computed(() => store.selectedRunId || 'Latest')
 
 const asusOverall = computed(() => {
-  const asus = filteredCompanies.value.find(c => c.company === 'ASUS')
+  const asus = filteredCompanies.value.find(c => c.company?.toLowerCase() === 'asus')
   return asus?.overall?.toFixed(2) ?? '—'
 })
 
 const asusRank = computed(() => {
   const sorted = [...filteredCompanies.value].sort((a, b) => (b.overall || 0) - (a.overall || 0))
-  const idx = sorted.findIndex(c => c.company === 'ASUS')
+  const idx = sorted.findIndex(c => c.company?.toLowerCase() === 'asus')
   return idx >= 0 ? `#${idx + 1}` : '—'
 })
 
@@ -225,7 +232,7 @@ const barOption = computed(() => {
       type: 'bar',
       data: sorted.map(c => ({
         value: c.overall || 0,
-        itemStyle: { color: COMPANY_COLORS[c.company] || '#409eff' },
+        itemStyle: { color: getCompanyColor(c.company) },
       })),
       barWidth: '50%',
       label: {
