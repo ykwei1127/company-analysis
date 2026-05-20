@@ -114,6 +114,7 @@
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { InfoFilled, Refresh } from '@element-plus/icons-vue'
 import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus, launchChrome, closeAllChrome, getCompanies } from '../api'
+import { useDashboardStore } from '../stores/dashboard'
 
 const ALL_PORTS = [9222, 9223, 9224]
 const selectedPorts = ref<number[]>([9222])
@@ -139,6 +140,8 @@ let pollTimer: ReturnType<typeof setInterval> | null = null
 const startTime = ref<number>(0)
 const elapsedSeconds = ref(0)
 let elapsedTimer: ReturnType<typeof setInterval> | null = null
+
+const dashboardStore = useDashboardStore()
 
 const visibleLogLines = computed(() => logs.value.slice(-200))
 
@@ -324,7 +327,15 @@ function startPolling() {
       const { data } = await getScraperStatus()
       logs.value = data.logs
       isRunning.value = data.running
-      if (!data.running) { stopPolling(); stopElapsedTimer() }
+      if (!data.running) {
+        stopPolling()
+        stopElapsedTimer()
+        // Refresh run list and switch to latest
+        await dashboardStore.fetchRuns()
+        if (dashboardStore.runs.length > 0) {
+          dashboardStore.selectRun(dashboardStore.runs[0].id)
+        }
+      }
       if (autoScroll.value) {
         nextTick(() => {
           if (logContainer.value) logContainer.value.scrollTop = logContainer.value.scrollHeight
