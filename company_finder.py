@@ -138,7 +138,6 @@ COMPANIES_TO_MATCH = [
     'NVIDIA',
     'TSMC',
     'MSI',
-    'Dell Technologies',
     {
         'name': 'HP Inc.',
         'company_id': 'E1093161',

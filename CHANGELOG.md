@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-05-20
+### Changed (Breaking Refactor)
+- **Unified workflow terminology**: replaced confusing `baseline/explore/match/city` with three clear **URL list types**
+  - `office` (was: explore/baseline/city) → `*_office.json`
+  - `country` (was: match country) → `*_country.json`
+  - `scan` (unchanged) → `*_scan.json`
+- **`company_finder.py`**: `run_explore()` → `run_office()`, `run_match()` → `run_country()`, updated `__main__` dispatch
+- **Settings page**: replaced 3-step flow with card-based UI (Office / Country / Scan), added "View URL Lists" tab
+- **Scraper page**: replaced "Data Source + Match Mode" dual dropdowns with single "List Type" dropdown
+- **Overview page**: "Match Modes" → "List Types", mixed-mode warning updated
+- **Backend API**: new endpoints `/finder/office`, `/finder/country`; `list_companies()` reads `*_office.json`/`*_country.json`/`*_scan.json`; `get_baseline()` accepts `?file=` param
+- **`glassdoor_scraper_unified.py`**: glob pattern updated, source_mode detection updated, `Source Mode = 'baseline'` → `'office'`
+- **`data_loader.py`**: `_normalize_mode()` maps `baseline`/`city` → `office`
+- **`data/asus_locations.json`** renamed to **`data/asus_office.json`** (run `migrate_filenames.py`)
+
+### Added
+- `migrate_filenames.py` — one-time script to rename old data files to new naming convention
+
 ## 2026-05-19
 ### Added
 - **Settings & Companies page** (Dashboard)
