@@ -2,25 +2,29 @@
   <div>
     <h3 class="page-title">Scraper Control</h3>
 
+    <!-- Demo mode banner -->
+    <el-alert
+      v-if="STATIC_MODE"
+      title="Demo Mode — Read Only"
+      type="info"
+      :closable="false"
+      show-icon
+      style="margin-bottom: 16px;"
+    >
+      This is a preview of the Scraper interface. Actual scraping requires the local backend to be running.
+    </el-alert>
+
     <!-- Chrome Status -->
     <el-card style="margin-bottom: 16px">
       <template #header><span>Chrome Debug Instances</span></template>
       <div class="chrome-status">
-        <div v-for="(open, port) in chromeStatus" :key="port" class="port-status">
+        <div v-for="port in ALL_PORTS" :key="port" class="port-status">
           <span class="port-label">Port {{ port }}</span>
-          <el-tag :type="open ? 'success' : 'danger'" size="small">{{ open ? 'Connected' : 'Offline' }}</el-tag>
-          <el-button v-if="!open" size="small" type="primary" plain @click="handleLaunchChrome(Number(port))" :loading="launchingPort === Number(port)">Launch</el-button>
+          <el-tag type="info" size="small">Unknown</el-tag>
         </div>
-        <el-button size="small" @click="refreshChromeStatus" :loading="checkingChrome">Refresh</el-button>
-        <el-button size="small" type="primary" @click="handleLaunchAll" :loading="launchingAll" :disabled="offlinePorts.length === 0">Launch All</el-button>
-        <el-button size="small" type="danger" plain @click="handleCloseAll" :loading="closingAll" :disabled="connectedPorts.length === 0">Close All</el-button>
-      </div>
-
-      <!-- Login check -->
-      <div class="login-status" v-if="loginResults.length > 0">
-        <el-tag v-for="r in loginResults" :key="r.port" :type="r.logged_in ? 'success' : 'warning'" size="small" style="margin-right: 8px">
-          {{ r.message }}
-        </el-tag>
+        <el-button size="small" :disabled="STATIC_MODE">Refresh</el-button>
+        <el-button size="small" type="primary" :disabled="STATIC_MODE">Launch All</el-button>
+        <el-button size="small" type="danger" plain :disabled="STATIC_MODE">Close All</el-button>
       </div>
     </el-card>
 
@@ -30,15 +34,15 @@
       <div class="scraper-controls">
         <div class="control-group">
           <label>Ports:</label>
-          <el-checkbox-group v-model="selectedPorts" size="small">
-            <el-checkbox v-for="port in ALL_PORTS" :key="port" :label="port" :value="port" :disabled="!chromeStatus[port]">
+          <el-checkbox-group v-model="selectedPorts" size="small" :disabled="STATIC_MODE">
+            <el-checkbox v-for="port in ALL_PORTS" :key="port" :label="port" :value="port" :disabled="STATIC_MODE">
               {{ port }}
             </el-checkbox>
           </el-checkbox-group>
         </div>
         <div class="control-group">
           <label>List Type:</label>
-          <el-select v-model="sourceMode" size="small" style="width: 160px">
+          <el-select v-model="sourceMode" size="small" style="width: 160px" :disabled="STATIC_MODE">
             <el-option label="All" value="all" />
             <el-option label="Office Location" value="office" />
             <el-option label="Country" value="country" />
@@ -58,53 +62,16 @@
               multiple
               collapse-tags
               :max-collapse-tags="2"
+              :disabled="STATIC_MODE"
             />
             <el-tooltip content="Select specific companies to scrape. Empty = all companies.">
               <el-icon style="color: var(--el-text-color-secondary);"><info-filled /></el-icon>
             </el-tooltip>
-            <el-button size="small" text @click="loadAvailableCompanies" :loading="loadingCompanies">
-              <el-icon><refresh /></el-icon>
-            </el-button>
-            <el-button v-if="selectedCompanies.length > 0" size="small" text @click="selectedCompanies = []">
-              Clear
-            </el-button>
           </div>
         </div>
-        <el-button type="primary" size="small" @click="handleStart" :loading="starting" :disabled="isRunning || selectedPorts.length === 0">Start</el-button>
-        <el-button type="danger" size="small" @click="handleStop" :disabled="!isRunning">Stop</el-button>
-        <el-button size="small" @click="checkLoginStatus" :disabled="selectedPorts.length === 0">Check Login</el-button>
-      </div>
-    </el-card>
-
-    <!-- Progress -->
-    <el-card v-if="isRunning || logs.length > 0">
-      <template #header>
-        <div class="card-header">
-          <span>Output</span>
-          <el-tag v-if="isRunning" type="warning" size="small" effect="dark">Running</el-tag>
-          <el-tag v-else-if="logs.length > 0" type="info" size="small">Done</el-tag>
-        </div>
-      </template>
-
-      <!-- Blocked alert -->
-      <el-alert v-if="blockedPorts.length > 0" type="error" :closable="false" show-icon style="margin-bottom: 12px">
-        <template #title>
-          Port {{ blockedPorts.join(', ') }} 被 Cloudflare 攔截！請到 Chrome 視窗手動通過驗證，通過後爬蟲會自動繼續。
-        </template>
-      </el-alert>
-
-      <!-- Progress bar -->
-      <el-progress v-if="progressPercent > 0" :percentage="progressPercent" :status="progressStatus" :stroke-width="8" style="margin-bottom: 8px" />
-      <div v-if="isRunning && progressPercent > 0" class="time-info">
-        <span>Elapsed: {{ elapsedStr }}</span>
-        <span v-if="etaStr">ETA: {{ etaStr }}</span>
-      </div>
-
-      <!-- Log output -->
-      <div class="log-container" ref="logContainer">
-        <div v-for="(line, i) in visibleLogLines" :key="i" class="log-line" :class="logClass(line)">
-          {{ line }}
-        </div>
+        <el-button type="primary" size="small" :disabled="true">Start</el-button>
+        <el-button type="danger" size="small" :disabled="true">Stop</el-button>
+        <el-button size="small" :disabled="STATIC_MODE">Check Login</el-button>
       </div>
     </el-card>
   </div>
@@ -115,6 +82,8 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { InfoFilled, Refresh } from '@element-plus/icons-vue'
 import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus, launchChrome, closeAllChrome, getCompanies } from '../api'
 import { useDashboardStore } from '../stores/dashboard'
+
+const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
 
 const ALL_PORTS = [9222, 9223, 9224]
 const selectedPorts = ref<number[]>([9222])

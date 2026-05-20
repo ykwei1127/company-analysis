@@ -2,6 +2,18 @@
   <div>
     <h1 class="page-title">Settings & Companies</h1>
 
+    <!-- Demo mode banner -->
+    <el-alert
+      v-if="STATIC_MODE"
+      title="Demo Mode — Read Only"
+      type="info"
+      :closable="false"
+      show-icon
+      style="margin-bottom: 16px;"
+    >
+      This is a preview of the Settings interface. Configuration changes require the local backend to be running.
+    </el-alert>
+
     <!-- Chrome Required Banner (only show when not running) -->
     <el-alert
       v-if="!chromeConnected && !finderStore.isRunning"
@@ -37,7 +49,7 @@
               </el-button>
             </div>
           </div>
-          <el-checkbox-group v-model="selectedMatchCompanies" size="small" style="display: flex; flex-wrap: wrap; gap: 8px;" :disabled="finderStore.isRunning">
+          <el-checkbox-group v-model="selectedMatchCompanies" size="small" style="display: flex; flex-wrap: wrap; gap: 8px;" :disabled="STATIC_MODE || finderStore.isRunning">
             <el-checkbox
               v-for="c in availableMatchCompanies"
               :key="c.name"
@@ -55,12 +67,13 @@
               placeholder="Add new company..."
               size="small"
               style="width: 180px"
+              :disabled="STATIC_MODE"
               @keyup.enter="handleAddToMatch"
             />
-            <el-button size="small" type="primary" @click="handleAddToMatch" :disabled="!newCompanyName.trim()">Add</el-button>
+            <el-button size="small" type="primary" @click="handleAddToMatch" :disabled="STATIC_MODE || !newCompanyName.trim()">Add</el-button>
             <el-popconfirm title="Remove selected companies?" @confirm="handleRemoveSelected">
               <template #reference>
-                <el-button size="small" type="danger" plain :disabled="selectedMatchCompanies.length === 0">
+                <el-button size="small" type="danger" plain :disabled="STATIC_MODE || selectedMatchCompanies.length === 0">
                   Remove Selected
                 </el-button>
               </template>
@@ -79,7 +92,7 @@
               type="danger"
               plain
               @click="handleStopFinder"
-              :disabled="!finderRunning"
+              :disabled="STATIC_MODE || !finderRunning"
             >Stop</el-button>
           </div>
           <p style="font-size: 13px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
@@ -103,7 +116,7 @@
                 type="primary"
                 @click="handleBuildOffice"
                 :loading="finderRunning && currentTask === 'office'"
-                :disabled="finderRunning"
+                :disabled="STATIC_MODE || finderRunning"
               >
                 <el-icon><Refresh /></el-icon> Build Office List
               </el-button>
@@ -139,7 +152,7 @@
                   type="primary"
                   @click="handleBuildCountry"
                   :loading="finderRunning && currentTask === 'country'"
-                  :disabled="finderRunning || !baselineExists"
+                  :disabled="STATIC_MODE || finderRunning || !baselineExists"
                 >
                   <el-icon><Refresh /></el-icon> Build Country List
                 </el-button>
@@ -177,7 +190,7 @@
                   plain
                   @click="handleBuildCity"
                   :loading="finderRunning && currentTask === 'city'"
-                  :disabled="finderRunning || !baselineExists"
+                  :disabled="STATIC_MODE || finderRunning || !baselineExists"
                 >
                   <el-icon><Refresh /></el-icon> Build City List
                 </el-button>
@@ -201,7 +214,7 @@
                 plain
                 @click="handleScan"
                 :loading="finderRunning && currentTask === 'scan'"
-                :disabled="finderRunning"
+                :disabled="STATIC_MODE || finderRunning"
               >
                 <el-icon><Search /></el-icon> Build Scan List
               </el-button>
@@ -243,7 +256,7 @@
               <template #default="{ row }">
                 <el-popconfirm title="Remove this file?" @confirm="handleRemove(row.name)">
                   <template #reference>
-                    <el-button type="danger" size="small" plain>Remove</el-button>
+                    <el-button type="danger" size="small" plain :disabled="STATIC_MODE">Remove</el-button>
                   </template>
                 </el-popconfirm>
               </template>
@@ -297,22 +310,22 @@
         <div class="section">
           <el-form label-width="200px" size="small" v-if="configLoaded">
             <el-form-item label="Include Baseline (ASUS)">
-              <el-switch v-model="config.include_baseline" @change="saveConfig" />
+              <el-switch v-model="config.include_baseline" :disabled="STATIC_MODE" @change="saveConfig" />
             </el-form-item>
             <el-form-item label="Parallel Ports">
-              <el-input v-model="portsStr" placeholder="9222,9223,9224" style="width: 220px" @blur="saveConfig" />
+              <el-input v-model="portsStr" placeholder="9222,9223,9224" style="width: 220px" :disabled="STATIC_MODE" @blur="saveConfig" />
             </el-form-item>
             <el-form-item label="Mode">
-              <el-select v-model="config.scraper_config.mode" @change="saveConfig" style="width: 140px">
+              <el-select v-model="config.scraper_config.mode" :disabled="STATIC_MODE" @change="saveConfig" style="width: 140px">
                 <el-option value="manual" label="Manual" />
                 <el-option value="auto" label="Auto" />
               </el-select>
             </el-form-item>
             <el-form-item label="Delay Between Requests (s)">
-              <el-input-number v-model="config.scraper_config.delay_between_requests" :min="0.5" :max="30" :step="0.5" @change="saveConfig" />
+              <el-input-number v-model="config.scraper_config.delay_between_requests" :min="0.5" :max="30" :step="0.5" :disabled="STATIC_MODE" @change="saveConfig" />
             </el-form-item>
             <el-form-item label="Page Wait Time (s)">
-              <el-input-number v-model="config.scraper_config.wait_time" :min="1" :max="30" :step="1" @change="saveConfig" />
+              <el-input-number v-model="config.scraper_config.wait_time" :min="1" :max="30" :step="1" :disabled="STATIC_MODE" @change="saveConfig" />
             </el-form-item>
           </el-form>
           <el-tag v-if="configSaved" type="success" size="small">Saved</el-tag>
@@ -341,6 +354,8 @@ import {
   removeCompanyToMatch, 
   getBaseline 
 } from '../api'
+
+const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
 
 const activeTab = ref('companies')
 
