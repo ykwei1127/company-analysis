@@ -29,6 +29,7 @@ export const removeCompanyToMatch = (name: string) => api.post('/settings/compan
 export const getBaseline = (file?: string) => api.get('/settings/baseline', { params: file ? { file } : undefined })
 export const runFinderOffice = (companies?: string[]) => api.post('/settings/finder/office', null, { params: { companies: companies?.join(',') } })
 export const runFinderCountry = (companies?: string[]) => api.post('/settings/finder/country', null, { params: { companies: companies?.join(',') } })
+export const runFinderCity = (companies?: string[]) => api.post('/settings/finder/city', null, { params: { companies: companies?.join(',') } })
 export const runFinderScan = (companies?: string[]) => api.post('/settings/finder/scan', null, { params: { companies: companies?.join(',') } })
 export const getFinderStatus = () => api.get('/settings/finder/status')
 export const stopFinder = () => api.post('/settings/finder/stop')

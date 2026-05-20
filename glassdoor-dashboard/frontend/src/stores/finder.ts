@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export const useFinderStore = defineStore('finder', () => {
   // State
   const isRunning = ref(false)
-  const currentTask = ref<'office' | 'country' | 'scan' | null>(null)
+  const currentTask = ref<'office' | 'country' | 'city' | 'scan' | null>(null)
   const logs = ref<string[]>([])
   const startTime = ref<number | null>(null)
   const elapsedTime = ref('')  // Now a ref that updates via setInterval
@@ -28,6 +28,7 @@ export const useFinderStore = defineStore('finder', () => {
     const titles: Record<string, string> = {
       office: 'Building Office Lists',
       country: 'Building Country Lists',
+      city: 'Building City Match Lists',
       scan: 'Scanning Countries'
     }
     return `Running: ${titles[currentTask.value]}`
@@ -38,13 +39,14 @@ export const useFinderStore = defineStore('finder', () => {
     const texts: Record<string, string> = {
       office: 'Finding office location review URLs...',
       country: 'Building country-level review URLs...',
+      city: 'Matching ASUS baseline cities across companies...',
       scan: 'Scanning all countries for reviews...'
     }
     return texts[currentTask.value]
   })
 
   // Actions
-  function start(task: 'office' | 'country' | 'scan') {
+  function start(task: 'office' | 'country' | 'city' | 'scan') {
     isRunning.value = true
     currentTask.value = task
     startTime.value = Date.now()

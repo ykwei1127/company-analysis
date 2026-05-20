@@ -120,15 +120,68 @@
               <p style="font-size: 12px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
                 Uses country-level IN codes to build review URLs. Fast and consistent.
               </p>
-              <el-button
-                size="small"
-                type="primary"
-                @click="handleBuildCountry"
-                :loading="finderRunning && currentTask === 'country'"
-                :disabled="finderRunning"
+              <el-alert
+                v-if="!baselineExists"
+                type="warning"
+                :closable="false"
+                style="margin-bottom: 10px; padding: 6px 10px; font-size: 12px;"
               >
-                <el-icon><Refresh /></el-icon> Build Country List
-              </el-button>
+                <template #title>Requires ASUS Office list first</template>
+                Run <strong>Build Office List</strong> (ASUS must be included) before building Country lists.
+              </el-alert>
+              <el-tooltip
+                :disabled="baselineExists"
+                content="Please build ASUS Office List first (data/asus_office.json)"
+                placement="top"
+              >
+                <el-button
+                  size="small"
+                  type="primary"
+                  @click="handleBuildCountry"
+                  :loading="finderRunning && currentTask === 'country'"
+                  :disabled="finderRunning || !baselineExists"
+                >
+                  <el-icon><Refresh /></el-icon> Build Country List
+                </el-button>
+              </el-tooltip>
+            </el-card>
+
+            <!-- City Match -->
+            <el-card shadow="hover" style="flex: 1; min-width: 200px;">
+              <template #header>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong>City Match</strong>
+                  <el-tag size="small" type="danger">city</el-tag>
+                </div>
+              </template>
+              <p style="font-size: 12px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+                Uses ASUS office locations as baseline, finds matching city-level URLs at other companies.
+              </p>
+              <el-alert
+                v-if="!baselineExists"
+                type="warning"
+                :closable="false"
+                style="margin-bottom: 10px; padding: 6px 10px; font-size: 12px;"
+              >
+                <template #title>Requires ASUS Office list first</template>
+                Run <strong>Build Office List</strong> (ASUS must be included) before building City Match lists.
+              </el-alert>
+              <el-tooltip
+                :disabled="baselineExists"
+                content="Please build ASUS Office List first (data/asus_office.json)"
+                placement="top"
+              >
+                <el-button
+                  size="small"
+                  type="danger"
+                  plain
+                  @click="handleBuildCity"
+                  :loading="finderRunning && currentTask === 'city'"
+                  :disabled="finderRunning || !baselineExists"
+                >
+                  <el-icon><Refresh /></el-icon> Build City List
+                </el-button>
+              </el-tooltip>
             </el-card>
 
             <!-- World Scan -->
@@ -181,7 +234,7 @@
             <el-table-column prop="name" label="Company" />
             <el-table-column prop="mode" label="Type" width="90">
               <template #default="{ row }">
-                <el-tag size="small" :type="row.mode === 'country' ? 'success' : row.mode === 'scan' ? 'warning' : 'info'">{{ row.mode }}</el-tag>
+                <el-tag size="small" :type="row.mode === 'country' ? 'success' : row.mode === 'scan' ? 'warning' : row.mode === 'city' ? 'danger' : 'info'">{{ row.mode }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="entries" label="Entries" width="80" />
@@ -276,7 +329,8 @@ import { useFinderStore } from '../stores/finder'
 import { 
   getCompanies, 
   runFinderOffice,
-  runFinderCountry, 
+  runFinderCountry,
+  runFinderCity,
   runFinderScan, 
   getFinderStatus, 
   stopFinder, 
@@ -509,6 +563,15 @@ async function handleBuildCountry() {
     ? selectedMatchCompanies.value
     : availableMatchCompanies.value.map(c => c.name)
   await runFinderCountry(companiesToRun)
+}
+
+async function handleBuildCity() {
+  finderStore.start('city')
+  startFinderPolling()
+  const companiesToRun = selectedMatchCompanies.value.length > 0
+    ? selectedMatchCompanies.value
+    : availableMatchCompanies.value.map(c => c.name)
+  await runFinderCity(companiesToRun)
 }
 
 async function handleScan() {

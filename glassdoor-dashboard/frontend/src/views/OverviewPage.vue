@@ -20,7 +20,7 @@
         <el-tag
           v-for="mode in uniqueModes"
           :key="mode"
-          :type="mode === 'country' ? 'success' : mode === 'scan' ? 'warning' : 'info'"
+          :type="mode === 'country' ? 'success' : mode === 'scan' ? 'warning' : mode === 'city' ? 'danger' : 'info'"
           size="small"
           style="margin-left: 4px;"
         >{{ mode }}</el-tag>
@@ -80,7 +80,7 @@
           <template #default="{ row }">
             <el-tag
               v-if="row.source_mode"
-              :type="row.source_mode === 'country' ? 'success' : row.source_mode === 'scan' ? 'warning' : 'info'"
+              :type="row.source_mode === 'country' ? 'success' : row.source_mode === 'scan' ? 'warning' : row.source_mode === 'city' ? 'danger' : 'info'"
               size="small"
             >
               {{ row.source_mode }}

@@ -42,6 +42,7 @@
             <el-option label="All" value="all" />
             <el-option label="Office Location" value="office" />
             <el-option label="Country" value="country" />
+            <el-option label="City Match" value="city" />
             <el-option label="World Scan" value="scan" />
           </el-select>
         </div>
@@ -117,7 +118,7 @@ import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatu
 const ALL_PORTS = [9222, 9223, 9224]
 const selectedPorts = ref<number[]>([9222])
 const mode = ref('matched')
-const sourceMode = ref('all')  // 'all', 'office', 'country', 'scan'
+const sourceMode = ref('all')  // 'all', 'office', 'country', 'city', 'scan'
 const availableCompanies = ref<{name: string, file: string, mode: string}[]>([])
 const selectedCompanies = ref<string[]>([])  // Empty means all companies
 const loadingCompanies = ref(false)

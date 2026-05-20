@@ -56,19 +56,21 @@ def update_config(payload: dict):
 
 @router.get("/settings/companies")
 def list_companies():
-    """List all company URL list files (office/country/scan)."""
+    """List all company URL list files (office/country/city/scan)."""
     companies = []
-    # Match all three types of URL list files
-    for pattern in ["*_office.json", "*_country.json", "*_scan.json"]:
+    # Match all four types of URL list files
+    for pattern in ["*_office.json", "*_country.json", "*_city.json", "*_scan.json"]:
         for f in sorted(glob.glob(str(DATA_DIR / pattern))):
             basename = os.path.basename(f)
             # Derive display name from filename
-            name = basename.replace("_office.json", "").replace("_country.json", "").replace("_scan.json", "").replace("_", " ").title()
+            name = basename.replace("_office.json", "").replace("_country.json", "").replace("_city.json", "").replace("_scan.json", "").replace("_", " ").title()
             # Determine list type from suffix
             if basename.endswith("_office.json"):
                 list_type = "office"
             elif basename.endswith("_country.json"):
                 list_type = "country"
+            elif basename.endswith("_city.json"):
+                list_type = "city"
             elif basename.endswith("_scan.json"):
                 list_type = "scan"
             else:
@@ -92,7 +94,7 @@ def list_companies():
 def remove_company(filename: str):
     """Remove a company's URL list JSON file."""
     filepath = DATA_DIR / filename
-    valid_suffixes = ("_office.json", "_country.json", "_scan.json")
+    valid_suffixes = ("_office.json", "_country.json", "_city.json", "_scan.json")
     if filepath.exists() and any(filename.endswith(s) for s in valid_suffixes):
         filepath.unlink()
         return {"status": "deleted", "file": filename}
@@ -193,6 +195,19 @@ def run_finder_scan(companies: Optional[List[str]] = None):
     return {"status": "started"}
 
 
+@router.post("/settings/finder/city")
+def run_finder_city(
+    companies: Optional[str] = Query(None, description="Comma-separated company names"),
+):
+    """Run company_finder.py city mode (ASUS-baseline city-level match)."""
+    if _finder_state["running"]:
+        return {"status": "already_running"}
+    companies_list = [c.strip() for c in companies.split(',') if c.strip()] if companies else None
+    cmd = [str(VENV_PYTHON), str(COMPANY_FINDER_SCRIPT), "city"]
+    _run_finder_subprocess(cmd, "city", companies=companies_list)
+    return {"status": "started"}
+
+
 # Legacy endpoint aliases for backward compatibility
 @router.post("/settings/finder/match")
 def run_match_legacy(
@@ -248,7 +263,7 @@ def get_baseline(file: Optional[str] = Query(None, description="URL list filenam
     """Get URL list entries from a specific file, or ASUS office locations by default."""
     if file:
         # Validate filename to prevent path traversal
-        valid_suffixes = ("_office.json", "_country.json", "_scan.json")
+        valid_suffixes = ("_office.json", "_country.json", "_city.json", "_scan.json")
         if not any(file.endswith(s) for s in valid_suffixes):
             return {"locations": []}
         filepath = DATA_DIR / file

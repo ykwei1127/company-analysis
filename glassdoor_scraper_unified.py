@@ -291,6 +291,8 @@ class GlassdoorScraper:
                 source_mode = 'country'
             elif basename.endswith('_scan.json'):
                 source_mode = 'scan'
+            elif basename.endswith('_city.json'):
+                source_mode = 'city'
             elif basename.endswith('_office.json'):
                 source_mode = 'office'
             else:
@@ -879,6 +881,7 @@ def main():
     matched_files = sorted(
         glob.glob('data/*_office.json') +
         glob.glob('data/*_country.json') +
+        glob.glob('data/*_city.json') +
         glob.glob('data/*_scan.json')
     )
 
@@ -890,6 +893,8 @@ def main():
             if source_mode_filter == 'country' and basename.endswith('_country.json'):
                 filtered.append(f)
             elif source_mode_filter == 'office' and basename.endswith('_office.json'):
+                filtered.append(f)
+            elif source_mode_filter == 'city' and basename.endswith('_city.json'):
                 filtered.append(f)
             elif source_mode_filter == 'scan' and basename.endswith('_scan.json'):
                 filtered.append(f)

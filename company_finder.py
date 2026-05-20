@@ -175,6 +175,11 @@ class CompanyFinder:
         url = company_config['locations_url']
         numeric_id = re.sub(r'[^\d]', '', company_config['company_id'])
         company_name = company_config['name']
+        # Derive slug from config (used for URL construction)
+        slug = company_config.get('slug') or (
+            url.split('All-')[1].split('-Office-')[0]
+            if 'All-' in url else company_name.replace(' ', '-')
+        )
 
         print(f"\n正在載入 Office Locations 頁面：{url}")
         self.driver.get(url)
@@ -194,7 +199,7 @@ class CompanyFinder:
 
         # 1. 首先加入 Global（整體公司評論）
         print("\n[Global] 正在抓取整體公司評論頁面...")
-        global_url = f"https://www.glassdoor.com/Reviews/ASUS-Reviews-E{numeric_id}.htm"
+        global_url = company_config.get('global_review_url') or f"https://www.glassdoor.com/Reviews/{slug}-Reviews-E{numeric_id}.htm"
         self.driver.get(global_url)
         time.sleep(2)
         global_review_url = None
@@ -240,7 +245,7 @@ class CompanyFinder:
 
         # 2. 加入 Taiwan（國家級別）- 用 IN240 代碼建立
         print("\n[Taiwan] 加入國家級別台灣評論頁面...")
-        company_slug = company_config.get('slug', 'ASUS')
+        company_slug = slug
         slug_len = len(company_slug)
         # URL pattern: {slug}-Taiwan-Reviews-EI_IE{id}.0,{slug_len}_IL.{slug_len+1},{slug_len+7}_IN240.htm
         # e.g. ASUS(4) → .0,4_IL.5,11_IN240
@@ -1260,9 +1265,92 @@ def run_scan():
         finder.close()
 
 
+def run_city():
+    """以 ASUS Office 清單為基準，比對其他公司同國家城市 URL（City Match 模式）"""
+    print("=" * 60)
+    print("模式：城市比對 URL 清單（City Match）")
+    print("=" * 60)
+
+    # 載入 ASUS 辦公室清單作為基準地區
+    try:
+        with open(BASELINE_FILE, encoding='utf-8') as f:
+            baseline = json.load(f)
+        baseline_found = [loc for loc in baseline if loc['status'] == 'found']
+        print(f"載入基準地區：{len(baseline_found)} 個（來自 {BASELINE_FILE}）")
+    except FileNotFoundError:
+        print(f"找不到基準檔案 {BASELINE_FILE}，請先執行 office 模式建立 ASUS 辦公室清單")
+        return
+
+    # 決定要處理的公司列表
+    companies_to_run = COMPANIES_TO_MATCH
+
+    # 檢查環境變數（從後端傳遞的公司列表）
+    env_companies = os.environ.get('FINDER_COMPANIES')
+    if env_companies:
+        selected_names = [n.strip() for n in env_companies.split(',') if n.strip()]
+        print(f"從環境變數讀取公司列表：{selected_names}")
+        companies_to_run = []
+        for entry in COMPANIES_TO_MATCH:
+            name = entry if isinstance(entry, str) else entry.get('name')
+            if name in selected_names:
+                companies_to_run.append(entry)
+        print(f"篩選後要處理的公司：{len(companies_to_run)} 個")
+
+    if not companies_to_run:
+        print("請在 COMPANIES_TO_MATCH 中加入要比對的公司名稱")
+        return
+
+    import time as _time
+    _total_start = _time.time()
+
+    finder = CompanyFinder(CHROME_DEBUG_PORT)
+    all_company_results = {}
+
+    try:
+        for company_entry in companies_to_run:
+            if isinstance(company_entry, str):
+                company_config = finder.search_company(company_entry)
+                if not company_config:
+                    print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
+                    continue
+            else:
+                company_config = company_entry
+            company_name = company_config['name']
+            print(f"\n{'='*60}")
+            print(f"正在處理：{company_name}")
+            _t0 = _time.time()
+
+            results = finder.match_against_baseline(company_config, baseline_found)
+
+            _elapsed = _time.time() - _t0
+            finder.print_match_results(results, company_name)
+            safe_name = company_name.lower().replace(' ', '_')
+            finder.save_results(results, company_name,
+                                output_file=f"data/{safe_name}_city.json")
+            print(f"  ⏱  {company_name} 耗時：{_elapsed:.0f}s")
+            all_company_results[company_name] = results
+
+        # 彙整摘要
+        print(f"\n{'='*60}")
+        print("比對摘要：")
+        print(f"{'='*60}")
+        for company_name, results in all_company_results.items():
+            found = sum(1 for r in results if r['status'] == 'found')
+            print(f"  {company_name}: {found}/{len(results)} 個地區有 review")
+
+    except Exception as e:
+        print(f"\n錯誤：{e}")
+        import traceback; traceback.print_exc()
+    finally:
+        _total = _time.time() - _total_start
+        print(f"\n{'='*60}")
+        print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+        print(f"{'='*60}")
+        finder.close()
+
+
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'country'
-
     os.makedirs('logs', exist_ok=True)
     log_path = f"logs/company_finder_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
     logger = TeeLogger(log_path)
@@ -1272,6 +1360,8 @@ if __name__ == '__main__':
             run_office()
         elif mode == 'country':
             run_country()
+        elif mode == 'city':
+            run_city()
         elif mode == 'scan':
             run_scan()
         # Legacy aliases
@@ -1280,6 +1370,6 @@ if __name__ == '__main__':
         elif mode == 'match':
             run_country()
         else:
-            print(f"未知模式：{mode}，請使用 office、country 或 scan")
+            print(f"未知模式：{mode}，請使用 office、country、city 或 scan")
     finally:
         logger.close()
