@@ -240,13 +240,20 @@ class CompanyFinder:
                 'status': 'no_review_url',
             })
 
-        # 2. 加入 Taiwan（國家級別）- 從 IN_223 代碼建立
+        # 2. 加入 Taiwan（國家級別）- 用 IN240 代碼建立
         print("\n[Taiwan] 加入國家級別台灣評論頁面...")
-        taiwan_url = f"https://www.glassdoor.com/Reviews/ASUS-Taiwan-Reviews-E{numeric_id}_IN223.htm"
+        company_slug = company_config.get('slug', 'ASUS')
+        slug_len = len(company_slug)
+        # URL pattern: {slug}-Taiwan-Reviews-EI_IE{id}.0,{slug_len}_IL.{slug_len+1},{slug_len+7}_IN240.htm
+        # e.g. ASUS(4) → .0,4_IL.5,11_IN240
+        taiwan_url = (
+            f"https://www.glassdoor.com/Reviews/{company_slug}-Taiwan-Reviews-"
+            f"EI_IE{numeric_id}.0,{slug_len}_IL.{slug_len+1},{slug_len+7}_IN240.htm"
+        )
         # 驗證 URL 是否存在（直接嘗試訪問）
         self.driver.get(taiwan_url)
         time.sleep(2)
-        taiwan_exists = 'E40093' in self.driver.current_url and 'Taiwan' in self.driver.current_url
+        taiwan_exists = str(numeric_id) in self.driver.current_url and 'Taiwan' in self.driver.current_url
 
         if taiwan_exists:
             print(f"  ✅ Taiwan URL: {taiwan_url}")
@@ -398,6 +405,51 @@ class CompanyFinder:
                 continue
 
             # 在新公司的城市裡找相同國家
+            # Special case: if baseline_location equals the country name (e.g. "Taiwan"),
+            # treat it as country-level and use IN code directly instead of finding a city.
+            if ref_location == ref_country:
+                in_code = COUNTRY_IN_CODES.get(ref_country)
+                if in_code:
+                    country_label = ref_country.replace(' ', '-')
+                    probe_url, probe_count = self._probe_url_by_ic(
+                        slug, numeric_id, country_label,
+                        {'code': in_code, 'type': 'IN'}
+                    )
+                    if probe_url:
+                        print(f"  ✅ Country-level URL (IN={in_code})：{probe_url}")
+                        results.append({
+                            'baseline_location': ref_location,
+                            'baseline_country': ref_country,
+                            'company': company_name,
+                            'matched_city': ref_country,
+                            'url': probe_url,
+                            'reviews_count': probe_count,
+                            'status': 'found',
+                        })
+                    else:
+                        print(f"  ➖ {company_name} 在 {ref_country} 無 review 頁面")
+                        results.append({
+                            'baseline_location': ref_location,
+                            'baseline_country': ref_country,
+                            'company': company_name,
+                            'matched_city': None,
+                            'url': None,
+                            'reviews_count': None,
+                            'status': 'not_in_company',
+                        })
+                else:
+                    print(f"  ⚠️  無 IN code mapping for {ref_country}，跳過")
+                    results.append({
+                        'baseline_location': ref_location,
+                        'baseline_country': ref_country,
+                        'company': company_name,
+                        'matched_city': None,
+                        'url': None,
+                        'reviews_count': None,
+                        'status': 'no_in_code',
+                    })
+                continue
+
             matched_city = None
             matched_info = None
             for country, (city_name, city_info) in country_to_city.items():
