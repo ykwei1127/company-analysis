@@ -11,5 +11,9 @@ glassdoor-dashboard/frontend/package-lock.json
 glassdoor-dashboard/frontend/dist/
 glassdoor-dashboard/frontend/src/auto-imports.d.ts
 glassdoor-dashboard/frontend/src/components.d.ts
+glassdoor-dashboard/frontend/vite.config.d.ts
+glassdoor-dashboard/frontend/vite.config.js
+glassdoor-dashboard/frontend/tsconfig.tsbuildinfo
+glassdoor-dashboard/frontend/tsconfig.node.tsbuildinfo
 employer-brand-monitor/
 package-lock.json

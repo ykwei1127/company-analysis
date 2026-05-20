@@ -22,15 +22,6 @@ const router = createRouter({
   routes,
 })
 
-// In static mode, redirect scraper/settings to overview
-if (STATIC_MODE) {
-  router.beforeEach((to) => {
-    if (to.path === '/scraper' || to.path === '/settings') {
-      return '/overview'
-    }
-  })
-}
-
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
