@@ -549,8 +549,9 @@ def _worker(port, task_queue, mode, headless, log_path=None, _progress=None):
             elif task['type'] == 'matched_entry':
                 entry = task['entry']
                 src_mode = task['source_mode']
-                company = entry['company']
-                baseline_loc = entry.get('baseline_location') or entry.get('country', 'Unknown')
+                # 'company' field only exists in country/city entries; derive from task name for office/scan
+                company = entry.get('company') or task['name'].split(' - ')[0]
+                baseline_loc = entry.get('baseline_location') or entry.get('location') or entry.get('country', 'Unknown')
                 actual_city = entry.get('matched_city') or baseline_loc
                 url = entry['url']
                 country = entry.get('baseline_country') or entry.get('country')
@@ -640,21 +641,26 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
             src_mode = 'country'
         elif basename.endswith('_scan.json'):
             src_mode = 'scan'
+        elif basename.endswith('_city.json'):
+            src_mode = 'city'
         elif basename.endswith('_office.json'):
             src_mode = 'office'
         else:
             src_mode = 'unknown'
+        # Derive company name from filename for office/scan modes (no 'company' field in entries)
+        file_company = basename.replace('_office.json', '').replace('_scan.json', '').replace('_city.json', '').replace('_country.json', '').replace('_', ' ').title()
         with open(f, encoding='utf-8') as _fh:
             _entries = json.load(_fh)
         for _e in _entries:
             if _e.get('status') != 'found' or not _e.get('url'):
                 continue
-            _baseline_loc = _e.get('baseline_location') or _e.get('country', 'Unknown')
+            _company = _e.get('company') or file_company
+            _baseline_loc = _e.get('baseline_location') or _e.get('location') or _e.get('country', 'Unknown')
             tasks_all.append({
                 'type': 'matched_entry',
                 'entry': _e,
                 'source_mode': src_mode,
-                'name': f"{_e['company']} - {_baseline_loc}",
+                'name': f"{_company} - {_baseline_loc}",
             })
 
     if not tasks_all:
