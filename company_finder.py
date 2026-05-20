@@ -1,16 +1,15 @@
 """
 Glassdoor 跨公司地區比較工具
 
-兩種模式：
-1. 首次探索（explore）：從公司的 Office Locations 頁抓取所有地區 URL
-2. 比對模式（match）：以基準地區清單（如 ASUS 的 22 個地區）對新公司搜尋對應 URL
+三種模式：
+1. office：從公司的 Office Locations 頁抓取城市級 Review URL
+2. country：用國家 IN code 抓取國家級 Review URL
+3. scan：掃描全世界國家，找出有 review 的地區
 
 使用方式：
-    # 首次探索（建立基準，僅需做一次）
-    python company_finder.py explore
-
-    # 對新公司比對基準地區
-    python company_finder.py match
+    python company_finder.py office        # 建立辦公室城市 URL 清單
+    python company_finder.py country       # 建立國家級 URL 清單
+    python company_finder.py scan          # 掃描全世界國家
 
 前置條件：
     已執行 啟動Chrome.bat 並在 Chrome 中登入 Glassdoor
@@ -54,7 +53,7 @@ class TeeLogger:
 # 全域設定
 # ============================================================
 CHROME_DEBUG_PORT = 9222
-BASELINE_FILE = 'data/asus_locations.json'  # 基準地區清單
+BASELINE_FILE = 'data/asus_office.json'  # ASUS 辦公室 URL 清單
 
 # 比對模式：'city'（原始邏輯，用同國家城市 IC code）或 'country'（國家級 IN code）
 MATCH_MODE = 'country'
@@ -922,7 +921,7 @@ class CompanyFinder:
     def save_results(self, results, company_name, output_file=None):
         if output_file is None:
             safe_name = company_name.lower().replace(' ', '_')
-            output_file = f"data/{safe_name}_locations.json"
+            output_file = f"data/{safe_name}_office.json"
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(results, f, ensure_ascii=False, indent=2)
         print(f"\n結果已儲存至：{output_file}")
@@ -1057,40 +1056,79 @@ class CompanyFinder:
 # ----------------------------------------------------------------
 # 主程式
 # ----------------------------------------------------------------
-def run_explore():
+def run_office():
+    """建立公司辦公室城市 URL 清單（原 explore 模式）"""
     print("=" * 60)
-    print("模式：首次探索（建立基準地區清單）")
+    print("模式：建立辦公室城市 URL 清單（Office Location）")
     print("=" * 60)
+
+    # 決定要處理的公司列表
+    companies_to_run = COMPANIES_TO_MATCH
+
+    # 檢查環境變數（從後端傳遞的公司列表）
+    env_companies = os.environ.get('FINDER_COMPANIES')
+    if env_companies:
+        selected_names = [n.strip() for n in env_companies.split(',') if n.strip()]
+        print(f"從環境變數讀取公司列表：{selected_names}")
+        companies_to_run = []
+        for entry in COMPANIES_TO_MATCH:
+            name = entry if isinstance(entry, str) else entry.get('name')
+            if name in selected_names:
+                companies_to_run.append(entry)
+        print(f"篩選後要處理的公司：{len(companies_to_run)} 個")
+
+    if not companies_to_run:
+        print("請在 COMPANIES_TO_MATCH 中加入要處理的公司名稱")
+        return
+
+    import time as _time
+    _total_start = _time.time()
+
     finder = CompanyFinder(CHROME_DEBUG_PORT)
     try:
-        results = finder.explore_all_locations(EXPLORE_CONFIG)
-        finder.save_results(results, EXPLORE_CONFIG['name'])
-        print(f"\n完成！共 {len(results)} 個地區")
+        for company_entry in companies_to_run:
+            if isinstance(company_entry, str):
+                company_config = finder.search_company(company_entry)
+                if not company_config:
+                    print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
+                    continue
+            else:
+                company_config = company_entry
+            company_name = company_config['name']
+            print(f"\n{'='*60}")
+            print(f"正在處理：{company_name}")
+
+            results = finder.explore_all_locations(company_config)
+            safe_name = company_name.lower().replace(' ', '_')
+            finder.save_results(results, company_name,
+                                output_file=f"data/{safe_name}_office.json")
+            print(f"\n完成！{company_name} 共 {len(results)} 個地區")
+
     except Exception as e:
         print(f"\n錯誤：{e}")
         import traceback; traceback.print_exc()
     finally:
+        _total = _time.time() - _total_start
+        print(f"\n{'='*60}")
+        print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+        print(f"{'='*60}")
         finder.close()
 
 
-def run_match(match_mode=None, companies=None):
-    """
-    執行比對。match_mode 可為 'city' 或 'country'，預設讀取 MATCH_MODE 全域設定。
-    companies: 要處理的公司列表，如果為 None 則使用 COMPANIES_TO_MATCH
-    """
-    mode_used = match_mode or MATCH_MODE
+def run_country(companies=None):
+    """建立國家級 URL 清單（原 match --mode country）"""
     print("=" * 60)
-    print(f"模式：比對新公司 vs 基準地區（{mode_used} level）")
+    print("模式：建立國家級 URL 清單（Country）")
     print("=" * 60)
 
-    # 載入基準地區
+    # 載入 ASUS 辦公室清單作為基準地區
     try:
         with open(BASELINE_FILE, encoding='utf-8') as f:
             baseline = json.load(f)
         baseline_found = [loc for loc in baseline if loc['status'] == 'found']
         print(f"載入基準地區：{len(baseline_found)} 個（來自 {BASELINE_FILE}）")
     except FileNotFoundError:
-        print(f"找不到基準檔案 {BASELINE_FILE}，請先執行 explore 模式")
+        print(f"找不到基準檔案 {BASELINE_FILE}，請先執行 office 模式建立 ASUS 辦公室清單")
         return
 
     # 決定要處理的公司列表
@@ -1134,16 +1172,12 @@ def run_match(match_mode=None, companies=None):
             print(f"正在處理：{company_name}")
             _t0 = _time.time()
 
-            if mode_used == 'country':
-                results = finder.match_by_country(company_config, baseline_found)
-            else:
-                results = finder.match_against_baseline(company_config, baseline_found)
+            results = finder.match_by_country(company_config, baseline_found)
 
             _elapsed = _time.time() - _t0
             finder.print_match_results(results, company_name)
-            suffix = '_matched_country.json' if mode_used == 'country' else '_matched.json'
             finder.save_results(results, company_name,
-                                output_file=f"data/{company_name.lower().replace(' ', '_')}{suffix}")
+                                output_file=f"data/{company_name.lower().replace(' ', '_')}_country.json")
             print(f"  ⏱  {company_name} 耗時：{_elapsed:.0f}s")
             all_company_results[company_name] = results
 
@@ -1228,26 +1262,25 @@ def run_scan():
 
 
 if __name__ == '__main__':
-    mode = sys.argv[1] if len(sys.argv) > 1 else 'match'
-    # 支援 --mode city/country 覆蓋 MATCH_MODE
-    match_mode_override = None
-    if '--mode' in sys.argv:
-        idx = sys.argv.index('--mode')
-        if idx + 1 < len(sys.argv):
-            match_mode_override = sys.argv[idx + 1]
+    mode = sys.argv[1] if len(sys.argv) > 1 else 'country'
 
     os.makedirs('logs', exist_ok=True)
     log_path = f"logs/company_finder_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
     logger = TeeLogger(log_path)
     print(f"Log: {log_path}")
     try:
-        if mode == 'explore':
-            run_explore()
-        elif mode == 'match':
-            run_match(match_mode=match_mode_override)
+        if mode == 'office':
+            run_office()
+        elif mode == 'country':
+            run_country()
         elif mode == 'scan':
             run_scan()
+        # Legacy aliases
+        elif mode == 'explore':
+            run_office()
+        elif mode == 'match':
+            run_country()
         else:
-            print(f"未知模式：{mode}，請使用 explore、match 或 scan")
+            print(f"未知模式：{mode}，請使用 office、country 或 scan")
     finally:
         logger.close()

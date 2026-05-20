@@ -37,25 +37,15 @@
           </el-checkbox-group>
         </div>
         <div class="control-group">
-          <label>Data Source:</label>
-          <el-select v-model="mode" size="small" style="width: 160px">
-            <el-option label="Company Reviews" value="matched" />
-            <el-option label="ASUS Baseline Only" value="baseline" />
-          </el-select>
-        </div>
-        <div class="control-group">
-          <label>Match Mode:</label>
-          <el-select v-model="sourceMode" size="small" style="width: 140px" :disabled="mode !== 'matched'">
+          <label>List Type:</label>
+          <el-select v-model="sourceMode" size="small" style="width: 160px">
             <el-option label="All" value="all" />
+            <el-option label="Office Location" value="office" />
             <el-option label="Country" value="country" />
-            <el-option label="City" value="city" />
-            <el-option label="Discovery" value="scan" />
+            <el-option label="World Scan" value="scan" />
           </el-select>
-          <el-tooltip v-if="mode === 'baseline'" content="ASUS Baseline has no Match Mode filter">
-            <el-icon style="margin-left: 4px; color: var(--el-text-color-secondary);"><info-filled /></el-icon>
-          </el-tooltip>
         </div>
-        <div class="control-group" v-if="mode === 'matched'" style="flex-wrap: wrap;">
+        <div class="control-group" style="flex-wrap: wrap;">
           <label>Companies:</label>
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
             <el-select-v2
@@ -127,7 +117,7 @@ import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatu
 const ALL_PORTS = [9222, 9223, 9224]
 const selectedPorts = ref<number[]>([9222])
 const mode = ref('matched')
-const sourceMode = ref('all')  // 'all', 'country', 'city', 'scan'
+const sourceMode = ref('all')  // 'all', 'office', 'country', 'scan'
 const availableCompanies = ref<{name: string, file: string, mode: string}[]>([])
 const selectedCompanies = ref<string[]>([])  // Empty means all companies
 const loadingCompanies = ref(false)

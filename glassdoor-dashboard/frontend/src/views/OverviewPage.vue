@@ -19,7 +19,7 @@
     >
       <div style="display: flex; gap: 24px; font-size: 13px;">
         <span><strong>Companies:</strong> {{ filteredCompanies.length }}</span>
-        <span><strong>Match Modes:</strong>
+        <span><strong>List Types:</strong>
           <el-tag
             v-for="mode in uniqueModes"
             :key="mode"
@@ -34,17 +34,17 @@
     <!-- Mixed Mode Warning -->
     <el-alert
       v-if="hasMixedModes"
-      title="Warning: Mixed Match Modes Detected"
+      title="Warning: Mixed List Types Detected"
       type="warning"
       :closable="false"
       style="margin-bottom: 16px;"
     >
       <div style="font-size: 13px; line-height: 1.6;">
-        This run contains data from multiple match modes ({{ uniqueModes.join(', ') }}).
+        This run contains data from multiple list types ({{ uniqueModes.join(', ') }}).
         <br>
-        Comparing city-level and country-level reviews may lead to inconsistent results.
+        Comparing office-level and country-level reviews may lead to inconsistent results.
         <br>
-        <strong>Recommendation:</strong> Use consistent Match Mode for all companies (preferably Country).
+        <strong>Recommendation:</strong> Use consistent list type for all companies.
       </div>
     </el-alert>
 
@@ -80,7 +80,7 @@
       <el-table :data="filteredCompanies" stripe style="width: 100%" :default-sort="{ prop: 'overall', order: 'descending' }">
         <el-table-column prop="rank" label="#" width="45" align="center" sortable />
         <el-table-column prop="company" label="Company" min-width="120" sortable />
-        <el-table-column prop="source_mode" label="Match" width="90" align="center" sortable>
+        <el-table-column prop="source_mode" label="Type" width="90" align="center" sortable>
           <template #default="{ row }">
             <el-tag
               v-if="row.source_mode"

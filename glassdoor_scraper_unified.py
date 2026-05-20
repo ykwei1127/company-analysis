@@ -269,11 +269,11 @@ class GlassdoorScraper:
 
     def scrape_from_matched_json(self, json_files, _progress_fn=None):
         """
-        從 company_finder.py 產生的 *_matched.json 抓取評分數據。
-        保留 baseline_location 和 matched_city，讓 Excel 顯示正確。
+        從 company_finder.py 產生的 URL list JSON 檔案抓取評分數據。
+        支援 office/country/scan 三種類型。
 
         Args:
-            json_files: list of str，matched json 路徑
+            json_files: list of str，URL list JSON 路徑
             _progress_fn: callable(entry_name)，每筆 entry 完成後回報進度
 
         Returns:
@@ -287,12 +287,12 @@ class GlassdoorScraper:
         for json_file in json_files:
             # Detect source mode from filename
             basename = os.path.basename(json_file)
-            if '_matched_country.json' in basename:
+            if basename.endswith('_country.json'):
                 source_mode = 'country'
-            elif '_scan.json' in basename:
+            elif basename.endswith('_scan.json'):
                 source_mode = 'scan'
-            elif '_matched.json' in basename:
-                source_mode = 'city'
+            elif basename.endswith('_office.json'):
+                source_mode = 'office'
             else:
                 source_mode = 'unknown'
 
@@ -337,10 +337,10 @@ class GlassdoorScraper:
     
     def scrape_from_baseline_json(self, json_file, company_name='ASUS', location_filter=None, _progress_fn=None):
         """
-        讀取 explore 模式產生的 *_locations.json（如 asus_locations.json）並抓取評分。
+        讀取 office 模式產生的 *_office.json（如 asus_office.json）並抓取評分。
 
         Args:
-            json_file: str，locations json 路徑
+            json_file: str，office locations json 路徑
             company_name: str，公司名稱
             location_filter: str or None，若指定則只處理該地區
             _progress_fn: callable(entry_name)，每筆 entry 完成後回報進度
@@ -373,7 +373,7 @@ class GlassdoorScraper:
                 data['Actual City'] = baseline_loc
                 data['Country'] = country
                 data['Review URL'] = url
-                data['Source Mode'] = 'baseline'
+                data['Source Mode'] = 'office'
                 all_data.append(data)
                 if data.get('Overall') is not None:
                     sleep_sec = 1.5
@@ -614,10 +614,10 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
 
     tasks_all = []
 
-    # If asus_matched_country.json is in matched_files, skip the city-level baseline to avoid mixing granularities
-    asus_country_in_matched = any('asus_matched_country' in os.path.basename(f) for f in matched_files)
+    # If asus_country.json is in matched_files, skip the city-level baseline to avoid mixing granularities
+    asus_country_in_matched = any('asus_country' in os.path.basename(f) for f in matched_files)
     if include_baseline and asus_country_in_matched:
-        print("[INFO] asus_matched_country.json 已在 matched files 中，略過 city-level baseline 避免重複")
+        print("[INFO] asus_country.json 已在 matched files 中，略過 city-level baseline 避免重複")
         include_baseline = False
 
     if include_baseline and os.path.exists(baseline_file):
@@ -634,12 +634,12 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
 
     for f in matched_files:
         basename = os.path.basename(f)
-        if '_matched_country.json' in basename:
+        if basename.endswith('_country.json'):
             src_mode = 'country'
-        elif '_scan.json' in basename:
+        elif basename.endswith('_scan.json'):
             src_mode = 'scan'
-        elif '_matched.json' in basename:
-            src_mode = 'city'
+        elif basename.endswith('_office.json'):
+            src_mode = 'office'
         else:
             src_mode = 'unknown'
         with open(f, encoding='utf-8') as _fh:
@@ -874,20 +874,24 @@ def main():
     _stem, _ext = os.path.splitext(_base_output)
     output_file = f"{_stem}_{_ts}{_ext}"
 
-    # 優先使用 data/*_matched*.json（company_finder 產生的結果，含 city 和 country 模式）
+    # 掃描 data/ 目錄中的 URL 清單檔案（office/country/scan）
     # 根據 source_mode_filter 和 company_filter 過濾檔案
-    matched_files = sorted(glob.glob('data/*_matched*.json'))
+    matched_files = sorted(
+        glob.glob('data/*_office.json') +
+        glob.glob('data/*_country.json') +
+        glob.glob('data/*_scan.json')
+    )
 
     # Apply source mode filter
     if source_mode_filter != 'all':
         filtered = []
         for f in matched_files:
             basename = os.path.basename(f)
-            if source_mode_filter == 'country' and '_matched_country.json' in basename:
+            if source_mode_filter == 'country' and basename.endswith('_country.json'):
                 filtered.append(f)
-            elif source_mode_filter == 'city' and '_matched.json' in basename and '_country' not in basename:
+            elif source_mode_filter == 'office' and basename.endswith('_office.json'):
                 filtered.append(f)
-            elif source_mode_filter == 'scan' and '_scan.json' in basename:
+            elif source_mode_filter == 'scan' and basename.endswith('_scan.json'):
                 filtered.append(f)
         matched_files = filtered
         print(f"🔍 Source Mode Filter: {source_mode_filter} -> {len(matched_files)} files selected")
@@ -898,7 +902,7 @@ def main():
         filtered = []
         for f in matched_files:
             basename = os.path.basename(f).lower()
-            # Match company name in filename (e.g., nvidia_matched.json)
+            # Match company name in filename (e.g., nvidia_office.json)
             for name in company_names:
                 if name in basename or basename.startswith(name.replace(' ', '_')):
                     filtered.append(f)
@@ -918,7 +922,7 @@ def main():
         input()
 
     include_baseline = (task == 'baseline') or (getattr(config, 'INCLUDE_BASELINE', False) if config else False)
-    baseline_file = 'data/asus_locations.json'
+    baseline_file = 'data/asus_office.json'
     # CLI --ports overrides config
     if args.ports:
         parallel_ports = [int(p.strip()) for p in args.ports.split(',')]
@@ -947,16 +951,16 @@ def main():
             data = []
 
             if include_baseline and os.path.exists(baseline_file):
-                asus_country_in_matched = any('asus_matched_country' in os.path.basename(f) for f in matched_files)
-                if asus_country_in_matched:
-                    print("[INFO] asus_matched_country.json 已在 matched files 中，略過 city-level baseline 避免重複")
+                asus_country_in_files = any('asus_country' in os.path.basename(f) for f in matched_files)
+                if asus_country_in_files:
+                    print("[INFO] asus_country.json 已在 URL list files 中，略過 office-level baseline 避免重複")
                 else:
                     print(f"\n[INCLUDE_BASELINE=True] 抓取基準公司 ASUS：{baseline_file}\n")
                     data += scraper.scrape_from_baseline_json(baseline_file, company_name='ASUS')
 
             if matched_files:
-                print(f"\n找到 matched JSON：{matched_files}")
-                print(f"開始從 matched JSON 抓取數據...\n")
+                print(f"\n找到 URL list JSON：{matched_files}")
+                print(f"開始從 URL list JSON 抓取數據...\n")
                 data += scraper.scrape_from_matched_json(matched_files)
             elif not include_baseline:
                 if config and hasattr(config, 'COMPANY_URLS'):

@@ -143,8 +143,8 @@ def get_run_metadata(run_id: Optional[str] = None) -> dict:
     companies = []
 
     def _normalize_mode(m: str) -> str:
-        # 'baseline' is the ASUS city-level reference — treat as 'city' for grouping
-        return 'city' if m == 'baseline' else m
+        # 'baseline' and 'city' are legacy names — treat as 'office' for grouping
+        return 'office' if m in ('baseline', 'city') else m
 
     if "source_mode" in df.columns and "company" in df.columns:
         for company, grp in df.groupby("company"):

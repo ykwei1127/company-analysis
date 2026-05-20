@@ -22,124 +22,139 @@
     </el-alert>
 
     <el-tabs v-model="activeTab">
-      <!-- Tab 1: Companies -->
-      <el-tab-pane label="Companies" name="companies">
-        <!-- Step 1: Baseline Management -->
+      <!-- Tab 1: URL Lists -->
+      <el-tab-pane label="URL Lists" name="companies">
+        <!-- Company Management -->
         <div class="section">
           <div class="section-header">
-            <h3 class="section-title">Step 1: Baseline Setup</h3>
-            <el-tag v-if="baselineExists" type="success" size="small">Ready</el-tag>
-            <el-tag v-else type="warning" size="small">Missing</el-tag>
+            <h3 class="section-title">Companies</h3>
+            <div style="display: flex; gap: 8px;">
+              <el-button size="small" text @click="selectedMatchCompanies = availableMatchCompanies.map(c => c.name)">
+                Select All
+              </el-button>
+              <el-button size="small" text @click="selectedMatchCompanies = []">
+                Clear All
+              </el-button>
+            </div>
           </div>
-          <p style="font-size: 13px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
-            Create baseline location list (usually ASUS). Run once. All companies will be matched against this baseline.
-          </p>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <el-button
-              size="small"
-              @click="handleExplore"
-              :loading="finderStore.isRunning && finderStore.currentTask === 'explore'"
-              :disabled="finderStore.isRunning"
+          <el-checkbox-group v-model="selectedMatchCompanies" size="small" style="display: flex; flex-wrap: wrap; gap: 8px;" :disabled="finderStore.isRunning">
+            <el-checkbox
+              v-for="c in availableMatchCompanies"
+              :key="c.name"
+              :label="c.name"
+              :value="c.name"
+              style="margin: 0;"
+              border
             >
-              <el-icon><Refresh /></el-icon> Run Explore (Create Baseline)
-            </el-button>
-            <el-button size="small" text @click="activeTab = 'baseline'">View Baseline →</el-button>
+              {{ c.name }}
+            </el-checkbox>
+          </el-checkbox-group>
+          <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center;">
+            <el-input
+              v-model="newCompanyName"
+              placeholder="Add new company..."
+              size="small"
+              style="width: 180px"
+              @keyup.enter="handleAddToMatch"
+            />
+            <el-button size="small" type="primary" @click="handleAddToMatch" :disabled="!newCompanyName.trim()">Add</el-button>
+            <el-popconfirm title="Remove selected companies?" @confirm="handleRemoveSelected">
+              <template #reference>
+                <el-button size="small" type="danger" plain :disabled="selectedMatchCompanies.length === 0">
+                  Remove Selected
+                </el-button>
+              </template>
+            </el-popconfirm>
           </div>
         </div>
 
         <el-divider />
 
-        <!-- Step 2: Match Companies -->
+        <!-- Build URL Lists -->
         <div class="section">
           <div class="section-header">
-            <h3 class="section-title">Step 2: Match Companies</h3>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <el-select v-model="matchMode" size="small" style="width: 110px">
-                <el-option value="country" label="Country Mode" />
-                <el-option value="city" label="City Mode" />
-              </el-select>
+            <h3 class="section-title">Build URL Lists</h3>
+            <el-button
+              size="small"
+              type="danger"
+              plain
+              @click="handleStopFinder"
+              :disabled="!finderRunning"
+            >Stop</el-button>
+          </div>
+          <p style="font-size: 13px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+            Build review URL lists for selected companies. Each type only needs to be run once; afterwards use <router-link to="/scraper">Scraper</router-link> to periodically collect reviews.
+          </p>
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
+            <!-- Office Location -->
+            <el-card shadow="hover" style="flex: 1; min-width: 200px;">
+              <template #header>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong>Office Location</strong>
+                  <el-tag size="small" type="info">office</el-tag>
+                </div>
+              </template>
+              <p style="font-size: 12px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+                Uses Glassdoor office locations page to find city-level review URLs.
+              </p>
               <el-button
                 size="small"
                 type="primary"
-                @click="handleMatch"
-                :loading="finderRunning && currentTask === 'match'"
-                :disabled="finderRunning || !baselineExists"
+                @click="handleBuildOffice"
+                :loading="finderRunning && currentTask === 'office'"
+                :disabled="finderRunning"
               >
-                Run Match
+                <el-icon><Refresh /></el-icon> Build Office List
               </el-button>
+            </el-card>
+
+            <!-- Country -->
+            <el-card shadow="hover" style="flex: 1; min-width: 200px;">
+              <template #header>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong>Country</strong>
+                  <el-tag size="small" type="success">country</el-tag>
+                </div>
+              </template>
+              <p style="font-size: 12px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+                Uses country-level IN codes to build review URLs. Fast and consistent.
+              </p>
               <el-button
                 size="small"
-                type="danger"
-                plain
-                @click="handleStopFinder"
-                :disabled="!finderRunning"
-              >Stop</el-button>
-            </div>
-          </div>
-          <p style="font-size: 13px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
-            <strong>Country Mode:</strong> Uses country-level IN codes. Fast and consistent comparison baseline (recommended)<br>
-            <strong>City Mode:</strong> Finds city-level reviews in same country. May mismatch due to different cities
-          </p>
-
-          <div class="finder-info">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <p style="margin: 0;"><strong>Companies to Match:</strong></p>
-              <div style="display: flex; gap: 8px;">
-                <el-button size="small" text @click="selectedMatchCompanies = availableMatchCompanies.map(c => c.name)">
-                  Select All
-                </el-button>
-                <el-button size="small" text @click="selectedMatchCompanies = []">
-                  Clear All
-                </el-button>
-              </div>
-            </div>
-            <el-checkbox-group v-model="selectedMatchCompanies" size="small" style="display: flex; flex-wrap: wrap; gap: 8px;" :disabled="finderStore.isRunning">
-              <el-checkbox
-                v-for="c in availableMatchCompanies"
-                :key="c.name"
-                :label="c.name"
-                :value="c.name"
-                style="margin: 0;"
-                border
-                :disabled="c.name === 'ASUS' && matchMode === 'city'"
+                type="primary"
+                @click="handleBuildCountry"
+                :loading="finderRunning && currentTask === 'country'"
+                :disabled="finderRunning"
               >
-                {{ c.name }}
-                <el-tooltip v-if="c.name === 'ASUS' && matchMode === 'city'" content="ASUS city-level baseline already exists (asus_locations.json)" placement="top">
-                  <el-icon style="margin-left: 4px; color: var(--el-color-info);"><InfoFilled /></el-icon>
-                </el-tooltip>
-              </el-checkbox>
-            </el-checkbox-group>
-            <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center;">
-              <el-input
-                v-model="newCompanyName"
-                placeholder="Add new company..."
+                <el-icon><Refresh /></el-icon> Build Country List
+              </el-button>
+            </el-card>
+
+            <!-- World Scan -->
+            <el-card shadow="hover" style="flex: 1; min-width: 200px;">
+              <template #header>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong>World Scan</strong>
+                  <el-tag size="small" type="warning">scan</el-tag>
+                </div>
+              </template>
+              <p style="font-size: 12px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+                Scans {{ totalScanCountries }} countries worldwide to discover where reviews exist.
+              </p>
+              <el-button
                 size="small"
-                style="width: 180px"
-                @keyup.enter="handleAddToMatch"
-              />
-              <el-button size="small" type="primary" @click="handleAddToMatch" :disabled="!newCompanyName.trim()">Add</el-button>
-              <el-popconfirm title="Remove selected companies?" @confirm="handleRemoveSelected">
-                <template #reference>
-                  <el-button size="small" type="danger" plain :disabled="selectedMatchCompanies.length === 0">
-                    Remove Selected
-                  </el-button>
-                </template>
-              </el-popconfirm>
-            </div>
+                type="warning"
+                plain
+                @click="handleScan"
+                :loading="finderRunning && currentTask === 'scan'"
+                :disabled="finderRunning"
+              >
+                <el-icon><Search /></el-icon> Build Scan List
+              </el-button>
+            </el-card>
           </div>
 
-        </div>
-
-        <el-divider />
-
-        <!-- Step 3: Discovery (Advanced) -->
-        <div class="section">
-          <div class="section-header">
-            <h3 class="section-title">Step 3: Discovery (Optional)</h3>
-          </div>
-          <p style="font-size: 13px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
-            Scan {{ totalScanCountries }} countries worldwide to find where the company has reviews (not limited by baseline). Use to discover new regions or verify coverage.
-          </p>
           <el-collapse style="margin-bottom: 12px;">
             <el-collapse-item title="View countries to scan (by region)" name="1">
               <div v-for="group in scanCountryGroups" :key="group.region" style="margin-bottom: 16px;">
@@ -152,39 +167,28 @@
               </div>
             </el-collapse-item>
           </el-collapse>
-          <el-button
-            size="small"
-            type="warning"
-            plain
-            @click="handleScan"
-            :loading="finderRunning && currentTask === 'scan'"
-            :disabled="finderRunning"
-          >
-            <el-icon><Search /></el-icon> Scan All Countries (~{{ Math.round(totalScanCountries * 3 * availableMatchCompanies.length / 60) }} min)
-          </el-button>
-
         </div>
 
         <el-divider />
 
-        <!-- Matched Companies Table -->
+        <!-- URL List Files -->
         <div class="section">
           <div class="section-header">
-            <h3 class="section-title">Matched Companies</h3>
+            <h3 class="section-title">URL List Files</h3>
             <el-button size="small" @click="loadCompanies" :loading="loadingCompanies">Refresh</el-button>
           </div>
           <el-table :data="companies" size="small" stripe>
             <el-table-column prop="name" label="Company" />
-            <el-table-column prop="mode" label="Mode" width="90">
+            <el-table-column prop="mode" label="Type" width="90">
               <template #default="{ row }">
-                <el-tag size="small" :type="row.mode === 'country' ? 'success' : 'info'">{{ row.mode }}</el-tag>
+                <el-tag size="small" :type="row.mode === 'country' ? 'success' : row.mode === 'scan' ? 'warning' : 'info'">{{ row.mode }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="entries" label="Entries" width="80" />
             <el-table-column prop="file" label="File" width="260" />
             <el-table-column label="Action" width="90">
               <template #default="{ row }">
-                <el-popconfirm title="Remove this company?" @confirm="handleRemove(row.name)">
+                <el-popconfirm title="Remove this file?" @confirm="handleRemove(row.name)">
                   <template #reference>
                     <el-button type="danger" size="small" plain>Remove</el-button>
                   </template>
@@ -195,57 +199,27 @@
         </div>
       </el-tab-pane>
 
-      <!-- Tab 2: Baseline -->
-      <el-tab-pane label="Baseline Locations" name="baseline">
+      <!-- Tab 2: View URL Lists -->
+      <el-tab-pane label="View URL Lists" name="baseline">
         <div class="section">
           <div class="section-header">
-            <h3 class="section-title">ASUS Baseline Locations</h3>
-            <el-tag size="small">{{ baselineLocations.length }} locations</el-tag>
-          </div>
-          <el-alert
-            type="info"
-            :closable="false"
-            style="margin-bottom: 16px;"
-          >
-            <template #title>
-              <strong>What is a Baseline Location?</strong>
-            </template>
-            <div style="font-size: 13px; line-height: 1.6;">
-              Baseline locations are the reference regions used for cross-company comparison.
-              When you run <strong>Match</strong>, all companies are compared against these same locations
-              to ensure consistent benchmarking. For example, if "Taipei, Taiwan" is in the baseline,
-              Match will try to find reviews for every company in Taiwan (country-level) or Taipei (city-level).
-              <br><br>
-              <strong>Source:</strong>
-              <a href="https://www.glassdoor.com/Location/All-ASUS-Office-Locations-E40093.htm" target="_blank" style="color: var(--el-color-primary);">
-                ASUS Office Locations on Glassdoor →
-              </a>
-              <br>
-              <strong>Usage:</strong> Match mode uses this list to know which regions to search for in other companies.
+            <h3 class="section-title">View URL List Entries</h3>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <el-select v-model="viewListFile" size="small" style="width: 250px" placeholder="Select a URL list file" @change="loadUrlListEntries">
+                <el-option
+                  v-for="c in companies"
+                  :key="c.file"
+                  :label="`${c.name} (${c.mode})`"
+                  :value="c.file"
+                />
+              </el-select>
+              <el-tag size="small">{{ viewListEntries.length }} entries</el-tag>
             </div>
-          </el-alert>
-          <el-alert
-            type="warning"
-            :closable="false"
-            style="margin-bottom: 16px;"
-          >
-            <template #default>
-              <div style="font-size: 13px;">
-                <strong>Note:</strong> ASUS Glassdoor shows <strong>27</strong> office locations, but this baseline contains <strong>{{ baselineLocations.length }}</strong> entries.
-                The extra 2 are:
-                <el-tag size="small" type="warning" style="margin: 0 4px;">Global</el-tag> (worldwide reviews summary) and
-                <el-tag size="small" type="warning" style="margin: 0 4px;">Taiwan</el-tag> (country-level aggregate, not a city office).
-              </div>
-            </template>
-          </el-alert>
-          <el-table :data="baselineLocations" size="small" stripe max-height="500">
+          </div>
+          <el-table :data="viewListEntries" size="small" stripe max-height="500" v-if="viewListEntries.length > 0">
             <el-table-column label="Location" width="180">
               <template #default="{ row }">
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span :style="{ fontWeight: (row.location === 'Global' || row.location === 'Taiwan') ? '600' : 'normal' }">{{ row.location }}</span>
-                  <el-tag v-if="row.location === 'Global'" size="small" type="warning" effect="dark">Global</el-tag>
-                  <el-tag v-else-if="row.location === 'Taiwan'" size="small" type="success" effect="dark">Country</el-tag>
-                </div>
+                <span>{{ row.location || row.baseline_location || row.country || '—' }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="country" label="Country" width="120" />
@@ -261,6 +235,7 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-empty v-else description="Select a URL list file to view entries" />
         </div>
       </el-tab-pane>
 
@@ -300,8 +275,8 @@ import { Loading, Refresh, Search, InfoFilled } from '@element-plus/icons-vue'
 import { useFinderStore } from '../stores/finder'
 import { 
   getCompanies, 
-  runFinderExplore, 
-  runFinderMatch, 
+  runFinderOffice,
+  runFinderCountry, 
   runFinderScan, 
   getFinderStatus, 
   stopFinder, 
@@ -442,17 +417,25 @@ async function handleRemoveSelected() {
 // ─── Global Finder Store ─────────────────────────────────
 const finderStore = useFinderStore()
 
-// 本地狀態（僅供本頁使用）
-const matchMode = ref('country')
-
-// When switching to city mode, deselect ASUS automatically
-watch(matchMode, (mode) => {
-  if (mode === 'city') {
-    selectedMatchCompanies.value = selectedMatchCompanies.value.filter(n => n !== 'ASUS')
-  }
-})
 const logContainerRef = ref<HTMLElement | null>(null)
 const baselineExists = ref(false)
+
+// ─── View URL List entries ──────────────────────────────
+const viewListFile = ref('')
+const viewListEntries = ref<any[]>([])
+
+async function loadUrlListEntries() {
+  if (!viewListFile.value) {
+    viewListEntries.value = []
+    return
+  }
+  try {
+    const { data } = await getBaseline(viewListFile.value)
+    viewListEntries.value = data.locations || []
+  } catch {
+    viewListEntries.value = []
+  }
+}
 
 // ─── Global Status ─────────────────────────────────────
 const chromeConnected = ref(true)  // 預設 true，檢查後更新
@@ -510,32 +493,31 @@ watch(finderLogs, () => {
 }, { deep: true })
 let finderPoll: ReturnType<typeof setInterval> | null = null
 
-async function handleMatch() {
-  finderStore.start('match')
-  startFinderPolling()  // Start polling immediately
-  // 只跑選中的公司
+async function handleBuildOffice() {
+  finderStore.start('office')
+  startFinderPolling()
   const companiesToRun = selectedMatchCompanies.value.length > 0
     ? selectedMatchCompanies.value
     : availableMatchCompanies.value.map(c => c.name)
-  console.log('Selected companies:', selectedMatchCompanies.value)
-  console.log('Companies to run:', companiesToRun)
-  await runFinderMatch(matchMode.value, companiesToRun)
+  await runFinderOffice(companiesToRun)
+}
+
+async function handleBuildCountry() {
+  finderStore.start('country')
+  startFinderPolling()
+  const companiesToRun = selectedMatchCompanies.value.length > 0
+    ? selectedMatchCompanies.value
+    : availableMatchCompanies.value.map(c => c.name)
+  await runFinderCountry(companiesToRun)
 }
 
 async function handleScan() {
   finderStore.start('scan')
-  startFinderPolling()  // Start polling immediately
-  // 使用選中的公司或全部
+  startFinderPolling()
   const companiesToRun = selectedMatchCompanies.value.length > 0
     ? selectedMatchCompanies.value
     : availableMatchCompanies.value.map(c => c.name)
   await runFinderScan(companiesToRun)
-}
-
-async function handleExplore() {
-  finderStore.start('explore')
-  startFinderPolling()  // Start polling immediately
-  await runFinderExplore()
 }
 
 function startFinderPolling() {
@@ -575,22 +557,11 @@ function stopFinderPolling() {
   if (finderPoll) { clearInterval(finderPoll); finderPoll = null }
 }
 
-// ─── Baseline ───────────────────────────────────────────
-const baselineLocations = ref<any[]>([])
-
-async function loadBaseline() {
-  try {
-    const { data } = await getBaseline()
-    baselineLocations.value = data.locations
-  } catch { /* ignore */ }
-}
-
 // ─── Lifecycle ──────────────────────────────────────────
 onMounted(() => {
   loadConfig()
   loadCompanies()
   loadCompaniesToMatch()
-  loadBaseline()
   checkBaseline()
 })
 

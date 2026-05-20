@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export const useFinderStore = defineStore('finder', () => {
   // State
   const isRunning = ref(false)
-  const currentTask = ref<'explore' | 'match' | 'scan' | null>(null)
+  const currentTask = ref<'office' | 'country' | 'scan' | null>(null)
   const logs = ref<string[]>([])
   const startTime = ref<number | null>(null)
   const elapsedTime = ref('')  // Now a ref that updates via setInterval
@@ -26,8 +26,8 @@ export const useFinderStore = defineStore('finder', () => {
   const statusTitle = computed(() => {
     if (!currentTask.value) return ''
     const titles: Record<string, string> = {
-      explore: 'Exploring Baseline',
-      match: 'Matching Companies',
+      office: 'Building Office Lists',
+      country: 'Building Country Lists',
       scan: 'Scanning Countries'
     }
     return `Running: ${titles[currentTask.value]}`
@@ -36,15 +36,15 @@ export const useFinderStore = defineStore('finder', () => {
   const statusText = computed(() => {
     if (!currentTask.value) return ''
     const texts: Record<string, string> = {
-      explore: 'Creating ASUS baseline location list...',
-      match: 'Matching companies against baseline...',
+      office: 'Finding office location review URLs...',
+      country: 'Building country-level review URLs...',
       scan: 'Scanning all countries for reviews...'
     }
     return texts[currentTask.value]
   })
 
   // Actions
-  function start(task: 'explore' | 'match' | 'scan') {
+  function start(task: 'office' | 'country' | 'scan') {
     isRunning.value = true
     currentTask.value = task
     startTime.value = Date.now()

@@ -68,7 +68,7 @@ async def scraper_start(ports: str = "9222", mode: str = "matched", source_mode:
     Args:
         ports: Comma-separated Chrome debug ports
         mode: 'matched' or 'baseline'
-        source_mode: 'all', 'country', 'city', or 'scan' (filter for matched mode)
+        source_mode: 'all', 'office', 'country', or 'scan'
         companies: Comma-separated company names to filter (e.g., "ASUS,NVIDIA")
     """
     if _scraper_state["running"]:
@@ -234,10 +234,12 @@ def _get_asus_glassdoor_url() -> str:
     """Get ASUS Glassdoor review URL from data files."""
     import json
     import glob
-    # Check both matched and locations files
+    # Check both office and other URL list files
     patterns = [
-        str(PROJECT_ROOT / "data" / "asus_locations.json"),
-        str(PROJECT_ROOT / "data" / "*_matched*.json"),
+        str(PROJECT_ROOT / "data" / "asus_office.json"),
+        str(PROJECT_ROOT / "data" / "*_office.json"),
+        str(PROJECT_ROOT / "data" / "*_country.json"),
+        str(PROJECT_ROOT / "data" / "*_scan.json"),
     ]
     files = []
     for pat in patterns:
