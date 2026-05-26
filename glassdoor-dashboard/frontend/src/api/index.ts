@@ -24,9 +24,6 @@ export const getRuns = () =>
 export const deleteRun = (_runId: string) =>
   STATIC_MODE ? noop() : api.delete(`/runs/${_runId}`)
 
-export const downloadRun = (_runId: string) =>
-  STATIC_MODE ? noop() : api.get(`/runs/${_runId}/download`, { responseType: 'blob' })
-
 export const getRunMetadata = (run: string) =>
   STATIC_MODE ? staticGet(`${staticRunPath(run)}/metadata.json`) : api.get(`/overview/run-metadata?run=${run}`)
 

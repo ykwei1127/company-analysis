@@ -153,6 +153,10 @@ COMPANIES_TO_MATCH = [
     'Inventec',
     'Pegatron',
     'AU Optronics',
+    'Trend Micro Inc.',
+    'Dell Technologies',
+    'Acer Group',
+    'Lenovo',
 ]
 # ============================================================
 
