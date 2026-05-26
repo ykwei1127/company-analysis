@@ -1,9 +1,11 @@
 """Overview and location-based API endpoints."""
 
 from fastapi import APIRouter, Query
+from fastapi.responses import FileResponse
+from pathlib import Path
 from typing import Optional
 
-from app.data_loader import load_ratings, list_runs, delete_run, get_run_metadata
+from app.data_loader import load_ratings, list_runs, delete_run, get_run_metadata, OUTPUT_DIR
 
 router = APIRouter(tags=["overview"])
 
@@ -18,6 +20,24 @@ def get_runs():
 def remove_run(run_id: str):
     """Delete a scrape run and all its associated files."""
     return delete_run(run_id)
+
+
+@router.get("/runs/{run_id}/download")
+def download_run(run_id: str):
+    """Download the XLSX file for a specific run."""
+    if run_id == "latest":
+        file_path = OUTPUT_DIR / "glassdoor_ratings.xlsx"
+    else:
+        file_path = OUTPUT_DIR / f"glassdoor_ratings_{run_id}.xlsx"
+
+    if not file_path.exists():
+        return {"error": "File not found"}
+
+    return FileResponse(
+        path=str(file_path),
+        filename=file_path.name,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
 
 @router.get("/overview")

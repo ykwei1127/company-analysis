@@ -41,6 +41,17 @@
               :value="run.id"
             />
           </el-select>
+          <el-button
+            v-if="!STATIC_MODE"
+            size="small"
+            type="primary"
+            plain
+            :disabled="!dashboardStore.selectedRunId"
+            title="Download raw data (XLSX)"
+            @click="handleDownload"
+          >
+            <el-icon><Download /></el-icon>
+          </el-button>
           <el-popconfirm
             v-if="!STATIC_MODE"
             :title="`Delete run '${dashboardStore.selectedRunId}'?`"
@@ -86,11 +97,11 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { DataBoard, TrendCharts, Location, Monitor, Setting, Delete, Loading } from '@element-plus/icons-vue'
+import { DataBoard, TrendCharts, Location, Monitor, Setting, Delete, Loading, Download } from '@element-plus/icons-vue'
 import { useDashboardStore } from './stores/dashboard'
 import { useThemeStore } from './stores/theme'
 import { useFinderStore } from './stores/finder'
-import { stopFinder } from './api'
+import { stopFinder, downloadRun } from './api'
 
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
@@ -104,6 +115,24 @@ async function handleStopFinder() {
     finderStore.stop()
   } catch (e) {
     console.error('Failed to stop finder', e)
+  }
+}
+
+async function handleDownload() {
+  if (!dashboardStore.selectedRunId) return
+  try {
+    const response = await downloadRun(dashboardStore.selectedRunId)
+    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `glassdoor_ratings_${dashboardStore.selectedRunId}.xlsx`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } catch (e) {
+    console.error('Failed to download run', e)
   }
 }
 
