@@ -1,0 +1,77 @@
+{
+  "match_modes": [],
+  "companies": [
+    {
+      "name": "ASUS",
+      "mode": "unknown"
+    },
+    {
+      "name": "Compal Electronics",
+      "mode": "unknown"
+    },
+    {
+      "name": "Google",
+      "mode": "unknown"
+    },
+    {
+      "name": "Lenovo",
+      "mode": "unknown"
+    },
+    {
+      "name": "Pegatron",
+      "mode": "unknown"
+    },
+    {
+      "name": "TSMC",
+      "mode": "unknown"
+    },
+    {
+      "name": "Acer",
+      "mode": "unknown"
+    },
+    {
+      "name": "Dell Technologies",
+      "mode": "unknown"
+    },
+    {
+      "name": "HP Inc.",
+      "mode": "unknown"
+    },
+    {
+      "name": "MSI",
+      "mode": "unknown"
+    },
+    {
+      "name": "Quanta Computer",
+      "mode": "unknown"
+    },
+    {
+      "name": "Wistron",
+      "mode": "unknown"
+    },
+    {
+      "name": "AU Optronics",
+      "mode": "unknown"
+    },
+    {
+      "name": "Delta Electronics",
+      "mode": "unknown"
+    },
+    {
+      "name": "Inventec",
+      "mode": "unknown"
+    },
+    {
+      "name": "NVIDIA",
+      "mode": "unknown"
+    },
+    {
+      "name": "Trend Micro",
+      "mode": "unknown"
+    },
+    {
+      "name": "Wiwynn",
+      "mode": "unknown"
+    }
+  ]
+}

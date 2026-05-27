@@ -1,0 +1,47 @@
+{
+  "rd_taiwan": {
+    "name": "R&D in Taiwan",
+    "companies": [
+      "ASUS",
+      "MSI",
+      "Trend Micro",
+      "Google",
+      "Acer"
+    ],
+    "location_filter": "Taiwan",
+    "weighted": false
+  },
+  "brand_global": {
+    "name": "Global Brands",
+    "companies": [
+      "ASUS",
+      "Acer",
+      "Dell Technologies",
+      "HP Inc.",
+      "Lenovo",
+      "MSI",
+      "Trend Micro",
+      "NVIDIA",
+      "Google"
+    ],
+    "location_filter": "all",
+    "weighted": true
+  },
+  "oem_taiwan": {
+    "name": "Taiwan Tech OEMs",
+    "companies": [
+      "ASUS",
+      "Quanta Computer",
+      "Wistron",
+      "Compal Electronics",
+      "Wiwynn",
+      "TSMC",
+      "Delta Electronics",
+      "Inventec",
+      "Pegatron",
+      "AU Optronics"
+    ],
+    "location_filter": "Taiwan",
+    "weighted": false
+  }
+}

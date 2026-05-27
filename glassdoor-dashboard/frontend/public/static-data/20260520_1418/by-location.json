@@ -1,6 +1,6 @@
 [
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Global",
     "country": "Global",
     "overall": 3.6,
@@ -16,7 +16,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Budapest, BU",
     "country": "Hungary",
     "overall": null,
@@ -32,7 +32,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Ratingen, NW",
     "country": "Germany",
     "overall": 4.0,
@@ -48,7 +48,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Jakarta, JK",
     "country": "Indonesia",
     "overall": 4.0,
@@ -64,7 +64,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Mumbai, MH",
     "country": "India",
     "overall": 3.3,
@@ -80,7 +80,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Taipei, TPQ",
     "country": "Taiwan",
     "overall": 3.7,
@@ -96,7 +96,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "São Paulo, SP",
     "country": "Brazil",
     "overall": 3.2,
@@ -112,7 +112,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Taiwan",
     "country": "Taiwan",
     "overall": 3.6,
@@ -128,7 +128,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Bellevue, WA",
     "country": "United States",
     "overall": 2.0,
@@ -144,7 +144,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Redmond, WA",
     "country": "United States",
     "overall": 4.9,
@@ -160,7 +160,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "San Jose, CA",
     "country": "United States",
     "overall": 4.8,
@@ -176,7 +176,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Westford, MA",
     "country": "United States",
     "overall": 4.8,
@@ -192,7 +192,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Munich, BY",
     "country": "Germany",
     "overall": 5.0,
@@ -208,7 +208,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Bengaluru, KA",
     "country": "India",
     "overall": 4.5,
@@ -224,7 +224,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Pune, MH",
     "country": "India",
     "overall": 4.3,
@@ -240,7 +240,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Taiwan",
     "country": "Taiwan",
     "overall": 3.7,
@@ -256,7 +256,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Barcelona, CT",
     "country": "Spain",
     "overall": 2.4,
@@ -272,7 +272,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Hemel Hempstead, ENG",
     "country": "United Kingdom",
     "overall": 3.9,
@@ -288,7 +288,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Noisy-le-Grand, A8",
     "country": "France",
     "overall": 2.4,
@@ -304,7 +304,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Dubai, DU",
     "country": "United Arab Emirates",
     "overall": 2.6,
@@ -320,7 +320,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Manila, D9",
     "country": "Philippines",
     "overall": 4.1,
@@ -336,7 +336,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Singapore",
     "country": "Singapore",
     "overall": 2.8,
@@ -352,7 +352,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Santiago, RM",
     "country": "Chile",
     "overall": 5.0,
@@ -368,7 +368,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Global",
     "country": "Global",
     "overall": 4.4,
@@ -384,7 +384,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Beaverton, OR",
     "country": "United States",
     "overall": 2.0,
@@ -400,7 +400,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Hillsboro, OR",
     "country": "United States",
     "overall": 4.9,
@@ -416,7 +416,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "San Francisco, CA",
     "country": "United States",
     "overall": 4.6,
@@ -432,7 +432,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Toronto, ON",
     "country": "Canada",
     "overall": 4.9,
@@ -448,7 +448,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Reading, ENG",
     "country": "United Kingdom",
     "overall": 4.3,
@@ -464,7 +464,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Hsinchu, TXG",
     "country": "Taiwan",
     "overall": 4.6,
@@ -480,7 +480,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Pudong, 23",
     "country": "China",
     "overall": 4.8,
@@ -496,7 +496,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Taipei, TPQ",
     "country": "Taiwan",
     "overall": 4.2,
@@ -512,7 +512,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Fremont, CA",
     "country": "United States",
     "overall": 3.7,
@@ -528,7 +528,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Markham, ON",
     "country": "Canada",
     "overall": 2.0,
@@ -544,7 +544,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Emmen, DR",
     "country": "Netherlands",
     "overall": 4.9,
@@ -560,7 +560,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Milan, LOM",
     "country": "Italy",
     "overall": 3.3,
@@ -576,7 +576,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Bangkok, 10",
     "country": "Thailand",
     "overall": 3.9,
@@ -592,7 +592,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Kuala Lumpur, 14",
     "country": "Malaysia",
     "overall": 4.9,
@@ -608,7 +608,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Seoul, 11",
     "country": "South Korea",
     "overall": 3.0,
@@ -624,7 +624,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Tokyo, 40",
     "country": "Japan",
     "overall": 1.0,
@@ -640,7 +640,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Asus",
+    "company": "ASUS",
     "baseline_location": "Sydney, NSW",
     "country": "Australia",
     "overall": 1.2,
@@ -656,7 +656,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Austin, TX",
     "country": "United States",
     "overall": 4.3,
@@ -672,7 +672,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Durham, NC",
     "country": "United States",
     "overall": 4.9,
@@ -688,7 +688,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Saint Louis, MO",
     "country": "United States",
     "overall": 4.0,
@@ -704,7 +704,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Santa Clara, CA",
     "country": "United States",
     "overall": 4.6,
@@ -720,7 +720,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Moscow, 48",
     "country": "Russia",
     "overall": 5.0,
@@ -736,7 +736,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Zürich, ZH",
     "country": "Switzerland",
     "overall": 4.3,
@@ -752,7 +752,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Mumbai, MH",
     "country": "India",
     "overall": 4.4,
@@ -768,7 +768,7 @@
     "source_mode": "office"
   },
   {
-    "company": "Nvidia",
+    "company": "NVIDIA",
     "baseline_location": "Shanghai, 23",
     "country": "China",
     "overall": 4.4,

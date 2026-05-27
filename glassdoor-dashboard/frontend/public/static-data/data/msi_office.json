@@ -1,0 +1,24 @@
+[
+  {
+    "location": "Global",
+    "country": "Global",
+    "page_heading": "MSI",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global",
+    "url": "https://www.glassdoor.com/Reviews/MSI-Reviews-E1273104.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Taiwan",
+    "country": "Taiwan",
+    "page_heading": "MSI Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/MSI-Taiwan-Reviews-EI_IE1273104.0,3_IL.4,10_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

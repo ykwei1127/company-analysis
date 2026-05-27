@@ -1,0 +1,870 @@
+{
+  "category": "brand_global",
+  "category_name": "Global Brands",
+  "companies": [
+    {
+      "company": "NVIDIA",
+      "total_reviews": 6171,
+      "source_mode": "weighted_region",
+      "overall": 4.41,
+      "culture": 4.41,
+      "wlb": 4.02,
+      "salary": 4.42,
+      "career": 4.32,
+      "diversity": 4.42,
+      "management": 4.23,
+      "recommend": 90.54,
+      "ceo_approval": 97.12,
+      "regions": {
+        "north_america": {
+          "total_reviews": 101,
+          "overall": 4.44,
+          "culture": 4.41,
+          "wlb": 4.42,
+          "salary": 4.77,
+          "career": 4.52,
+          "diversity": 4.34,
+          "management": 4.65,
+          "recommend": 90.32,
+          "ceo_approval": 93.05
+        },
+        "europe": {
+          "total_reviews": 34,
+          "overall": 4.71,
+          "culture": 4.94,
+          "wlb": 3.97,
+          "salary": 4.97,
+          "career": 4.78,
+          "diversity": 4.89,
+          "management": 4.7,
+          "recommend": 100.0,
+          "ceo_approval": 97.12
+        },
+        "asia": {
+          "total_reviews": 587,
+          "overall": 4.5,
+          "culture": 4.5,
+          "wlb": 4.16,
+          "salary": 4.49,
+          "career": 4.49,
+          "diversity": 4.57,
+          "management": 4.38,
+          "recommend": 95.04,
+          "ceo_approval": 98.97
+        },
+        "global": {
+          "total_reviews": 5449,
+          "overall": 4.4,
+          "culture": 4.4,
+          "wlb": 4.0,
+          "salary": 4.4,
+          "career": 4.3,
+          "diversity": 4.4,
+          "management": 4.2,
+          "recommend": 90.0,
+          "ceo_approval": 97.0
+        }
+      },
+      "rank": 1
+    },
+    {
+      "company": "Google",
+      "total_reviews": 49729,
+      "source_mode": "weighted_region",
+      "overall": 4.4,
+      "culture": 4.2,
+      "wlb": 4.2,
+      "salary": 4.5,
+      "career": 4.2,
+      "diversity": 4.4,
+      "management": 3.9,
+      "recommend": 87.08,
+      "ceo_approval": 82.14,
+      "regions": {
+        "asia": {
+          "total_reviews": 1552,
+          "overall": 4.46,
+          "culture": 4.29,
+          "wlb": 4.32,
+          "salary": 4.55,
+          "career": 4.11,
+          "diversity": 4.42,
+          "management": 3.92,
+          "recommend": 89.6,
+          "ceo_approval": 86.32
+        },
+        "south_america": {
+          "total_reviews": 10,
+          "overall": 4.8,
+          "culture": 4.9,
+          "wlb": 4.8,
+          "salary": 5.0,
+          "career": 4.6,
+          "diversity": 4.9,
+          "management": 4.8,
+          "recommend": 96.0,
+          "ceo_approval": 98.0
+        },
+        "global": {
+          "total_reviews": 48167,
+          "overall": 4.4,
+          "culture": 4.2,
+          "wlb": 4.2,
+          "salary": 4.5,
+          "career": 4.2,
+          "diversity": 4.4,
+          "management": 3.9,
+          "recommend": 87.0,
+          "ceo_approval": 82.0
+        }
+      },
+      "rank": 2
+    },
+    {
+      "company": "MSI",
+      "total_reviews": 67,
+      "source_mode": "weighted_region",
+      "overall": 4.0,
+      "culture": 3.76,
+      "wlb": 3.81,
+      "salary": 3.53,
+      "career": 3.29,
+      "diversity": 3.79,
+      "management": 3.33,
+      "recommend": 76.49,
+      "ceo_approval": 91.54,
+      "regions": {
+        "asia": {
+          "total_reviews": 4,
+          "overall": 4.0,
+          "culture": 3.1,
+          "wlb": 3.9,
+          "salary": 4.0,
+          "career": 3.1,
+          "diversity": 2.1,
+          "management": 2.2,
+          "recommend": 100.0,
+          "ceo_approval": 100.0
+        },
+        "global": {
+          "total_reviews": 63,
+          "overall": 4.0,
+          "culture": 3.8,
+          "wlb": 3.8,
+          "salary": 3.5,
+          "career": 3.3,
+          "diversity": 3.9,
+          "management": 3.4,
+          "recommend": 75.0,
+          "ceo_approval": 91.0
+        }
+      },
+      "rank": 3
+    },
+    {
+      "company": "HP Inc.",
+      "total_reviews": 12106,
+      "source_mode": "weighted_region",
+      "overall": 3.91,
+      "culture": 4.04,
+      "wlb": 4.13,
+      "salary": 3.49,
+      "career": 3.51,
+      "diversity": 4.21,
+      "management": 3.42,
+      "recommend": 74.93,
+      "ceo_approval": 67.42,
+      "regions": {
+        "north_america": {
+          "total_reviews": 180,
+          "overall": 3.4,
+          "culture": 3.6,
+          "wlb": 3.9,
+          "salary": 3.4,
+          "career": 3.3,
+          "diversity": 4.2,
+          "management": 2.7,
+          "recommend": 53.0,
+          "ceo_approval": null
+        },
+        "europe": {
+          "total_reviews": 236,
+          "overall": 4.0,
+          "culture": 4.24,
+          "wlb": 4.29,
+          "salary": 3.74,
+          "career": 3.71,
+          "diversity": 4.2,
+          "management": 3.55,
+          "recommend": 94.24,
+          "ceo_approval": null
+        },
+        "asia": {
+          "total_reviews": 2216,
+          "overall": 4.0,
+          "culture": 4.21,
+          "wlb": 4.23,
+          "salary": 3.41,
+          "career": 3.54,
+          "diversity": 4.24,
+          "management": 3.54,
+          "recommend": 78.34,
+          "ceo_approval": 99.0
+        },
+        "south_america": {
+          "total_reviews": 5,
+          "overall": 3.2,
+          "culture": 2.8,
+          "wlb": 2.5,
+          "salary": 2.6,
+          "career": 2.6,
+          "diversity": 4.4,
+          "management": 2.2,
+          "recommend": 39.0,
+          "ceo_approval": null
+        },
+        "oceania": {
+          "total_reviews": 31,
+          "overall": 4.5,
+          "culture": 4.9,
+          "wlb": 4.9,
+          "salary": 4.2,
+          "career": 4.6,
+          "diversity": 4.9,
+          "management": 4.6,
+          "recommend": 99.0,
+          "ceo_approval": null
+        },
+        "global": {
+          "total_reviews": 9438,
+          "overall": 3.9,
+          "culture": 4.0,
+          "wlb": 4.1,
+          "salary": 3.5,
+          "career": 3.5,
+          "diversity": 4.2,
+          "management": 3.4,
+          "recommend": 74.0,
+          "ceo_approval": 60.0
+        }
+      },
+      "rank": 4
+    },
+    {
+      "company": "Lenovo",
+      "total_reviews": 3970,
+      "source_mode": "weighted_region",
+      "overall": 3.88,
+      "culture": 3.77,
+      "wlb": 3.68,
+      "salary": 3.79,
+      "career": 3.48,
+      "diversity": 4.05,
+      "management": 3.37,
+      "recommend": 75.59,
+      "ceo_approval": 87.27,
+      "regions": {
+        "europe": {
+          "total_reviews": 2,
+          "overall": 4.55,
+          "culture": 4.35,
+          "wlb": 3.4,
+          "salary": 4.5,
+          "career": 3.75,
+          "diversity": 4.35,
+          "management": 3.6,
+          "recommend": 58.0,
+          "ceo_approval": 58.0
+        },
+        "asia": {
+          "total_reviews": 400,
+          "overall": 3.77,
+          "culture": 3.62,
+          "wlb": 3.65,
+          "salary": 3.79,
+          "career": 3.4,
+          "diversity": 3.73,
+          "management": 3.18,
+          "recommend": 65.79,
+          "ceo_approval": 92.63
+        },
+        "south_america": {
+          "total_reviews": 3,
+          "overall": 2.73,
+          "culture": 2.73,
+          "wlb": 2.93,
+          "salary": 2.53,
+          "career": 2.27,
+          "diversity": 2.67,
+          "management": 2.6,
+          "recommend": 57.33,
+          "ceo_approval": 100.0
+        },
+        "oceania": {
+          "total_reviews": 42,
+          "overall": 3.0,
+          "culture": 2.5,
+          "wlb": 2.3,
+          "salary": 2.8,
+          "career": 2.5,
+          "diversity": 2.9,
+          "management": 2.6,
+          "recommend": 53.0,
+          "ceo_approval": 59.0
+        },
+        "global": {
+          "total_reviews": 3523,
+          "overall": 3.9,
+          "culture": 3.8,
+          "wlb": 3.7,
+          "salary": 3.8,
+          "career": 3.5,
+          "diversity": 4.1,
+          "management": 3.4,
+          "recommend": 77.0,
+          "ceo_approval": 87.0
+        }
+      },
+      "rank": 5
+    },
+    {
+      "company": "Trend Micro",
+      "total_reviews": 2910,
+      "source_mode": "weighted_region",
+      "overall": 3.72,
+      "culture": 4.03,
+      "wlb": 4.09,
+      "salary": 3.37,
+      "career": 3.72,
+      "diversity": 4.02,
+      "management": 3.25,
+      "recommend": 76.67,
+      "ceo_approval": 74.4,
+      "regions": {
+        "north_america": {
+          "total_reviews": 41,
+          "overall": 4.18,
+          "culture": 4.18,
+          "wlb": 4.74,
+          "salary": 3.18,
+          "career": 3.74,
+          "diversity": 4.18,
+          "management": 3.09,
+          "recommend": 75.41,
+          "ceo_approval": 71.9
+        },
+        "europe": {
+          "total_reviews": 32,
+          "overall": 3.65,
+          "culture": 3.65,
+          "wlb": 4.0,
+          "salary": 3.74,
+          "career": 3.34,
+          "diversity": 3.35,
+          "management": 2.99,
+          "recommend": 86.88,
+          "ceo_approval": 99.12
+        },
+        "asia": {
+          "total_reviews": 732,
+          "overall": 3.72,
+          "culture": 4.11,
+          "wlb": 4.3,
+          "salary": 3.53,
+          "career": 4.09,
+          "diversity": 4.11,
+          "management": 3.13,
+          "recommend": 91.53,
+          "ceo_approval": 70.95
+        },
+        "oceania": {
+          "total_reviews": 28,
+          "overall": 4.3,
+          "culture": 4.3,
+          "wlb": 4.8,
+          "salary": 3.9,
+          "career": 3.6,
+          "diversity": 3.6,
+          "management": 3.6,
+          "recommend": 99.0,
+          "ceo_approval": 96.0
+        },
+        "global": {
+          "total_reviews": 2077,
+          "overall": 3.7,
+          "culture": 4.0,
+          "wlb": 4.0,
+          "salary": 3.3,
+          "career": 3.6,
+          "diversity": 4.0,
+          "management": 3.3,
+          "recommend": 71.0,
+          "ceo_approval": 75.0
+        }
+      },
+      "rank": 6
+    },
+    {
+      "company": "Dell Technologies",
+      "total_reviews": 37611,
+      "source_mode": "weighted_region",
+      "overall": 3.7,
+      "culture": 3.7,
+      "wlb": 3.8,
+      "salary": 3.5,
+      "career": 3.4,
+      "diversity": 4.1,
+      "management": 3.3,
+      "recommend": 64.18,
+      "ceo_approval": 70.33,
+      "regions": {
+        "north_america": {
+          "total_reviews": 5,
+          "overall": 3.4,
+          "culture": 4.0,
+          "wlb": 5.0,
+          "salary": 4.4,
+          "career": 4.0,
+          "diversity": null,
+          "management": 3.6,
+          "recommend": 99.6,
+          "ceo_approval": 100.0
+        },
+        "europe": {
+          "total_reviews": 56,
+          "overall": 3.5,
+          "culture": 3.85,
+          "wlb": 3.95,
+          "salary": 4.13,
+          "career": 2.92,
+          "diversity": 4.72,
+          "management": 3.39,
+          "recommend": 61.8,
+          "ceo_approval": 73.71
+        },
+        "asia": {
+          "total_reviews": 935,
+          "overall": 3.79,
+          "culture": 3.83,
+          "wlb": 3.87,
+          "salary": 3.53,
+          "career": 3.63,
+          "diversity": 4.09,
+          "management": 3.29,
+          "recommend": 71.99,
+          "ceo_approval": 83.53
+        },
+        "south_america": {
+          "total_reviews": 10,
+          "overall": 4.9,
+          "culture": 5.0,
+          "wlb": 5.0,
+          "salary": 4.9,
+          "career": 4.4,
+          "diversity": 5.0,
+          "management": 4.7,
+          "recommend": 100.0,
+          "ceo_approval": 100.0
+        },
+        "oceania": {
+          "total_reviews": 249,
+          "overall": 3.9,
+          "culture": 3.7,
+          "wlb": 3.5,
+          "salary": 3.6,
+          "career": 3.3,
+          "diversity": 3.9,
+          "management": 3.4,
+          "recommend": 59.0,
+          "ceo_approval": 67.0
+        },
+        "global": {
+          "total_reviews": 36356,
+          "overall": 3.7,
+          "culture": 3.7,
+          "wlb": 3.8,
+          "salary": 3.5,
+          "career": 3.4,
+          "diversity": 4.1,
+          "management": 3.3,
+          "recommend": 64.0,
+          "ceo_approval": 70.0
+        }
+      },
+      "rank": 7
+    },
+    {
+      "company": "Acer",
+      "total_reviews": 786,
+      "source_mode": "weighted_region",
+      "overall": 3.7,
+      "culture": 3.35,
+      "wlb": 3.78,
+      "salary": 3.55,
+      "career": 3.31,
+      "diversity": 3.44,
+      "management": 2.88,
+      "recommend": 50.59,
+      "ceo_approval": 69.31,
+      "regions": {
+        "europe": {
+          "total_reviews": 2,
+          "overall": 2.5,
+          "culture": 2.0,
+          "wlb": 2.0,
+          "salary": 4.5,
+          "career": 2.5,
+          "diversity": null,
+          "management": 1.5,
+          "recommend": null,
+          "ceo_approval": null
+        },
+        "asia": {
+          "total_reviews": 265,
+          "overall": 3.49,
+          "culture": 2.87,
+          "wlb": 3.73,
+          "salary": 3.45,
+          "career": 3.11,
+          "diversity": 3.09,
+          "management": 2.45,
+          "recommend": 25.07,
+          "ceo_approval": 62.49
+        },
+        "oceania": {
+          "total_reviews": 9,
+          "overall": 4.2,
+          "culture": 3.8,
+          "wlb": 4.9,
+          "salary": 3.2,
+          "career": 4.3,
+          "diversity": 4.6,
+          "management": 3.8,
+          "recommend": 99.0,
+          "ceo_approval": 61.0
+        },
+        "global": {
+          "total_reviews": 510,
+          "overall": 3.8,
+          "culture": 3.6,
+          "wlb": 3.8,
+          "salary": 3.6,
+          "career": 3.4,
+          "diversity": 3.6,
+          "management": 3.1,
+          "recommend": 63.0,
+          "ceo_approval": 73.0
+        }
+      },
+      "rank": 8
+    },
+    {
+      "company": "ASUS",
+      "total_reviews": 2830,
+      "source_mode": "weighted_region",
+      "overall": 3.59,
+      "culture": 3.06,
+      "wlb": 3.38,
+      "salary": 3.17,
+      "career": 3.2,
+      "diversity": 3.28,
+      "management": 2.78,
+      "recommend": 60.13,
+      "ceo_approval": 84.47,
+      "regions": {
+        "north_america": {
+          "total_reviews": 93,
+          "overall": 3.44,
+          "culture": 2.46,
+          "wlb": 2.79,
+          "salary": 2.27,
+          "career": 2.32,
+          "diversity": 3.05,
+          "management": 2.74,
+          "recommend": 43.32,
+          "ceo_approval": 97.0
+        },
+        "europe": {
+          "total_reviews": 33,
+          "overall": 3.63,
+          "culture": 3.63,
+          "wlb": 3.07,
+          "salary": 2.84,
+          "career": 2.98,
+          "diversity": 3.97,
+          "management": 2.86,
+          "recommend": 79.64,
+          "ceo_approval": 88.82
+        },
+        "asia": {
+          "total_reviews": 1186,
+          "overall": 3.64,
+          "culture": 3.08,
+          "wlb": 3.71,
+          "salary": 3.26,
+          "career": 3.44,
+          "diversity": 3.3,
+          "management": 2.79,
+          "recommend": 65.93,
+          "ceo_approval": 95.8
+        },
+        "south_america": {
+          "total_reviews": 4,
+          "overall": 3.65,
+          "culture": 2.72,
+          "wlb": 2.55,
+          "salary": 3.53,
+          "career": 2.45,
+          "diversity": 3.58,
+          "management": 2.58,
+          "recommend": 65.5,
+          "ceo_approval": 100.0
+        },
+        "oceania": {
+          "total_reviews": 22,
+          "overall": 1.2,
+          "culture": 1.0,
+          "wlb": 1.0,
+          "salary": 1.0,
+          "career": 1.0,
+          "diversity": 1.0,
+          "management": 1.0,
+          "recommend": 1.0,
+          "ceo_approval": 53.0
+        },
+        "global": {
+          "total_reviews": 1492,
+          "overall": 3.6,
+          "culture": 3.1,
+          "wlb": 3.2,
+          "salary": 3.2,
+          "career": 3.1,
+          "diversity": 3.3,
+          "management": 2.8,
+          "recommend": 57.0,
+          "ceo_approval": 75.0
+        }
+      },
+      "rank": 9
+    }
+  ],
+  "regions": {
+    "north_america": [
+      {
+        "company": "NVIDIA",
+        "overall": 4.44,
+        "total_reviews": 101
+      },
+      {
+        "company": "HP Inc.",
+        "overall": 3.4,
+        "total_reviews": 180
+      },
+      {
+        "company": "Trend Micro",
+        "overall": 4.18,
+        "total_reviews": 41
+      },
+      {
+        "company": "Dell Technologies",
+        "overall": 3.4,
+        "total_reviews": 5
+      },
+      {
+        "company": "ASUS",
+        "overall": 3.44,
+        "total_reviews": 93
+      }
+    ],
+    "europe": [
+      {
+        "company": "NVIDIA",
+        "overall": 4.71,
+        "total_reviews": 34
+      },
+      {
+        "company": "HP Inc.",
+        "overall": 4.0,
+        "total_reviews": 236
+      },
+      {
+        "company": "Lenovo",
+        "overall": 4.55,
+        "total_reviews": 2
+      },
+      {
+        "company": "Trend Micro",
+        "overall": 3.65,
+        "total_reviews": 32
+      },
+      {
+        "company": "Dell Technologies",
+        "overall": 3.5,
+        "total_reviews": 56
+      },
+      {
+        "company": "Acer",
+        "overall": 2.5,
+        "total_reviews": 2
+      },
+      {
+        "company": "ASUS",
+        "overall": 3.63,
+        "total_reviews": 33
+      }
+    ],
+    "asia": [
+      {
+        "company": "NVIDIA",
+        "overall": 4.5,
+        "total_reviews": 587
+      },
+      {
+        "company": "Google",
+        "overall": 4.46,
+        "total_reviews": 1552
+      },
+      {
+        "company": "MSI",
+        "overall": 4.0,
+        "total_reviews": 4
+      },
+      {
+        "company": "HP Inc.",
+        "overall": 4.0,
+        "total_reviews": 2216
+      },
+      {
+        "company": "Lenovo",
+        "overall": 3.77,
+        "total_reviews": 400
+      },
+      {
+        "company": "Trend Micro",
+        "overall": 3.72,
+        "total_reviews": 732
+      },
+      {
+        "company": "Dell Technologies",
+        "overall": 3.79,
+        "total_reviews": 935
+      },
+      {
+        "company": "Acer",
+        "overall": 3.49,
+        "total_reviews": 265
+      },
+      {
+        "company": "ASUS",
+        "overall": 3.64,
+        "total_reviews": 1186
+      }
+    ],
+    "south_america": [
+      {
+        "company": "Google",
+        "overall": 4.8,
+        "total_reviews": 10
+      },
+      {
+        "company": "HP Inc.",
+        "overall": 3.2,
+        "total_reviews": 5
+      },
+      {
+        "company": "Lenovo",
+        "overall": 2.73,
+        "total_reviews": 3
+      },
+      {
+        "company": "Dell Technologies",
+        "overall": 4.9,
+        "total_reviews": 10
+      },
+      {
+        "company": "ASUS",
+        "overall": 3.65,
+        "total_reviews": 4
+      }
+    ],
+    "oceania": [
+      {
+        "company": "HP Inc.",
+        "overall": 4.5,
+        "total_reviews": 31
+      },
+      {
+        "company": "Lenovo",
+        "overall": 3.0,
+        "total_reviews": 42
+      },
+      {
+        "company": "Trend Micro",
+        "overall": 4.3,
+        "total_reviews": 28
+      },
+      {
+        "company": "Dell Technologies",
+        "overall": 3.9,
+        "total_reviews": 249
+      },
+      {
+        "company": "Acer",
+        "overall": 4.2,
+        "total_reviews": 9
+      },
+      {
+        "company": "ASUS",
+        "overall": 1.2,
+        "total_reviews": 22
+      }
+    ],
+    "global": [
+      {
+        "company": "NVIDIA",
+        "overall": 4.4,
+        "total_reviews": 5449
+      },
+      {
+        "company": "Google",
+        "overall": 4.4,
+        "total_reviews": 48167
+      },
+      {
+        "company": "MSI",
+        "overall": 4.0,
+        "total_reviews": 63
+      },
+      {
+        "company": "HP Inc.",
+        "overall": 3.9,
+        "total_reviews": 9438
+      },
+      {
+        "company": "Lenovo",
+        "overall": 3.9,
+        "total_reviews": 3523
+      },
+      {
+        "company": "Trend Micro",
+        "overall": 3.7,
+        "total_reviews": 2077
+      },
+      {
+        "company": "Dell Technologies",
+        "overall": 3.7,
+        "total_reviews": 36356
+      },
+      {
+        "company": "Acer",
+        "overall": 3.8,
+        "total_reviews": 510
+      },
+      {
+        "company": "ASUS",
+        "overall": 3.6,
+        "total_reviews": 1492
+      }
+    ]
+  }
+}

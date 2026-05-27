@@ -1,20 +1,5 @@
 [
   {
-    "company": "NVIDIA",
-    "overall": 4.4,
-    "culture": 4.4,
-    "wlb": 4.0,
-    "salary": 4.5,
-    "career": 4.3,
-    "diversity": 4.4,
-    "management": 4.2,
-    "recommend": 90.0,
-    "ceo_approval": 98.0,
-    "total_reviews": 5459,
-    "source_mode": "city",
-    "rank": 1
-  },
-  {
     "company": "Google",
     "overall": 4.4,
     "culture": 4.2,
@@ -25,8 +10,23 @@
     "management": 3.9,
     "recommend": 87.0,
     "ceo_approval": 82.0,
-    "total_reviews": 48247,
-    "source_mode": "city",
+    "total_reviews": 48167,
+    "source_mode": "unknown",
+    "rank": 1
+  },
+  {
+    "company": "NVIDIA",
+    "overall": 4.4,
+    "culture": 4.4,
+    "wlb": 4.0,
+    "salary": 4.4,
+    "career": 4.3,
+    "diversity": 4.4,
+    "management": 4.2,
+    "recommend": 90.0,
+    "ceo_approval": 97.0,
+    "total_reviews": 5449,
+    "source_mode": "unknown",
     "rank": 2
   },
   {
@@ -41,8 +41,23 @@
     "recommend": 75.0,
     "ceo_approval": 91.0,
     "total_reviews": 63,
-    "source_mode": "city",
+    "source_mode": "unknown",
     "rank": 3
+  },
+  {
+    "company": "Lenovo",
+    "overall": 3.9,
+    "culture": 3.8,
+    "wlb": 3.7,
+    "salary": 3.8,
+    "career": 3.5,
+    "diversity": 4.1,
+    "management": 3.4,
+    "recommend": 77.0,
+    "ceo_approval": 87.0,
+    "total_reviews": 3523,
+    "source_mode": "unknown",
+    "rank": 4
   },
   {
     "company": "HP Inc.",
@@ -54,24 +69,9 @@
     "diversity": 4.2,
     "management": 3.4,
     "recommend": 74.0,
-    "ceo_approval": 66.0,
-    "total_reviews": 9450,
-    "source_mode": "city",
-    "rank": 4
-  },
-  {
-    "company": "Lenovo",
-    "overall": 3.9,
-    "culture": 3.8,
-    "wlb": 3.7,
-    "salary": 3.8,
-    "career": 3.5,
-    "diversity": 4.1,
-    "management": 3.4,
-    "recommend": 76.0,
-    "ceo_approval": 88.0,
-    "total_reviews": 3531,
-    "source_mode": "city",
+    "ceo_approval": 60.0,
+    "total_reviews": 9438,
+    "source_mode": "unknown",
     "rank": 5
   },
   {
@@ -86,7 +86,7 @@
     "recommend": 63.0,
     "ceo_approval": 73.0,
     "total_reviews": 510,
-    "source_mode": "city",
+    "source_mode": "unknown",
     "rank": 6
   },
   {
@@ -99,9 +99,9 @@
     "diversity": 4.1,
     "management": 3.3,
     "recommend": 64.0,
-    "ceo_approval": 69.0,
-    "total_reviews": 36386,
-    "source_mode": "city",
+    "ceo_approval": 70.0,
+    "total_reviews": 36356,
+    "source_mode": "unknown",
     "rank": 7
   },
   {
@@ -113,26 +113,11 @@
     "career": 3.6,
     "diversity": 4.0,
     "management": 3.3,
-    "recommend": 70.0,
-    "ceo_approval": 74.0,
-    "total_reviews": 2082,
-    "source_mode": "city",
+    "recommend": 71.0,
+    "ceo_approval": 75.0,
+    "total_reviews": 2077,
+    "source_mode": "unknown",
     "rank": 8
-  },
-  {
-    "company": "Delta Electronics",
-    "overall": 3.6,
-    "culture": 3.3,
-    "wlb": 3.4,
-    "salary": 3.6,
-    "career": 3.5,
-    "diversity": 3.5,
-    "management": 3.2,
-    "recommend": 67.0,
-    "ceo_approval": 82.0,
-    "total_reviews": 757,
-    "source_mode": "city",
-    "rank": 9
   },
   {
     "company": "Compal Electronics",
@@ -146,8 +131,8 @@
     "recommend": 58.0,
     "ceo_approval": 60.0,
     "total_reviews": 252,
-    "source_mode": "city",
-    "rank": 10
+    "source_mode": "unknown",
+    "rank": 9
   },
   {
     "company": "ASUS",
@@ -155,13 +140,28 @@
     "culture": 3.1,
     "wlb": 3.2,
     "salary": 3.2,
-    "career": 3.0,
+    "career": 3.1,
     "diversity": 3.3,
     "management": 2.8,
     "recommend": 57.0,
     "ceo_approval": 75.0,
-    "total_reviews": 1495,
-    "source_mode": "city",
+    "total_reviews": 1492,
+    "source_mode": "unknown",
+    "rank": 10
+  },
+  {
+    "company": "Delta Electronics",
+    "overall": 3.6,
+    "culture": 3.4,
+    "wlb": 3.5,
+    "salary": 3.6,
+    "career": 3.5,
+    "diversity": 3.5,
+    "management": 3.2,
+    "recommend": 66.0,
+    "ceo_approval": 81.0,
+    "total_reviews": 755,
+    "source_mode": "unknown",
     "rank": 11
   },
   {
@@ -176,23 +176,8 @@
     "recommend": 61.0,
     "ceo_approval": 76.0,
     "total_reviews": 400,
-    "source_mode": "city",
+    "source_mode": "unknown",
     "rank": 12
-  },
-  {
-    "company": "Inventec",
-    "overall": 3.5,
-    "culture": 3.2,
-    "wlb": 3.5,
-    "salary": 3.1,
-    "career": 3.3,
-    "diversity": 3.6,
-    "management": 3.1,
-    "recommend": 56.0,
-    "ceo_approval": 77.0,
-    "total_reviews": 162,
-    "source_mode": "city",
-    "rank": 13
   },
   {
     "company": "Wiwynn",
@@ -206,38 +191,23 @@
     "recommend": 59.0,
     "ceo_approval": null,
     "total_reviews": 86,
-    "source_mode": "city",
-    "rank": 14
-  },
-  {
-    "company": "TSMC",
-    "overall": 3.3,
-    "culture": 2.6,
-    "wlb": 2.2,
-    "salary": 3.8,
-    "career": 3.6,
-    "diversity": 2.8,
-    "management": 2.7,
-    "recommend": 46.0,
-    "ceo_approval": 74.0,
-    "total_reviews": 2139,
-    "source_mode": "city",
-    "rank": 15
+    "source_mode": "unknown",
+    "rank": 13
   },
   {
     "company": "Wistron",
-    "overall": 3.3,
-    "culture": 2.9,
-    "wlb": 3.0,
-    "salary": 2.7,
-    "career": 3.0,
-    "diversity": 2.9,
-    "management": 2.6,
-    "recommend": 45.0,
+    "overall": 3.4,
+    "culture": 3.0,
+    "wlb": 3.1,
+    "salary": 2.8,
+    "career": 3.1,
+    "diversity": 3.0,
+    "management": 2.7,
+    "recommend": 48.0,
     "ceo_approval": 83.0,
-    "total_reviews": 713,
-    "source_mode": "city",
-    "rank": 16
+    "total_reviews": 712,
+    "source_mode": "unknown",
+    "rank": 14
   },
   {
     "company": "Pegatron",
@@ -250,14 +220,29 @@
     "management": 2.9,
     "recommend": 44.0,
     "ceo_approval": 69.0,
-    "total_reviews": 508,
-    "source_mode": "city",
-    "rank": 17
+    "total_reviews": 507,
+    "source_mode": "unknown",
+    "rank": 15
+  },
+  {
+    "company": "TSMC",
+    "overall": 3.3,
+    "culture": 2.6,
+    "wlb": 2.2,
+    "salary": 3.8,
+    "career": 3.5,
+    "diversity": 2.8,
+    "management": 2.7,
+    "recommend": 45.0,
+    "ceo_approval": 74.0,
+    "total_reviews": 2138,
+    "source_mode": "unknown",
+    "rank": 16
   },
   {
     "company": "Quanta Computer",
-    "overall": 3.1,
-    "culture": 2.7,
+    "overall": 3.0,
+    "culture": 2.6,
     "wlb": 2.6,
     "salary": 3.0,
     "career": 3.1,
@@ -266,7 +251,22 @@
     "recommend": 50.0,
     "ceo_approval": 54.0,
     "total_reviews": 570,
-    "source_mode": "city",
+    "source_mode": "unknown",
+    "rank": 17
+  },
+  {
+    "company": "Inventec",
+    "overall": null,
+    "culture": null,
+    "wlb": null,
+    "salary": null,
+    "career": null,
+    "diversity": null,
+    "management": null,
+    "recommend": null,
+    "ceo_approval": null,
+    "total_reviews": null,
+    "source_mode": "unknown",
     "rank": 18
   }
 ]

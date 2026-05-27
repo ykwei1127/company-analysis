@@ -106,6 +106,11 @@ def get_overview_by_location(run: Optional[str] = Query(None)):
     if df.empty:
         return []
 
+    # Normalize company names so they match category definitions (same as export_static.py)
+    if "company" in df.columns:
+        df = df.copy()
+        df["company"] = df["company"].apply(normalize_company_name)
+
     result = []
     for _, row in df.iterrows():
         item = {

@@ -56,12 +56,9 @@
             <td v-for="dim in DIM_COLS" :key="dim.key" class="heat-cell">
               <el-tooltip v-if="row[dim.key] != null" placement="top" :show-after="200">
                 <template #content>
-                  <div style="max-width: 320px; font-size: 12px;">
+                  <div style="max-width: 280px; font-size: 12px;">
                     <div style="font-weight: 600; margin-bottom: 4px; border-bottom: 1px solid #666; padding-bottom: 4px;">
                       {{ row.company }} - {{ dim.label }}: {{ Number(row[dim.key]).toFixed(2) }}
-                      <span v-if="categoryStore.selectedCategory === 'brand_global' && row[`${dim.key}_totalWeight`]">
-                        (weighted avg)
-                      </span>
                     </div>
                     <div style="color: #aaa; font-size: 11px; margin-bottom: 8px;">
                       Data sources ({{ (row[`${dim.key}_sources`] as HeatmapSource[]).length }} locations):
@@ -70,23 +67,9 @@
                          style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 3px;">
                       <span>{{ src.location }}{{ src.country && src.country !== src.location ? ` (${src.country})` : '' }}</span>
                       <span style="color: #409EFF;">{{ src.value.toFixed(2) }}</span>
-                      <span v-if="categoryStore.selectedCategory === 'brand_global'" style="color: #888; font-size: 10px;">
-                        w:{{ src.weight || src.reviews }}
-                      </span>
                     </div>
                     <div v-if="(row[`${dim.key}_sources`] as HeatmapSource[]).length > 8" style="color: #888; font-style: italic; margin-top: 4px;">
                       ... and {{ (row[`${dim.key}_sources`] as HeatmapSource[]).length - 8 }} more
-                    </div>
-                    <div v-if="categoryStore.selectedCategory === 'brand_global' && row[`${dim.key}_totalWeight`]
-                              && (row[`${dim.key}_sources`] as HeatmapSource[]).length > 1"
-                         style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #666; font-size: 11px; color: #aaa;">
-                      <div>Weighted calculation:</div>
-                      <div style="color: #67C23A;">
-                        Σ(value × reviews) / Σ(reviews) = {{ Number(row[dim.key]).toFixed(2) }}
-                      </div>
-                      <div style="font-size: 10px; margin-top: 2px;">
-                        Total reviews: {{ row[`${dim.key}_totalWeight`] }}
-                      </div>
                     </div>
                   </div>
                 </template>
@@ -299,13 +282,9 @@ const getPivotValue = (loc: string, company: string): number | null => {
 
 // ═══════ Heatmap Logic ═══════
 const regionRatings = computed(() => {
-  // For Taiwan-only categories, filter to Taiwan data only
+  // For Taiwan-only categories, show all data
   if (categoryStore.selectedCategory !== 'brand_global') {
-    return allRatings.value.filter(r =>
-      r.country === 'Taiwan' ||
-      r.baseline_location?.toLowerCase() === 'taiwan' ||
-      r.baseline_location?.toLowerCase() === 'global'
-    )
+    return allRatings.value
   }
   // For brand_global, filter by selected region
   const region = REGIONS.find(r => r.key === selectedRegion.value)
@@ -367,7 +346,6 @@ interface HeatmapSource {
   value: number
   reviews: number
   sourceMode: string
-  weight?: number
 }
 
 interface HeatmapRow {
@@ -376,52 +354,8 @@ interface HeatmapRow {
 }
 
 const heatmapRows = computed<HeatmapRow[]>(() => {
-  // Taiwan-only 類別：只顯示 Taiwan 地點資料，每間公司一行
-  if (categoryStore.selectedCategory !== 'brand_global') {
-    // 獲取類別定義的所有公司
-    const categoryCompanies = categoryStore.currentCategory?.companies || []
-    // 排序：ASUS 第一
-    const sortedCompanies = [...categoryCompanies].sort((a, b) => {
-      if (a === 'ASUS') return -1
-      if (b === 'ASUS') return 1
-      return a.localeCompare(b)
-    })
-    // 為每個公司創建一行，只取 Taiwan 資料
-    return sortedCompanies.map(company => {
-      // 找出該公司的 Taiwan 資料（排除 Global）
-      const taiwanRows = regionRatings.value.filter(r =>
-        r.company.toLowerCase() === company.toLowerCase() &&
-        r.baseline_location &&
-        r.baseline_location.toLowerCase() !== 'global' &&
-        (r.country === 'Taiwan' || r.baseline_location.toLowerCase().includes('taiwan'))
-      )
-      const row: HeatmapRow = { company }
-      for (const dim of DIM_COLS) {
-        // Taiwan 類別：取第一筆 Taiwan 資料（應該只有一筆）
-        const r = taiwanRows.find(r => r[dim.key] != null)
-        row[dim.key] = r ? r[dim.key] as number : null
-        row[`${dim.key}_sources`] = r ? [{
-          location: r.baseline_location || 'Taiwan',
-          country: r.country,
-          value: r[dim.key] as number,
-          reviews: r.total_reviews || 0,
-          sourceMode: r.source_mode || 'unknown'
-        }] : []
-      }
-      return row
-    })
-  }
-  // Global Brands：按區域加權平均，並保存原始地點資料
   return regionCompanies.value.map(company => {
-    // 從 allRatings 獲取該公司在該區域的所有原始地點資料
-    const region = REGIONS.find(r => r.key === selectedRegion.value)
-    const rawRows = region
-      ? allRatings.value.filter(r =>
-          r.company.toLowerCase() === company.toLowerCase() &&
-          (r.country && region.countries.includes(r.country))
-        )
-      : []
-
+    // 使用大小寫不敏感的匹配
     const rows = regionRatings.value.filter(r =>
       r.company.toLowerCase() === company.toLowerCase()
     )
@@ -431,28 +365,14 @@ const heatmapRows = computed<HeatmapRow[]>(() => {
       const vals = validRows.map(r => r[dim.key] as number)
       const avg = vals.length ? parseFloat((vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2)) : null
       row[dim.key] = avg
-
-      // 保存原始地點資料和加權計算詳情
-      const rawSources: HeatmapSource[] = rawRows
-        .filter((r: LocationRating) => r[dim.key] != null)
-        .map((r: LocationRating) => ({
-          location: r.baseline_location || r.country || 'Unknown',
-          country: r.country,
-          value: r[dim.key] as number,
-          reviews: r.total_reviews || 0,
-          sourceMode: r.source_mode || 'unknown',
-          weight: r.total_reviews || 0 // 用於加權計算
-        }))
-
-      // 計算總權重和加權平均
-      const totalWeight = rawSources.reduce((sum, s) => sum + (s.weight || 0), 0)
-      const weightedAvg = totalWeight > 0
-        ? rawSources.reduce((sum, s) => sum + s.value * (s.weight || 0), 0) / totalWeight
-        : null
-
-      row[`${dim.key}_sources`] = rawSources
-      row[`${dim.key}_weightedAvg`] = weightedAvg
-      row[`${dim.key}_totalWeight`] = totalWeight
+      // 保存數據來源詳情
+      row[`${dim.key}_sources`] = validRows.map(r => ({
+        location: r.baseline_location || 'Global',
+        country: r.country,
+        value: r[dim.key] as number,
+        reviews: r.total_reviews || 0,
+        sourceMode: r.source_mode || 'unknown'
+      })) as HeatmapSource[]
     }
     return row
   })
@@ -490,15 +410,58 @@ const heatStyle = (val: number) => {
 }
 
 async function loadData() {
-  // 獲取原始地點數據（用於 tooltip 顯示詳情）
-  const { data: locationData } = await getOverviewByLocation(store.selectedRunId || undefined)
-  
-  // 過濾類別中的公司
-  const categoryCompanies = categoryStore.currentCategory?.companies || []
-  const normalizedCompanies = categoryCompanies.map(c => c.toLowerCase())
-  allRatings.value = locationData.filter((r: LocationRating) =>
-    normalizedCompanies.includes(r.company.toLowerCase())
-  )
+  if (categoryStore.isWeightedCategory) {
+    // For weighted categories, load category data
+    const category = categoryStore.selectedCategory
+    const { data } = await getOverviewByCategory(category, store.selectedRunId || undefined)
+    // Convert company data to location ratings format
+    const ratings: LocationRating[] = []
+    interface RegionDataItem {
+      overall: number
+      culture: number
+      wlb: number
+      salary: number
+      career: number
+      diversity: number
+      management: number
+      recommend: number
+      ceo_approval: number
+      total_reviews: number
+    }
+    for (const company of data.companies || []) {
+      if (company.regions) {
+        const regions = company.regions as Record<string, RegionDataItem>
+        for (const [regionKey, rdata] of Object.entries(regions)) {
+          ratings.push({
+            company: company.company,
+            baseline_location: regionKey,
+            country: regionKey,
+            overall: rdata.overall,
+            culture: rdata.culture,
+            wlb: rdata.wlb,
+            salary: rdata.salary,
+            career: rdata.career,
+            diversity: rdata.diversity,
+            management: rdata.management,
+            recommend: rdata.recommend,
+            ceo_approval: rdata.ceo_approval,
+            total_reviews: rdata.total_reviews,
+            source_mode: 'country'
+          })
+        }
+      }
+    }
+    allRatings.value = ratings
+  } else {
+    // For non-weighted categories, use location-based data
+    const { data } = await getOverviewByLocation(store.selectedRunId || undefined)
+    // Filter by category companies
+    const categoryCompanies = categoryStore.currentCategory?.companies || []
+    const normalizedCompanies = categoryCompanies.map(c => c.toLowerCase())
+    allRatings.value = data.filter((r: LocationRating) =>
+      normalizedCompanies.includes(r.company.toLowerCase())
+    )
+  }
 }
 
 onMounted(loadData)
