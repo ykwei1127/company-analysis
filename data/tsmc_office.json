@@ -1,0 +1,46 @@
+[
+  {
+    "location": "Global",
+    "country": "Global",
+    "page_heading": "TSMC",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global",
+    "url": "https://www.glassdoor.com/Reviews/TSMC-Reviews-E4130.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Taiwan",
+    "country": "Taiwan",
+    "page_heading": "TSMC Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/TSMC-Taiwan-Reviews-EI_IE4130.0,4_IL.5,11_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "San Jose, MP",
+    "country": "United States",
+    "page_heading": "TSMC",
+    "heading_is_generic": true,
+    "list_rating": null,
+    "address": "2851 Junction Avenue San Jose, CA 95134, U.S.A., San Jose, MP, 95134, United States",
+    "url": null,
+    "reviews_count": null,
+    "status": "no_review_url"
+  },
+  {
+    "location": "Hsinchu, TXG",
+    "country": "Taiwan",
+    "page_heading": "TSMC",
+    "heading_is_generic": true,
+    "list_rating": 3.6,
+    "address": "25, Li-Hsin Rd., Hsinchu Science Park, Hsin-Chu 300-78, Taiwan, R.O.C., Hsinchu, TXG, 0, Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/TSMC-Hsinchu-Reviews-EI_IE4130.0,4_IL.5,12_IC4915323.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

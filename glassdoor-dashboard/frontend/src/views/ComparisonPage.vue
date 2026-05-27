@@ -2,6 +2,21 @@
   <div>
     <h3 class="page-title">Company Comparison</h3>
 
+    <!-- Category Selector -->
+    <div class="category-selector-row">
+      <div class="category-tabs">
+        <button
+          v-for="cat in categoryStore.categories"
+          :key="cat.key"
+          class="category-tab"
+          :class="{ active: categoryStore.selectedCategory === cat.key }"
+          @click="categoryStore.selectCategory(cat.key)"
+        >
+          {{ cat.name }}
+        </button>
+      </div>
+    </div>
+
     <!-- Radar Chart -->
     <el-card style="margin-bottom: 20px">
       <template #header><span style="font-weight: 600">Multi-Dimension Radar</span></template>
@@ -12,11 +27,11 @@
           v-for="c in companies"
           :key="c.company"
           class="legend-item"
-          :class="{ inactive: !selectedCompanies.includes(c.company) }"
+          :class="{ inactive: !selectedCompanies.includes(c.company), asus: c.company === 'ASUS' }"
           @click="toggleCompany(c.company)"
         >
           <span class="legend-square" :style="{ background: getCompanyColor(c.company) }"></span>
-          {{ c.company }}
+          <span v-if="c.company === 'ASUS'" class="asus-star">★</span> {{ c.company }}
         </span>
       </div>
 
@@ -30,19 +45,33 @@
           <span style="font-weight: 600">Gap Analysis</span>
           <div class="gap-controls">
             <el-select v-model="companyA" size="small" style="width: 160px">
-              <el-option v-for="name in companyNames" :key="name" :label="name" :value="name" />
+              <el-option v-for="name in companyNames" :key="name" :value="name">
+                <span v-if="name === 'ASUS'" class="asus-star">★</span> {{ name }}
+              </el-option>
             </el-select>
             <span style="margin: 0 6px; color: var(--text-secondary)">vs</span>
             <el-select v-model="companyB" size="small" style="width: 160px">
-              <el-option v-for="name in companyNames" :key="name" :label="name" :value="name" />
+              <el-option v-for="name in companyNames" :key="name" :value="name">
+                <span v-if="name === 'ASUS'" class="asus-star">★</span> {{ name }}
+              </el-option>
             </el-select>
           </div>
         </div>
       </template>
       <el-table :data="gapData" stripe style="width: 100%">
         <el-table-column prop="dimension" label="Dimension" min-width="140" />
-        <el-table-column prop="valueA" :label="companyA" min-width="100" align="center" />
-        <el-table-column prop="valueB" :label="companyB" min-width="100" align="center" />
+        <el-table-column min-width="100" align="center">
+          <template #header>
+            <span v-if="companyA === 'ASUS'" class="asus-star">★</span> {{ companyA }}
+          </template>
+          <template #default="{ row }">{{ row.valueA }}</template>
+        </el-table-column>
+        <el-table-column min-width="100" align="center">
+          <template #header>
+            <span v-if="companyB === 'ASUS'" class="asus-star">★</span> {{ companyB }}
+          </template>
+          <template #default="{ row }">{{ row.valueB }}</template>
+        </el-table-column>
         <el-table-column label="Gap" min-width="100" align="center">
           <template #default="{ row }">
             <span v-if="row.gap != null" :style="{ color: row.gap > 0 ? '#67c23a' : row.gap < 0 ? '#f56c6c' : '#ccc' }">
@@ -63,8 +92,9 @@ import { use } from 'echarts/core'
 import { RadarChart } from 'echarts/charts'
 import { TooltipComponent, LegendComponent, RadarComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
-import { getOverview } from '../api'
+import { getOverviewByCategory } from '../api'
 import { useDashboardStore } from '../stores/dashboard'
+import { useCategoryStore } from '../stores/category'
 import { useThemeStore } from '../stores/theme'
 import type { CompanyOverview } from '../types'
 import { type DimensionKey, DIMENSION_LABELS } from '../types'
@@ -92,9 +122,8 @@ const COMPANY_COLORS: Record<string, string> = {
   Pegatron: '#f06292',
 }
 
-const DEFAULT_SELECTED = ['ASUS', 'NVIDIA', 'Google', 'Dell Technologies', 'HP Inc.', 'Acer', 'Lenovo', 'MSI']
-
 const store = useDashboardStore()
+const categoryStore = useCategoryStore()
 const themeStore = useThemeStore()
 const companies = ref<CompanyOverview[]>([])
 const selectedCompanies = ref<string[]>([])
@@ -113,6 +142,14 @@ const companyNames = computed(() => companies.value.map(c => c.company))
 const visibleCompanies = computed(() =>
   companies.value.filter(c => selectedCompanies.value.includes(c.company))
 )
+
+// Get default selected companies based on category
+const getDefaultSelected = () => {
+  const category = categoryStore.currentCategory
+  if (!category) return []
+  // Limit to first 6 companies for better radar chart visibility
+  return category.companies.slice(0, 6)
+}
 
 function toggleCompany(name: string) {
   const idx = selectedCompanies.value.indexOf(name)
@@ -183,22 +220,28 @@ const gapData = computed(() => {
 })
 
 async function loadData() {
-  const { data } = await getOverview(store.selectedRunId || undefined)
-  companies.value = data
-  // Match DEFAULT_SELECTED against actual company names (case-insensitive)
-  const available: string[] = data.map((c: CompanyOverview) => c.company)
+  const category = categoryStore.selectedCategory
+  const { data } = await getOverviewByCategory(category, store.selectedRunId || undefined)
+  companies.value = data.companies || []
+
+  // Set default selected companies based on category
+  const available: string[] = companies.value.map((c: CompanyOverview) => c.company)
+  const defaults = getDefaultSelected()
   const matched = available.filter((n: string) =>
-    DEFAULT_SELECTED.some(d => d.toLowerCase() === n.toLowerCase())
+    defaults.some(d => d.toLowerCase() === n.toLowerCase())
   )
-  selectedCompanies.value = matched.length > 0 ? matched : available.slice(0, 8)
-  // Set gap analysis defaults
+  selectedCompanies.value = matched.length > 0 ? matched : available.slice(0, 6)
+
+  // Set gap analysis defaults - ASUS vs first competitor in category
   const asusName = available.find((n: string) => n.toLowerCase() === 'asus')
+  const competitor = defaults.find(d => d.toLowerCase() !== 'asus') ?? available.find((n: string) => n.toLowerCase() !== 'asus')
   companyA.value = asusName ?? available[0] ?? ''
-  companyB.value = available.find((n: string) => n !== companyA.value) ?? available[1] ?? ''
+  companyB.value = competitor ?? available.find((n: string) => n !== companyA.value) ?? available[1] ?? ''
 }
 
 onMounted(loadData)
 watch(() => store.selectedRunId, loadData)
+watch(() => categoryStore.selectedCategory, loadData)
 </script>
 
 <style scoped>
@@ -208,5 +251,37 @@ watch(() => store.selectedRunId, loadData)
 .legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; padding: 0 8px; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); cursor: pointer; user-select: none; transition: opacity 0.2s; }
 .legend-item.inactive { opacity: 0.35; }
+.legend-item.asus { color: var(--accent-blue-light); font-weight: 600; background: rgba(64,158,255,0.08); padding: 2px 8px; border-radius: 4px; }
 .legend-square { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.asus-star { color: gold; margin-right: 4px; }
+
+/* Category Selector */
+.category-selector-row {
+  margin-bottom: 16px;
+}
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.category-tab {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.category-tab:hover {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+.category-tab.active {
+  background: var(--accent-blue);
+  color: #fff;
+  border-color: var(--accent-blue);
+}
 </style>

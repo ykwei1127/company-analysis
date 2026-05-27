@@ -2,10 +2,111 @@
   <div>
     <h3 class="page-title">Location Breakdown</h3>
 
+    <!-- Category Selector -->
+    <div class="category-selector-row">
+      <div class="category-tabs">
+        <button
+          v-for="cat in categoryStore.categories"
+          :key="cat.key"
+          class="category-tab"
+          :class="{ active: categoryStore.selectedCategory === cat.key }"
+          @click="categoryStore.selectCategory(cat.key)"
+        >
+          {{ cat.name }}
+        </button>
+      </div>
+    </div>
+
     <!-- View tabs -->
     <div class="view-tabs">
-      <button class="view-tab" :class="{ active: viewMode === 'pivot' }" @click="viewMode = 'pivot'">Pivot Table</button>
       <button class="view-tab" :class="{ active: viewMode === 'heatmap' }" @click="viewMode = 'heatmap'">Heatmap</button>
+      <button class="view-tab" :class="{ active: viewMode === 'pivot' }" @click="viewMode = 'pivot'">Pivot Table</button>
+      <button v-if="categoryStore.isWeightedCategory" class="view-tab" :class="{ active: viewMode === 'matrix' }" @click="viewMode = 'matrix'">Region Matrix</button>
+    </div>
+
+    <!-- ═══════ Heatmap View ═══════ -->
+    <div v-if="viewMode === 'heatmap'">
+      <!-- Region tabs - only show for global brands category -->
+      <div v-if="categoryStore.selectedCategory === 'brand_global'" class="controls-row">
+        <div class="region-tabs">
+          <button v-for="r in REGIONS" :key="r.key" class="region-tab" :class="{ active: selectedRegion === r.key }" @click="selectedRegion = r.key">
+            {{ r.label }}
+          </button>
+        </div>
+      </div>
+      <!-- For Taiwan-only categories, show Taiwan indicator -->
+      <div v-else class="controls-row">
+        <div class="taiwan-indicator">
+          <span class="taiwan-badge">Taiwan Data Only</span>
+        </div>
+      </div>
+
+      <table class="heatmap-table">
+        <thead>
+          <tr>
+            <th class="company-col">Company</th>
+            <th v-for="dim in DIM_COLS" :key="dim.key">{{ dim.label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="row in heatmapRows" :key="String(row.company)" :class="{ asus: row.company === 'ASUS' }">
+            <td class="company-col" :class="{ highlight: row.company === 'ASUS' }">
+              <span v-if="row.company === 'ASUS'" class="asus-star">★</span> {{ row.company }}
+            </td>
+            <td v-for="dim in DIM_COLS" :key="dim.key" class="heat-cell">
+              <el-tooltip v-if="row[dim.key] != null" placement="top" :show-after="200">
+                <template #content>
+                  <div style="max-width: 320px; font-size: 12px;">
+                    <div style="font-weight: 600; margin-bottom: 4px; border-bottom: 1px solid #666; padding-bottom: 4px;">
+                      {{ row.company }} - {{ dim.label }}: {{ Number(row[dim.key]).toFixed(2) }}
+                      <span v-if="categoryStore.selectedCategory === 'brand_global' && row[`${dim.key}_totalWeight`]">
+                        (weighted avg)
+                      </span>
+                    </div>
+                    <div style="color: #aaa; font-size: 11px; margin-bottom: 8px;">
+                      Data sources ({{ (row[`${dim.key}_sources`] as HeatmapSource[]).length }} locations):
+                    </div>
+                    <div v-for="(src, idx) in (row[`${dim.key}_sources`] as HeatmapSource[]).slice(0, 8)" :key="idx"
+                         style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 3px;">
+                      <span>{{ src.location }}{{ src.country && src.country !== src.location ? ` (${src.country})` : '' }}</span>
+                      <span style="color: #409EFF;">{{ src.value.toFixed(2) }}</span>
+                      <span v-if="categoryStore.selectedCategory === 'brand_global'" style="color: #888; font-size: 10px;">
+                        w:{{ src.weight || src.reviews }}
+                      </span>
+                    </div>
+                    <div v-if="(row[`${dim.key}_sources`] as HeatmapSource[]).length > 8" style="color: #888; font-style: italic; margin-top: 4px;">
+                      ... and {{ (row[`${dim.key}_sources`] as HeatmapSource[]).length - 8 }} more
+                    </div>
+                    <div v-if="categoryStore.selectedCategory === 'brand_global' && row[`${dim.key}_totalWeight`]
+                              && (row[`${dim.key}_sources`] as HeatmapSource[]).length > 1"
+                         style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #666; font-size: 11px; color: #aaa;">
+                      <div>Weighted calculation:</div>
+                      <div style="color: #67C23A;">
+                        Σ(value × reviews) / Σ(reviews) = {{ Number(row[dim.key]).toFixed(2) }}
+                      </div>
+                      <div style="font-size: 10px; margin-top: 2px;">
+                        Total reviews: {{ row[`${dim.key}_totalWeight`] }}
+                      </div>
+                    </div>
+                  </div>
+                </template>
+                <span class="heat-badge" :style="heatStyle(Number(row[dim.key]))">
+                  {{ Number(row[dim.key]).toFixed(1) }}
+                </span>
+              </el-tooltip>
+              <span v-else class="heat-na">—</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Legend -->
+      <div class="legend">
+        <span v-for="l in legend" :key="l.label" class="legend-item">
+          <span class="legend-swatch" :style="{ background: l.color }"></span> {{ l.label }}
+        </span>
+        <span class="legend-item"><span class="legend-swatch" style="background: #333"></span> n/a</span>
+      </div>
     </div>
 
     <!-- ═══════ Pivot Table View ═══════ -->
@@ -47,64 +148,60 @@
       </el-card>
     </div>
 
-    <!-- ═══════ Heatmap View ═══════ -->
-    <div v-if="viewMode === 'heatmap'">
-      <!-- Region tabs -->
-      <div class="controls-row">
-        <div class="region-tabs">
-          <button v-for="r in REGIONS" :key="r.key" class="region-tab" :class="{ active: selectedRegion === r.key }" @click="selectedRegion = r.key">
-            {{ r.label }}
-          </button>
+    <!-- ═══════ Region Matrix View (Global Brands only) ═══════ -->
+    <div v-if="viewMode === 'matrix' && categoryStore.selectedCategory === 'brand_global'">
+      <el-card>
+        <template #header>
+          <span style="font-weight: 600">Region Performance Matrix</span>
+          <span style="margin-left: 8px; font-size: 12px; color: var(--text-secondary)">Compare companies across all regions</span>
+        </template>
+
+        <div class="matrix-scroll">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th class="company-col">Company</th>
+                <th v-for="region in MATRIX_REGIONS" :key="region.key" class="region-col">
+                  {{ region.label }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in matrixRows" :key="row.company" :class="{ asus: row.company === 'ASUS' }">
+                <td class="company-col" :class="{ highlight: row.company === 'ASUS' }">
+                  <span v-if="row.company === 'ASUS'" class="asus-star">★</span> {{ row.company }}
+                </td>
+                <td v-for="region in MATRIX_REGIONS" :key="region.key" class="score-cell">
+                  <span v-if="typeof row[region.key] === 'number'" class="matrix-score" :style="heatStyle(row[region.key] as number)">
+                    {{ (row[region.key] as number).toFixed(2) }}
+                  </span>
+                  <span v-else class="matrix-na">—</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
-
-      <table class="heatmap-table">
-        <thead>
-          <tr>
-            <th class="company-col">Company</th>
-            <th v-for="dim in DIM_COLS" :key="dim.key">{{ dim.label }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="row in heatmapRows" :key="String(row.company)">
-            <td class="company-col" :class="{ highlight: row.company === 'ASUS' }">
-              <span v-if="row.company === 'ASUS'">&#9733; </span>{{ row.company }}
-            </td>
-            <td v-for="dim in DIM_COLS" :key="dim.key" class="heat-cell">
-              <span v-if="row[dim.key] != null" class="heat-badge" :style="heatStyle(Number(row[dim.key]))">
-                {{ Number(row[dim.key]).toFixed(1) }}
-              </span>
-              <span v-else class="heat-na">—</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Legend -->
-      <div class="legend">
-        <span v-for="l in legend" :key="l.label" class="legend-item">
-          <span class="legend-swatch" :style="{ background: l.color }"></span> {{ l.label }}
-        </span>
-        <span class="legend-item"><span class="legend-swatch" style="background: #333"></span> n/a</span>
-      </div>
+      </el-card>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { getOverviewByLocation } from '../api'
+import { getOverviewByLocation, getOverviewByCategory } from '../api'
 import { useDashboardStore } from '../stores/dashboard'
+import { useCategoryStore } from '../stores/category'
 import type { LocationRating, DimensionKey } from '../types'
 
 const store = useDashboardStore()
+const categoryStore = useCategoryStore()
 const allRatings = ref<LocationRating[]>([])
-const viewMode = ref<'pivot' | 'heatmap'>('pivot')
+const viewMode = ref<'pivot' | 'heatmap' | 'matrix'>('heatmap')
 const selectedRegion = ref('north_america')
 const pivotCompanyFilter = ref<string[]>([])
 const pivotDimension = ref<DimensionKey>('overall')
 
-// Region definitions
+// Region definitions - only used for brand_global category
 const REGIONS = [
   { key: 'north_america', label: 'North America', countries: ['United States', 'Canada'] },
   { key: 'europe', label: 'Europe', countries: ['United Kingdom', 'Germany', 'France', 'Netherlands', 'Italy', 'Spain', 'Hungary'] },
@@ -112,6 +209,19 @@ const REGIONS = [
   { key: 'south_america', label: 'South America', countries: ['Brazil', 'Chile'] },
   { key: 'oceania', label: 'Oceania', countries: ['Australia'] },
   { key: 'global', label: 'Global', countries: [] },
+]
+
+// For Taiwan-only categories, use simplified region
+const TAIWAN_REGION = { key: 'taiwan', label: 'Taiwan', countries: ['Taiwan'] }
+
+// Matrix regions (for brand_global category)
+const MATRIX_REGIONS = [
+  { key: 'north_america', label: 'North America' },
+  { key: 'europe', label: 'Europe' },
+  { key: 'asia', label: 'Asia' },
+  { key: 'south_america', label: 'South America' },
+  { key: 'oceania', label: 'Oceania' },
+  { key: 'global', label: 'Global' },
 ]
 
 // Pivot dimension options
@@ -189,6 +299,15 @@ const getPivotValue = (loc: string, company: string): number | null => {
 
 // ═══════ Heatmap Logic ═══════
 const regionRatings = computed(() => {
+  // For Taiwan-only categories, filter to Taiwan data only
+  if (categoryStore.selectedCategory !== 'brand_global') {
+    return allRatings.value.filter(r =>
+      r.country === 'Taiwan' ||
+      r.baseline_location?.toLowerCase() === 'taiwan' ||
+      r.baseline_location?.toLowerCase() === 'global'
+    )
+  }
+  // For brand_global, filter by selected region
   const region = REGIONS.find(r => r.key === selectedRegion.value)
   if (!region) return []
   if (region.key === 'global') {
@@ -196,25 +315,166 @@ const regionRatings = computed(() => {
       !r.baseline_location || r.baseline_location.toLowerCase() === 'global'
     )
   }
-  return allRatings.value.filter(r =>
-    r.country && region.countries.includes(r.country)
-  )
+  return allRatings.value.filter(r => {
+    // Check if baseline_location matches region key (for weighted region data)
+    if (r.baseline_location === region.key) return true
+    // Or check if country is in region countries list
+    return r.country && region.countries.includes(r.country)
+  })
 })
 
 const regionCompanies = computed(() => {
-  const set = new Set(regionRatings.value.map(r => r.company))
-  const ordered = COMPANY_ORDER.filter(c => set.has(c))
-  const rest = [...set].filter(c => !COMPANY_ORDER.includes(c)).sort()
-  return [...ordered, ...rest]
+  // 獲取當前類別的所有公司（即使沒有資料也要顯示）
+  const categoryCompanies = categoryStore.currentCategory?.companies || []
+
+  // 獲取有資料的公司，並進行大小寫不敏感的去重
+  const companiesWithData = new Set<string>()
+  const normalizedDataMap = new Map<string, string>() // normalized -> original
+
+  for (const r of regionRatings.value) {
+    const normalized = r.company.toLowerCase()
+    if (!normalizedDataMap.has(normalized)) {
+      normalizedDataMap.set(normalized, r.company)
+      companiesWithData.add(r.company)
+    }
+  }
+
+  // 合併類別公司和有資料的公司（使用標準化的類別公司名）
+  const allCompanies = new Set<string>(categoryCompanies)
+
+  // 添加有資料的公司，如果其標準化名稱不在類別公司中
+  for (const dataCompany of companiesWithData) {
+    const normalizedData = dataCompany.toLowerCase()
+    const isInCategory = categoryCompanies.some(c => c.toLowerCase() === normalizedData)
+    if (!isInCategory) {
+      allCompanies.add(dataCompany)
+    }
+  }
+
+  // 排序：ASUS 第一，其他按字母順序
+  const sorted = [...allCompanies].sort((a, b) => {
+    if (a === 'ASUS') return -1
+    if (b === 'ASUS') return 1
+    return a.localeCompare(b)
+  })
+
+  return sorted
 })
 
-const heatmapRows = computed(() => {
+interface HeatmapSource {
+  location: string
+  country: string | null
+  value: number
+  reviews: number
+  sourceMode: string
+  weight?: number
+}
+
+interface HeatmapRow {
+  company: string
+  [key: string]: number | null | string | HeatmapSource[]
+}
+
+const heatmapRows = computed<HeatmapRow[]>(() => {
+  // Taiwan-only 類別：只顯示 Taiwan 地點資料，每間公司一行
+  if (categoryStore.selectedCategory !== 'brand_global') {
+    // 獲取類別定義的所有公司
+    const categoryCompanies = categoryStore.currentCategory?.companies || []
+    // 排序：ASUS 第一
+    const sortedCompanies = [...categoryCompanies].sort((a, b) => {
+      if (a === 'ASUS') return -1
+      if (b === 'ASUS') return 1
+      return a.localeCompare(b)
+    })
+    // 為每個公司創建一行，只取 Taiwan 資料
+    return sortedCompanies.map(company => {
+      // 找出該公司的 Taiwan 資料（排除 Global）
+      const taiwanRows = regionRatings.value.filter(r =>
+        r.company.toLowerCase() === company.toLowerCase() &&
+        r.baseline_location &&
+        r.baseline_location.toLowerCase() !== 'global' &&
+        (r.country === 'Taiwan' || r.baseline_location.toLowerCase().includes('taiwan'))
+      )
+      const row: HeatmapRow = { company }
+      for (const dim of DIM_COLS) {
+        // Taiwan 類別：取第一筆 Taiwan 資料（應該只有一筆）
+        const r = taiwanRows.find(r => r[dim.key] != null)
+        row[dim.key] = r ? r[dim.key] as number : null
+        row[`${dim.key}_sources`] = r ? [{
+          location: r.baseline_location || 'Taiwan',
+          country: r.country,
+          value: r[dim.key] as number,
+          reviews: r.total_reviews || 0,
+          sourceMode: r.source_mode || 'unknown'
+        }] : []
+      }
+      return row
+    })
+  }
+  // Global Brands：按區域加權平均，並保存原始地點資料
   return regionCompanies.value.map(company => {
-    const rows = regionRatings.value.filter(r => r.company === company)
-    const row: Record<string, number | null | string> = { company }
+    // 從 allRatings 獲取該公司在該區域的所有原始地點資料
+    const region = REGIONS.find(r => r.key === selectedRegion.value)
+    const rawRows = region
+      ? allRatings.value.filter(r =>
+          r.company.toLowerCase() === company.toLowerCase() &&
+          (r.country && region.countries.includes(r.country))
+        )
+      : []
+
+    const rows = regionRatings.value.filter(r =>
+      r.company.toLowerCase() === company.toLowerCase()
+    )
+    const row: HeatmapRow = { company }
     for (const dim of DIM_COLS) {
-      const vals = rows.map(r => r[dim.key]).filter((v): v is number => v != null)
-      row[dim.key] = vals.length ? parseFloat((vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2)) : null
+      const validRows = rows.filter(r => r[dim.key] != null)
+      const vals = validRows.map(r => r[dim.key] as number)
+      const avg = vals.length ? parseFloat((vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2)) : null
+      row[dim.key] = avg
+
+      // 保存原始地點資料和加權計算詳情
+      const rawSources: HeatmapSource[] = rawRows
+        .filter((r: LocationRating) => r[dim.key] != null)
+        .map((r: LocationRating) => ({
+          location: r.baseline_location || r.country || 'Unknown',
+          country: r.country,
+          value: r[dim.key] as number,
+          reviews: r.total_reviews || 0,
+          sourceMode: r.source_mode || 'unknown',
+          weight: r.total_reviews || 0 // 用於加權計算
+        }))
+
+      // 計算總權重和加權平均
+      const totalWeight = rawSources.reduce((sum, s) => sum + (s.weight || 0), 0)
+      const weightedAvg = totalWeight > 0
+        ? rawSources.reduce((sum, s) => sum + s.value * (s.weight || 0), 0) / totalWeight
+        : null
+
+      row[`${dim.key}_sources`] = rawSources
+      row[`${dim.key}_weightedAvg`] = weightedAvg
+      row[`${dim.key}_totalWeight`] = totalWeight
+    }
+    return row
+  })
+})
+
+// Matrix data for region comparison
+interface MatrixRow {
+  company: string
+  [key: string]: string | number | null
+}
+
+const matrixRows = computed<MatrixRow[]>(() => {
+  const companies = categoryStore.currentCategory?.companies || []
+  return companies.map(company => {
+    const row: MatrixRow = { company }
+    for (const region of MATRIX_REGIONS) {
+      // Find data for this company in this region from allRatings
+      const rating = allRatings.value.find(r =>
+        r.company === company &&
+        (r.baseline_location === region.key || r.country === region.key)
+      )
+      row[region.key] = rating?.overall ?? null
     }
     return row
   })
@@ -230,16 +490,60 @@ const heatStyle = (val: number) => {
 }
 
 async function loadData() {
-  const { data } = await getOverviewByLocation(store.selectedRunId || undefined)
-  allRatings.value = data
+  // 獲取原始地點數據（用於 tooltip 顯示詳情）
+  const { data: locationData } = await getOverviewByLocation(store.selectedRunId || undefined)
+  
+  // 過濾類別中的公司
+  const categoryCompanies = categoryStore.currentCategory?.companies || []
+  const normalizedCompanies = categoryCompanies.map(c => c.toLowerCase())
+  allRatings.value = locationData.filter((r: LocationRating) =>
+    normalizedCompanies.includes(r.company.toLowerCase())
+  )
 }
 
 onMounted(loadData)
 watch(() => store.selectedRunId, loadData)
+watch(() => categoryStore.selectedCategory, () => {
+  // 當切換到非加權類別時，如果當前在 Region Matrix，自動切換到 Heatmap
+  if (!categoryStore.isWeightedCategory && viewMode.value === 'matrix') {
+    viewMode.value = 'heatmap'
+  }
+  loadData()
+})
 </script>
 
 <style scoped>
 .page-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin: 0 0 14px 0; }
+
+/* Category Selector */
+.category-selector-row {
+  margin-bottom: 16px;
+}
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.category-tab {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.category-tab:hover {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+.category-tab.active {
+  background: var(--accent-blue);
+  color: #fff;
+  border-color: var(--accent-blue);
+}
 
 /* View tabs */
 .view-tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 0; }
@@ -280,6 +584,20 @@ watch(() => store.selectedRunId, loadData)
 .region-tab:hover { border-color: var(--accent-blue); color: var(--text-primary); }
 .region-tab.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
 
+/* Taiwan indicator for non-global categories */
+.taiwan-indicator {
+  display: flex;
+  align-items: center;
+}
+.taiwan-badge {
+  background: var(--accent-blue);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 /* ═══ Pivot Table ═══ */
 .pivot-scroll { overflow-x: auto; }
 .pivot-table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
@@ -293,6 +611,9 @@ watch(() => store.selectedRunId, loadData)
 .heatmap-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .heatmap-table th { padding: 10px 12px; text-align: center; color: var(--text-secondary); font-weight: 500; font-size: 12px; border-bottom: 1px solid var(--border-color); }
 .heatmap-table td { padding: 8px 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
+.heatmap-table tr:hover { background: var(--bg-card-hover); }
+.heatmap-table tr.asus { background: rgba(64,158,255,0.08); }
+.heatmap-table tr.asus:hover { background: rgba(64,158,255,0.15); }
 .company-col { text-align: left !important; width: 180px; font-weight: 500; }
 .company-col.highlight { color: var(--accent-blue-light); }
 .heat-cell { min-width: 60px; }
@@ -303,4 +624,17 @@ watch(() => store.selectedRunId, loadData)
 .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; padding: 8px 0; }
 .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
 .legend-swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+
+/* ═══ Region Matrix ═══ */
+.matrix-scroll { overflow-x: auto; }
+.matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.matrix-table th { padding: 12px 8px; text-align: center; color: var(--text-secondary); font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border-color); background: var(--bg-secondary); white-space: nowrap; }
+.matrix-table td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--border-color); }
+.matrix-table tr:hover { background: var(--bg-card-hover); }
+.matrix-table tr.asus { background: rgba(64,158,255,0.08); }
+.matrix-table tr.asus:hover { background: rgba(64,158,255,0.15); }
+.matrix-table .region-col { min-width: 100px; }
+.matrix-score { display: inline-block; padding: 4px 12px; border-radius: 4px; font-weight: 600; font-size: 13px; min-width: 52px; }
+.matrix-na { color: var(--text-muted); }
+.asus-star { color: gold; margin-right: 4px; }
 </style>

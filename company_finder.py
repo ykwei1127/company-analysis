@@ -157,6 +157,7 @@ COMPANIES_TO_MATCH = [
     'Dell Technologies',
     'Acer Group',
     'Lenovo',
+    'Google',
 ]
 # ============================================================
 
@@ -418,7 +419,7 @@ class CompanyFinder:
                 in_code = COUNTRY_IN_CODES.get(ref_country)
                 if in_code:
                     country_label = ref_country.replace(' ', '-')
-                    probe_url, probe_count = self._probe_url_by_ic(
+                    probe_url, probe_count, _ = self._probe_url_by_ic(
                         slug, numeric_id, country_label,
                         {'code': in_code, 'type': 'IN'}
                     )
@@ -470,7 +471,7 @@ class CompanyFinder:
                 code_info = ic_map.get(ref_location)
                 if code_info:
                     city_label = ref_location.split(',')[0].strip()  # e.g. "Taipei" or "Taiwan"
-                    probe_url, probe_count = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
+                    probe_url, probe_count, _ = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
                     if probe_url:
                         print(f"  ✅ IC probe 找到 Review URL：{probe_url}")
                         results.append({
@@ -516,7 +517,7 @@ class CompanyFinder:
                 code_info = ic_map.get(ref_location)
                 if code_info:
                     city_label = ref_location.split(',')[0].strip()
-                    probe_url, probe_count = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
+                    probe_url, probe_count, _ = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
                     if probe_url:
                         print(f"  ✅ IC probe 找到 Review URL：{probe_url}")
                         results.append({
@@ -635,7 +636,7 @@ class CompanyFinder:
 
             # 拼 country-level review URL
             country_label = ref_country.replace(' ', '-')
-            probe_url, probe_count = self._probe_url_by_ic(
+            probe_url, probe_count, _ = self._probe_url_by_ic(
                 slug, numeric_id, country_label,
                 {'code': in_code, 'type': 'IN'}
             )
@@ -706,14 +707,30 @@ class CompanyFinder:
             })
             print(f"  [0/{len(countries)}] Global ✅")
 
+        adaptive_delay = 3.0  # 基礎延遲，會根據 rate limit 動態調整
+        consecutive_success = 0
+
         for i, (country, in_code) in enumerate(countries, 1):
             country_label = country.replace(' ', '-')
-            probe_url, probe_count = self._probe_url_by_ic(
+
+            # 每 5 個國家主動休息，降低被封鎖風險
+            if i > 1 and i % 5 == 0:
+                rest_time = 8 if adaptive_delay > 3 else 5
+                print(f"    💤 批量休息 {rest_time}s...")
+                time.sleep(rest_time)
+
+            probe_url, probe_count, was_limited = self._probe_url_by_ic(
                 slug, numeric_id, country_label,
                 {'code': in_code, 'type': 'IN'}
             )
 
+            # 如果遇到 rate limit，大幅增加後續延遲
+            if was_limited:
+                adaptive_delay = min(15.0, adaptive_delay + 3.0)
+                print(f"    🔒 觸發限流保護，下次延遲調整為 {adaptive_delay:.1f}s")
+
             if probe_url:
+                consecutive_success += 1
                 print(f"  [{i}/{len(countries)}] {country} ✅ ({probe_count or '?'} reviews)")
                 results.append({
                     'country': country,
@@ -723,7 +740,11 @@ class CompanyFinder:
                     'reviews_count': probe_count,
                     'status': 'found',
                 })
+                # 連續成功可稍微降低延遲（最低 2.5 秒）
+                if consecutive_success >= 3 and adaptive_delay > 2.5:
+                    adaptive_delay = max(2.5, adaptive_delay - 0.3)
             else:
+                consecutive_success = 0
                 print(f"  [{i}/{len(countries)}] {country} ✗")
                 results.append({
                     'country': country,
@@ -733,7 +754,10 @@ class CompanyFinder:
                     'reviews_count': None,
                     'status': 'not_found',
                 })
-            time.sleep(3)
+                # 失敗則增加延遲（rate limit 已在上面額外增加）
+                adaptive_delay = min(8.0, adaptive_delay + 0.5)
+
+            time.sleep(adaptive_delay)
 
         found = sum(1 for r in results if r['status'] == 'found')
         print(f"\n  結果：{found}/{len(results)} 個國家有 review")
@@ -857,7 +881,7 @@ class CompanyFinder:
     def _probe_url_by_ic(self, slug, numeric_id, city_label, code_info):
         """用 IC/IN Code 直接拼出 Review URL，載入後確認頁面是否有效。
         code_info: {'code': '3271041', 'type': 'IC'} 或 {'code': '218', 'type': 'IN'}
-        Returns: (url, reviews_count) or (None, None)
+        Returns: (url, reviews_count, was_rate_limited) or (None, None, False)
         """
         code = code_info['code']
         code_type = code_info['type']  # 'IC' or 'IN'
@@ -877,7 +901,9 @@ class CompanyFinder:
             pass
 
         # 偵測 rate limit，等待後重試一次
+        was_rate_limited = False
         if self._is_rate_limited():
+            was_rate_limited = True
             print(f"    ⚠️  Rate limited! 等待 60 秒後重試...")
             time.sleep(60)
             self.driver.get(url)
@@ -889,12 +915,12 @@ class CompanyFinder:
                 pass
             if self._is_rate_limited():
                 print(f"    ❌ 仍被封鎖，跳過")
-                return None, None
+                return None, None, was_rate_limited
 
         final_url = self.driver.current_url
         # 如果被 redirect 到其他頁則無效
         if f'_{code_type}{code}' not in final_url:
-            return None, None
+            return None, None, was_rate_limited
         # 嘗試抓評論數
         count = None
         try:
@@ -904,7 +930,7 @@ class CompanyFinder:
                 count = int(m.group(1).replace(',', ''))
         except Exception:
             pass
-        return final_url.split('?')[0], count
+        return final_url.split('?')[0], count, was_rate_limited
 
     def _extract_country(self, page_heading, address):
         """從 heading 括號或 address 最後一段取國家名"""
@@ -978,7 +1004,8 @@ class CompanyFinder:
         except Exception:
             pass
 
-        name_keywords = [w.lower() for w in company_name.split() if len(w) > 1]
+        import re as re_module
+        name_keywords = [re_module.sub(r'[^\w]', '', w).lower() for w in company_name.split() if len(w) > 1]
 
         all_links = self.driver.find_elements(By.TAG_NAME, 'a')
         for link in all_links:
@@ -1039,7 +1066,7 @@ class CompanyFinder:
                 if not all(kw in href_lower for kw in name_keywords):
                     continue
                 numeric_id = m.group(1)
-                slug_match = re.search(r'/(?:Overview|Reviews)/([^/]+)-(?:Overview|Reviews)-E\d+', href)
+                slug_match = re.search(r'/(?:Overview|Reviews)/([^/]+)-(?:Overview|Reviews)-(?:EI_IE|E)\d+', href)
                 slug = slug_match.group(1) if slug_match else company_name.replace(' ', '-')
                 company_id = f"E{numeric_id}"
                 locations_url = f"https://www.glassdoor.com/Location/All-{slug}-Office-Locations-{company_id}.htm"

@@ -1,0 +1,35 @@
+[
+  {
+    "location": "Global",
+    "country": "Global",
+    "page_heading": "Pegatron",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Pegatron-Reviews-E337948.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Taiwan",
+    "country": "Taiwan",
+    "page_heading": "Pegatron Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Pegatron-Taiwan-Reviews-EI_IE337948.0,8_IL.9,15_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Jeffersonville, IN",
+    "country": "United States",
+    "page_heading": "Pegatron",
+    "heading_is_generic": true,
+    "list_rating": 2.2,
+    "address": "Jeffersonville, IN, United States",
+    "url": "https://www.glassdoor.com/Reviews/Pegatron-Jeffersonville-Reviews-EI_IE337948.0,8_IL.9,23_IC1145141.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

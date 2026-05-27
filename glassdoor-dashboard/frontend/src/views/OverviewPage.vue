@@ -2,47 +2,33 @@
   <div>
     <h3 class="page-title">Company Overview</h3>
 
-    <!-- Filter -->
-    <div class="filter-row">
-      <el-select v-model="locationFilter" placeholder="Filter by location" clearable size="default" style="width: 260px">
-        <el-option label="Global (All)" value="global" />
-        <el-option v-for="loc in locationOptions" :key="loc" :label="loc" :value="loc" />
-      </el-select>
+    <!-- Category Selector -->
+    <div class="category-selector-row">
+      <div class="category-tabs">
+        <button
+          v-for="cat in categoryStore.categories"
+          :key="cat.key"
+          class="category-tab"
+          :class="{ active: categoryStore.selectedCategory === cat.key }"
+          @click="categoryStore.selectCategory(cat.key)"
+        >
+          {{ cat.name }}
+        </button>
+      </div>
     </div>
 
     <!-- Run Info Banner -->
     <div class="run-info-bar">
       <span class="run-info-title">{{ currentRunId || 'Latest' }}</span>
       <span class="run-info-divider">|</span>
-      <span><strong>Companies:</strong> {{ filteredCompanies.length }}</span>
+      <span><strong>Category:</strong> {{ categoryStore.currentCategory?.name }}</span>
       <span class="run-info-divider">|</span>
-      <span><strong>List Types:</strong>
-        <el-tag
-          v-for="mode in uniqueModes"
-          :key="mode"
-          :type="mode === 'country' ? 'success' : mode === 'scan' ? 'warning' : mode === 'city' ? 'danger' : 'info'"
-          size="small"
-          style="margin-left: 4px;"
-        >{{ mode }}</el-tag>
+      <span><strong>Companies:</strong> {{ filteredCompanies.length }}</span>
+      <span v-if="categoryStore.isWeightedCategory" class="run-info-divider">|</span>
+      <span v-if="categoryStore.isWeightedCategory">
+        <strong>Mode:</strong> <el-tag type="success" size="small">Region-Weighted</el-tag>
       </span>
     </div>
-
-    <!-- Mixed Mode Warning -->
-    <el-alert
-      v-if="hasMixedModes"
-      title="Warning: Mixed List Types Detected"
-      type="warning"
-      :closable="false"
-      style="margin-bottom: 16px;"
-    >
-      <div style="font-size: 13px; line-height: 1.6;">
-        This run contains data from multiple list types ({{ uniqueModes.join(', ') }}).
-        <br>
-        Comparing office-level and country-level reviews may lead to inconsistent results.
-        <br>
-        <strong>Recommendation:</strong> Use consistent list type for all companies.
-      </div>
-    </el-alert>
 
     <!-- KPI Cards -->
     <div class="kpi-row">
@@ -64,6 +50,67 @@
       </div>
     </div>
 
+    <!-- ASUS Regional Performance (only for weighted categories) -->
+    <el-card v-if="categoryStore.isWeightedCategory && asusRegionData.length > 0" style="margin-bottom: 20px">
+      <template #header>
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span style="font-weight: 600">ASUS Performance by Region</span>
+            <span style="margin-left: 8px; font-size: 12px; color: var(--text-secondary)">
+              (vs Regional Avg / Best)
+            </span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); display: flex; gap: 12px;">
+            <span><strong>ASUS:</strong> ASUS regional score</span>
+            <span><strong>Avg:</strong> Average of all companies in this region</span>
+            <span><strong>Best:</strong> Top company in this region</span>
+            <span><strong>Gap:</strong> ASUS score minus regional average</span>
+          </div>
+        </div>
+      </template>
+      <div class="asus-region-grid">
+        <div v-for="region in asusRegionData" :key="region.key" class="asus-region-card">
+          <div class="asus-region-header">
+            <span class="asus-region-name">{{ region.label }}</span>
+            <span class="asus-region-rank">#{{ region.asusRank }} of {{ region.totalCompanies }}</span>
+          </div>
+          <div class="asus-region-body">
+            <div class="asus-score-row">
+              <span class="label">ASUS</span>
+              <span class="score asus" :class="getScoreClass(region.asusScore)">{{ region.asusScore.toFixed(2) }}</span>
+            </div>
+            <div class="asus-score-row">
+              <span class="label">Avg</span>
+              <span class="score">{{ region.avgScore.toFixed(2) }}</span>
+            </div>
+            <div class="asus-score-row">
+              <span class="label">Best</span>
+              <span class="score best">{{ region.bestScore.toFixed(2) }}</span>
+              <span class="best-company">{{ region.bestCompany }}</span>
+            </div>
+            <div class="asus-gap-bar" :class="{ positive: region.asusGap >= 0, negative: region.asusGap < 0 }">
+              <span class="gap-label">{{ region.asusGap >= 0 ? '+' : '' }}{{ region.asusGap.toFixed(2) }} vs avg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-card>
+
+    <!-- Category Info -->
+    <el-alert
+      :title="categoryStore.currentCategory?.name"
+      type="info"
+      :closable="false"
+      style="margin-bottom: 16px;"
+    >
+      <div style="font-size: 13px; line-height: 1.6;">
+        Comparing: {{ categoryStore.currentCategory?.companies.join(', ') }}
+        <span v-if="categoryStore.isWeightedCategory">
+          <br><strong>Weighted Mode:</strong> Scores are calculated using review-weighted averages across all regions.
+        </span>
+      </div>
+    </el-alert>
+
     <!-- Bar Chart: Overall Rating -->
     <el-card style="margin-bottom: 20px">
       <template #header><span style="font-weight: 600">Overall Rating Ranking</span></template>
@@ -75,7 +122,12 @@
       <template #header><span style="font-weight: 600">Company Summary</span></template>
       <el-table :data="filteredCompanies" stripe style="width: 100%" :default-sort="{ prop: 'overall', order: 'descending' }">
         <el-table-column prop="rank" label="#" width="45" align="center" sortable />
-        <el-table-column prop="company" label="Company" min-width="120" sortable />
+        <el-table-column prop="company" label="Company" min-width="120" sortable>
+          <template #default="{ row }">
+            <span v-if="row.company === 'ASUS'" class="asus-star">★</span>
+            <span :class="{ 'asus-name': row.company === 'ASUS' }">{{ row.company }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="source_mode" label="Type" width="90" align="center" sortable>
           <template #default="{ row }">
             <el-tag
@@ -117,10 +169,11 @@ import { use } from 'echarts/core'
 import { BarChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
-import { getOverview, getOverviewByLocation, getRunMetadata } from '../api'
+import { getOverviewByCategory, getOverviewByLocation } from '../api'
 import { useDashboardStore } from '../stores/dashboard'
+import { useCategoryStore } from '../stores/category'
 import { useThemeStore } from '../stores/theme'
-import type { CompanyOverview, LocationRating } from '../types'
+import type { CompanyOverview } from '../types'
 
 use([BarChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer])
 
@@ -146,11 +199,10 @@ const COMPANY_COLORS: Record<string, string> = {
 }
 
 const store = useDashboardStore()
+const categoryStore = useCategoryStore()
 const themeStore = useThemeStore()
 const companies = ref<CompanyOverview[]>([])
-const allLocationRatings = ref<LocationRating[]>([])
-const locationFilter = ref('global')
-const runMatchModes = ref<string[]>([])
+const regionData = ref<RegionInfo[]>([])
 
 // Case-insensitive color lookup
 function getCompanyColor(name: string): string {
@@ -159,26 +211,58 @@ function getCompanyColor(name: string): string {
   return entry?.[1] ?? '#409eff'
 }
 
-const locationOptions = computed(() => {
-  const locs = new Set(allLocationRatings.value.map(r => r.baseline_location).filter(Boolean))
-  locs.delete('Global')
-  return [...locs].sort()
+// Region info type
+interface RegionCompany {
+  company: string
+  overall: number | null
+  total_reviews: number
+}
+
+interface RegionInfo {
+  key: string
+  label: string
+  companies: RegionCompany[]
+  avgOverall: number
+}
+
+interface AsusRegionData {
+  key: string
+  label: string
+  asusScore: number
+  asusRank: number
+  totalCompanies: number
+  avgScore: number
+  bestScore: number
+  bestCompany: string
+  asusGap: number // vs average
+}
+
+const filteredCompanies = computed(() => companies.value)
+
+const asusRegionData = computed<AsusRegionData[]>(() => {
+  return regionData.value.map(region => {
+    const sorted = [...region.companies].sort((a, b) => (b.overall || 0) - (a.overall || 0))
+    const asusIdx = sorted.findIndex(c => c.company.toLowerCase() === 'asus')
+    const asusEntry = asusIdx >= 0 ? sorted[asusIdx] : null
+    const asusScore = asusEntry?.overall || 0
+    const avgScore = region.avgOverall
+    const best = sorted[0]
+
+    return {
+      key: region.key,
+      label: region.label,
+      asusScore,
+      asusRank: asusIdx >= 0 ? asusIdx + 1 : 0,
+      totalCompanies: sorted.length,
+      avgScore,
+      bestScore: best?.overall || 0,
+      bestCompany: best?.company || '',
+      asusGap: asusScore - avgScore
+    }
+  }).filter(r => r.asusScore > 0)
 })
 
-const filteredCompanies = computed(() => {
-  if (!locationFilter.value || locationFilter.value === 'global') {
-    return companies.value
-  }
-  const locData = allLocationRatings.value.filter(r => r.baseline_location === locationFilter.value)
-  return locData.map((r, i) => ({ ...r, rank: i + 1 })).sort((a, b) => (b.overall || 0) - (a.overall || 0)).map((r, i) => ({ ...r, rank: i + 1 }))
-})
-
-// Get unique match modes from run metadata
-const uniqueModes = computed(() => {
-  return runMatchModes.value
-})
-
-const hasMixedModes = computed(() => uniqueModes.value.length > 1)
+const hasMixedModes = computed(() => false) // Simplified for category mode
 
 // Get current run ID from dashboard store
 const currentRunId = computed(() => store.selectedRunId || 'Latest')
@@ -189,15 +273,22 @@ const asusOverall = computed(() => {
 })
 
 const asusRank = computed(() => {
-  const sorted = [...filteredCompanies.value].sort((a, b) => (b.overall || 0) - (a.overall || 0))
-  const idx = sorted.findIndex(c => c.company?.toLowerCase() === 'asus')
-  return idx >= 0 ? `#${idx + 1}` : '—'
+  const asus = filteredCompanies.value.find(c => c.company?.toLowerCase() === 'asus')
+  return asus?.rank ? `#${asus.rank}` : '—'
 })
 
 const topCompany = computed(() => {
   const sorted = [...filteredCompanies.value].sort((a, b) => (b.overall || 0) - (a.overall || 0))
   return sorted[0]?.company ?? '—'
 })
+
+function getScoreClass(score: number): string {
+  if (score >= 4.4) return 'excellent'
+  if (score >= 4.0) return 'good'
+  if (score >= 3.7) return 'average'
+  if (score >= 3.3) return 'below-average'
+  return 'poor'
+}
 
 const barOption = computed(() => {
   const sorted = [...filteredCompanies.value].sort((a, b) => (b.overall || 0) - (a.overall || 0))
@@ -247,18 +338,48 @@ const barOption = computed(() => {
 })
 
 async function loadData() {
-  const [overview, byLoc, metadata] = await Promise.all([
-    getOverview(store.selectedRunId || undefined),
-    getOverviewByLocation(store.selectedRunId || undefined),
-    getRunMetadata(store.selectedRunId || 'latest'),
-  ])
-  companies.value = overview.data
-  allLocationRatings.value = byLoc.data
-  runMatchModes.value = metadata.data.match_modes || []
+  try {
+    const category = categoryStore.selectedCategory
+    const { data } = await getOverviewByCategory(category, store.selectedRunId || undefined)
+
+    companies.value = data.companies || []
+
+    // Build region data for weighted categories
+    if (data.regions && categoryStore.isWeightedCategory) {
+      const regionMap: Record<string, string> = {
+        north_america: 'North America',
+        europe: 'Europe',
+        asia: 'Asia',
+        south_america: 'South America',
+        oceania: 'Oceania',
+        global: 'Global'
+      }
+
+      const regions = data.regions as Record<string, RegionCompany[]>
+      regionData.value = Object.entries(regions)
+        .filter(([_, comps]) => comps && Array.isArray(comps) && comps.length > 0)
+        .map(([key, comps]) => {
+          const regionCompanies = comps
+          const avgOverall = regionCompanies.reduce((sum: number, c: RegionCompany) => sum + (c.overall || 0), 0) / regionCompanies.length
+          return {
+            key,
+            label: regionMap[key] || key,
+            companies: regionCompanies.sort((a: RegionCompany, b: RegionCompany) => (b.overall || 0) - (a.overall || 0)),
+            avgOverall
+          }
+        })
+        .sort((a: RegionInfo, b: RegionInfo) => b.avgOverall - a.avgOverall)
+    } else {
+      regionData.value = []
+    }
+  } catch (e) {
+    console.error('Failed to load data', e)
+  }
 }
 
 onMounted(loadData)
 watch(() => store.selectedRunId, loadData)
+watch(() => categoryStore.selectedCategory, loadData)
 </script>
 
 <style scoped>
@@ -286,6 +407,171 @@ watch(() => store.selectedRunId, loadData)
 .run-info-divider {
   color: var(--border-color);
   font-size: 16px;
+}
+
+/* ASUS Regional Performance Cards */
+.asus-region-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.asus-region-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 14px;
+}
+.asus-region-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+.asus-region-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.asus-region-rank {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.asus-region-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.asus-score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.asus-score-row .label {
+  color: var(--text-secondary);
+}
+.asus-score-row .score {
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  min-width: 40px;
+  text-align: center;
+}
+.asus-score-row .score.asus {
+  font-size: 16px;
+}
+.asus-score-row .score.best {
+  background: var(--bg-secondary);
+}
+.asus-score-row .best-company {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-left: 4px;
+}
+.asus-gap-bar {
+  margin-top: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-align: center;
+}
+.asus-gap-bar.positive {
+  background: #2d6a2d;
+  color: #fff;
+}
+.asus-gap-bar.negative {
+  background: #c0392b;
+  color: #fff;
+}
+
+/* Category Selector */
+.category-selector-row {
+  margin-bottom: 16px;
+}
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.category-tab {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.category-tab:hover {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+.category-tab.active {
+  background: var(--accent-blue);
+  color: #fff;
+  border-color: var(--accent-blue);
+}
+
+/* Region Cards */
+.region-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+.region-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 14px;
+}
+.region-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+.region-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.region-score {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.region-score.excellent { background: #2d6a2d; color: #fff; }
+.region-score.good { background: #4a9e4a; color: #fff; }
+.region-score.average { background: #8bc48b; color: #1a1a1a; }
+.region-score.below-average { background: #e8c97a; color: #1a1a1a; }
+.region-score.poor { background: #c0392b; color: #fff; }
+
+.region-companies {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.region-company {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.company-name {
+  color: var(--text-secondary);
+}
+.company-score {
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .kpi-row { display: flex; gap: 16px; margin-bottom: 20px; }

@@ -41,6 +41,17 @@
               :value="run.id"
             />
           </el-select>
+          <el-button
+            v-if="!STATIC_MODE"
+            size="small"
+            type="primary"
+            plain
+            :disabled="!dashboardStore.selectedRunId"
+            title="Download raw data (XLSX)"
+            @click="handleDownload"
+          >
+            <el-icon><Download /></el-icon>
+          </el-button>
           <el-popconfirm
             v-if="!STATIC_MODE"
             :title="`Delete run '${dashboardStore.selectedRunId}'?`"
@@ -54,7 +65,7 @@
               </el-button>
             </template>
           </el-popconfirm>
-          <button class="gear-btn" @click="themeStore.toggle()" :title="themeStore.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">&#9881;</button>
+          <el-button size="small" plain @click="themeStore.toggle()" :title="themeStore.mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">&#9881;</el-button>
         </div>
       </header>
 
@@ -86,11 +97,11 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { DataBoard, TrendCharts, Location, Monitor, Setting, Delete, Loading } from '@element-plus/icons-vue'
+import { DataBoard, TrendCharts, Location, Monitor, Setting, Delete, Loading, Download } from '@element-plus/icons-vue'
 import { useDashboardStore } from './stores/dashboard'
 import { useThemeStore } from './stores/theme'
 import { useFinderStore } from './stores/finder'
-import { stopFinder } from './api'
+import { stopFinder, downloadRun } from './api'
 
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
@@ -104,6 +115,24 @@ async function handleStopFinder() {
     finderStore.stop()
   } catch (e) {
     console.error('Failed to stop finder', e)
+  }
+}
+
+async function handleDownload() {
+  if (!dashboardStore.selectedRunId) return
+  try {
+    const response = await downloadRun(dashboardStore.selectedRunId)
+    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `glassdoor_ratings_${dashboardStore.selectedRunId}.xlsx`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } catch (e) {
+    console.error('Failed to download run', e)
   }
 }
 
@@ -215,17 +244,8 @@ html, body, #app {
 }
 
 .app-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
-.header-right { display: flex; align-items: center; gap: 12px; }
-.gear-btn {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 18px;
-  cursor: pointer;
-  padding: 4px;
-  transition: color 0.2s;
-}
-.gear-btn:hover { color: var(--text-primary); }
+.header-right { display: flex; align-items: center; gap: 8px; }
+.header-right .el-select { margin-right: 4px; }
 
 .page-content { padding: 24px; flex: 1; overflow-y: auto; }
 

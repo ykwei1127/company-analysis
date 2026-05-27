@@ -24,11 +24,23 @@ export const getRuns = () =>
 export const deleteRun = (_runId: string) =>
   STATIC_MODE ? noop() : api.delete(`/runs/${_runId}`)
 
+export const downloadRun = (_runId: string) =>
+  STATIC_MODE ? noop() : api.get(`/runs/${_runId}/download`, { responseType: 'blob' })
+
 export const getRunMetadata = (run: string) =>
   STATIC_MODE ? staticGet(`${staticRunPath(run)}/metadata.json`) : api.get(`/overview/run-metadata?run=${run}`)
 
 export const getOverview = (run?: string) =>
   STATIC_MODE ? staticGet(`${staticRunPath(run)}/overview.json`) : api.get('/overview', { params: { run } })
+
+export const getCategories = () =>
+  STATIC_MODE ? staticGet(`${STATIC_BASE}/categories.json`) : api.get('/categories')
+
+export const getOverviewByCategory = (category: string, run?: string) =>
+  STATIC_MODE ? staticGet(`${staticRunPath(run)}/by-category.json`) : api.get('/overview/by-category', { params: { category, run } })
+
+export const getRegionBreakdown = (company: string, category: string, run?: string) =>
+  STATIC_MODE ? Promise.resolve({ data: {} }) : api.get('/overview/regions', { params: { company, category, run } })
 
 export const getOverviewByLocation = (run?: string) =>
   STATIC_MODE ? staticGet(`${staticRunPath(run)}/by-location.json`) : api.get('/overview/by-location', { params: { run } })

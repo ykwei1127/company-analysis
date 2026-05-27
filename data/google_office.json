@@ -1,0 +1,24 @@
+[
+  {
+    "location": "Global",
+    "country": "Global",
+    "page_heading": "Google",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Taiwan",
+    "country": "Taiwan",
+    "page_heading": "Google Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Google-Taiwan-Reviews-EI_IE9079.0,6_IL.7,13_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]
