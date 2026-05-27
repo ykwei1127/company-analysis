@@ -48,6 +48,7 @@
               :value="run.id"
             />
           </el-select>
+          <!-- Download XLSX -->
           <el-button
             v-if="!STATIC_MODE"
             size="small"
@@ -59,6 +60,16 @@
           >
             <el-icon><Download /></el-icon>
           </el-button>
+          <a
+            v-else-if="STATIC_MODE && dashboardStore.selectedRunId"
+            :href="`${STATIC_BASE}/${dashboardStore.selectedRunId}/glassdoor_ratings_${dashboardStore.selectedRunId}.xlsx`"
+            download
+            style="text-decoration: none;"
+          >
+            <el-button size="small" type="primary" plain title="Download XLSX">
+              <el-icon><Download /></el-icon>
+            </el-button>
+          </a>
           <el-popconfirm
             v-if="!STATIC_MODE"
             :title="`Delete run '${dashboardStore.selectedRunId}'?`"
@@ -116,6 +127,7 @@ const themeStore = useThemeStore()
 const finderStore = useFinderStore()
 
 const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
+const STATIC_BASE = import.meta.env.BASE_URL + 'static-data'
 
 // Run metadata for source mode display
 const runMetadata = ref<{ match_modes?: string[] } | null>(null)

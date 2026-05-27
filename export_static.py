@@ -503,6 +503,12 @@ def export_run(run_id: str, csv_path: str, out_dir: Path):
     # Export by-category data for each category
     for category in CATEGORIES.keys():
         write_json(out_dir / f"by-category-{category}.json", build_by_category(df, category))
+    
+    # Copy XLSX file if exists
+    xlsx_path = Path(csv_path).with_suffix('.xlsx')
+    if xlsx_path.exists():
+        shutil.copy2(xlsx_path, out_dir / f"glassdoor_ratings_{run_id}.xlsx")
+        print(f"  ✓ Copied XLSX: {xlsx_path.name}")
 
 
 def main():
