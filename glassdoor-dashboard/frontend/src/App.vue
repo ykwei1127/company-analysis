@@ -31,7 +31,7 @@
           <el-tag v-if="sourceTag" :type="sourceTag.type" size="small" style="margin-right: 8px;">
             {{ sourceTag.label }}
           </el-tag>
-          <el-tag v-else-if="STATIC_MODE" type="info" size="small" style="margin-right: 8px;">
+          <el-tag v-if="STATIC_MODE" type="info" size="small" style="margin-right: 8px;">
             Demo
           </el-tag>
           <el-select
@@ -122,7 +122,7 @@ const runMetadata = ref<{ match_modes?: string[] } | null>(null)
 
 // Load run metadata when selected run changes
 async function loadRunMetadata() {
-  if (!dashboardStore.selectedRunId || STATIC_MODE) {
+  if (!dashboardStore.selectedRunId) {
     runMetadata.value = null
     return
   }
