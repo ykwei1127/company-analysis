@@ -24,7 +24,7 @@
       <!-- Clickable Legend: toggle companies on/off -->
       <div class="legend-row">
         <span
-          v-for="c in companies"
+          v-for="c in sortedCompanies"
           :key="c.company"
           class="legend-item"
           :class="{ inactive: !selectedCompanies.includes(c.company), asus: c.company === 'ASUS' }"
@@ -101,25 +101,30 @@ import { type DimensionKey, DIMENSION_LABELS } from '../types'
 
 use([RadarChart, TooltipComponent, LegendComponent, RadarComponent, CanvasRenderer])
 
+// High-contrast color palette for better visual differentiation
 const COMPANY_COLORS: Record<string, string> = {
-  Google: '#4285f4',
-  NVIDIA: '#76b900',
-  'HP Inc.': '#2196f3',
-  MSI: '#f44336',
-  'Dell Technologies': '#ff9800',
-  'Trend Micro': '#9c27b0',
-  Wiwynn: '#00bcd4',
-  'Compal Electronics': '#ff7043',
-  Lenovo: '#e91e63',
-  Inventec: '#ff5722',
-  'AU Optronics': '#607d8b',
-  Acer: '#8bc34a',
-  TSMC: '#795548',
-  ASUS: '#00bcd4',
-  'Quanta Computer': '#3f51b5',
-  'Delta Electronics': '#673ab7',
-  Wistron: '#009688',
-  Pegatron: '#f06292',
+  // ASUS - Cyan (most prominent)
+  ASUS: '#00e5ff',
+  // R&D in Taiwan - distinct hues
+  Google: '#2979ff',     // Blue
+  MSI: '#ff1744',        // Red
+  'Trend Micro': '#d500f9', // Purple
+  Acer: '#76ff03',       // Lime Green
+  // Global Brands - distinct from Taiwan companies
+  NVIDIA: '#ff9100',     // Orange
+  'HP Inc.': '#18ffff',  // Cyan-Light
+  'Dell Technologies': '#ff3d00', // Deep Orange
+  Lenovo: '#ffea00',     // Yellow
+  // Taiwan Tech OEMs - distinct hues (avoid blue/cyan which is too similar to ASUS)
+  'Quanta Computer': '#ff4081', // Pink
+  Wistron: '#76ff03',    // Lime Green
+  'Compal Electronics': '#ff9100', // Orange
+  Wiwynn: '#e91e63',     // Pink-Red (avoid blue tones)
+  TSMC: '#ffd600',       // Amber
+  'Delta Electronics': '#651fff', // Deep Purple (avoid blue tones)
+  Inventec: '#1de9b6',   // Teal
+  Pegatron: '#ff3d00',   // Deep Orange
+  'AU Optronics': '#9c27b0', // Purple
 }
 
 const store = useDashboardStore()
@@ -139,16 +144,54 @@ function getCompanyColor(name: string): string {
 
 const companyNames = computed(() => companies.value.map(c => c.company))
 
+// Sort companies with ASUS first for legend display
+const sortedCompanies = computed(() => {
+  const list = [...companies.value]
+  const asusIndex = list.findIndex(c => c.company === 'ASUS')
+  if (asusIndex > 0) {
+    const asus = list.splice(asusIndex, 1)[0]
+    list.unshift(asus)
+  }
+  return list
+})
+
 const visibleCompanies = computed(() =>
   companies.value.filter(c => selectedCompanies.value.includes(c.company))
 )
 
 // Get default selected companies based on category
+// Always include ASUS, then select top 2 companies by overall rating (max 3 total)
 const getDefaultSelected = () => {
   const category = categoryStore.currentCategory
   if (!category) return []
-  // Limit to first 6 companies for better radar chart visibility
-  return category.companies.slice(0, 6)
+
+  // Always include ASUS first
+  const result = ['ASUS']
+
+  // Get other companies with data, sorted by overall rating (descending)
+  const otherCompanies = companies.value
+    .filter(c => c.company !== 'ASUS' && c.overall != null)
+    .sort((a, b) => (b.overall || 0) - (a.overall || 0))
+    .slice(0, 2)
+    .map(c => c.company)
+
+  // Add top ranked companies until we have 3 total
+  for (const company of otherCompanies) {
+    if (result.length < 3 && !result.includes(company)) {
+      result.push(company)
+    }
+  }
+
+  // If still not enough, fill from category definition
+  if (result.length < 3) {
+    for (const company of category.companies) {
+      if (result.length < 3 && !result.includes(company)) {
+        result.push(company)
+      }
+    }
+  }
+
+  return result
 }
 
 function toggleCompany(name: string) {
