@@ -289,6 +289,13 @@
               </template>
             </el-table-column>
             <el-table-column prop="country" label="Country" width="120" />
+            <el-table-column label="Source" width="90">
+              <template #default="{ row }">
+                <el-tag size="small" :type="row.source_mode === 'country' ? 'success' : row.source_mode === 'scan' ? 'warning' : row.source_mode === 'city' ? 'danger' : 'info'">
+                  {{ row.source_mode || '—' }}
+                </el-tag>
+              </template>
+            </el-table-column>
             <el-table-column prop="status" label="Status" width="100">
               <template #default="{ row }">
                 <el-tag :type="row.status === 'found' ? 'success' : 'danger'" size="small">{{ row.status }}</el-tag>

@@ -37,7 +37,7 @@ export const getCategories = () =>
   STATIC_MODE ? staticGet(`${STATIC_BASE}/categories.json`) : api.get('/categories')
 
 export const getOverviewByCategory = (category: string, run?: string) =>
-  STATIC_MODE ? staticGet(`${staticRunPath(run)}/by-category.json`) : api.get('/overview/by-category', { params: { category, run } })
+  STATIC_MODE ? staticGet(`${staticRunPath(run)}/by-category-${category}.json`) : api.get('/overview/by-category', { params: { category, run } })
 
 export const getRegionBreakdown = (company: string, category: string, run?: string) =>
   STATIC_MODE ? Promise.resolve({ data: {} }) : api.get('/overview/regions', { params: { company, category, run } })

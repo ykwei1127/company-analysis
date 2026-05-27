@@ -27,6 +27,13 @@
       <header class="top-bar">
         <h2 class="app-title">Glassdoor Multi-Company Dashboard</h2>
         <div class="header-right">
+          <!-- Source Mode Tag -->
+          <el-tag v-if="sourceTag" :type="sourceTag.type" size="small" style="margin-right: 8px;">
+            {{ sourceTag.label }}
+          </el-tag>
+          <el-tag v-else-if="STATIC_MODE" type="info" size="small" style="margin-right: 8px;">
+            Demo
+          </el-tag>
           <el-select
             :model-value="dashboardStore.selectedRunId"
             @change="(val: string) => dashboardStore.selectRun(val)"
@@ -101,13 +108,61 @@ import { DataBoard, TrendCharts, Location, Monitor, Setting, Delete, Loading, Do
 import { useDashboardStore } from './stores/dashboard'
 import { useThemeStore } from './stores/theme'
 import { useFinderStore } from './stores/finder'
-import { stopFinder, downloadRun } from './api'
+import { stopFinder, downloadRun, getRunMetadata } from './api'
+import { ref, watch, computed } from 'vue'
 
 const dashboardStore = useDashboardStore()
 const themeStore = useThemeStore()
 const finderStore = useFinderStore()
 
 const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
+
+// Run metadata for source mode display
+const runMetadata = ref<{ match_modes?: string[] } | null>(null)
+
+// Load run metadata when selected run changes
+async function loadRunMetadata() {
+  if (!dashboardStore.selectedRunId || STATIC_MODE) {
+    runMetadata.value = null
+    return
+  }
+  try {
+    const { data } = await getRunMetadata(dashboardStore.selectedRunId)
+    runMetadata.value = data
+  } catch (e) {
+    console.error('Failed to load run metadata', e)
+    runMetadata.value = null
+  }
+}
+
+// Watch for run changes
+watch(() => dashboardStore.selectedRunId, loadRunMetadata, { immediate: true })
+
+// Get source tag display info
+const sourceTag = computed(() => {
+  if (!runMetadata.value?.match_modes?.length) return null
+  const modes = runMetadata.value.match_modes
+  // Return the first mode or 'mixed' if multiple
+  const mode = modes.length === 1 ? modes[0] : 'mixed'
+  const colors: Record<string, 'info' | 'success' | 'warning' | 'danger'> = {
+    office: 'info',       // gray
+    country: 'success',   // green  
+    city: 'danger',       // red
+    scan: 'warning',      // orange
+    mixed: 'info'
+  }
+  const labels: Record<string, string> = {
+    office: 'office',
+    country: 'country',
+    city: 'city',
+    scan: 'scan',
+    mixed: 'mixed'
+  }
+  return {
+    type: colors[mode] || 'info',
+    label: labels[mode] || mode
+  }
+})
 
 async function handleStopFinder() {
   try {
