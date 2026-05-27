@@ -191,11 +191,21 @@ cd glassdoor-dashboard
 
 | 頁面 | 說明 |
 |------|------|
-| Overview | 各公司 Global / Taiwan 評分 KPI、各評分維度長條圖比較 |
-| Comparison | 雷達圖跨公司多維度比較，支援多公司並排 |
-| Locations | 地區評分熱力圖，點擊城市查看各公司詳細分數 |
+| Overview | 三個類別（R&D in Taiwan、Global Brands、Taiwan Tech OEMs）評分比較，頂部顯示 Source Mode 標籤 |
+| Comparison | 雷達圖跨公司多維度比較，支援三個類別切換，預設選取 ASUS + 前 2 名公司 |
+| Locations | 地區評分熱力圖，支援 Taiwan-only 與 Global Brands 加權計算顯示 |
 | Scraper | Chrome 狀態管理、啟動/停止爬蟲、List Type 篩選、公司選擇、即時 Log |
 | Settings | 公司管理（新增/移除）、建立 URL 清單（Office/Country/City/Scan）、查看清單內容、爬蟲設定 |
+
+### Source Mode 標籤顏色
+
+| 模式 | 顏色 | 說明 |
+|------|------|------|
+| office | 🟠 橙色 | 辦公室地點級別 |
+| country | 🟢 綠色 | 國家級別 |
+| city | 🔴 紅色 | 城市級別（ASUS 城市基準） |
+| scan | 🔵 藍色 | 全球掃描 |
+| Demo | ⚪ 灰色 | 靜態模式（GitHub Pages） |
 
 ### 爬蟲完成後自動刷新
 

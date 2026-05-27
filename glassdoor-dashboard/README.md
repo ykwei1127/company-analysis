@@ -79,11 +79,20 @@ Vue 3 + FastAPI 互動式 Dashboard，用於檢視爬取的 Glassdoor 評分數�
 
 | 頁面 | 功能 |
 |------|------|
-| **Overview** | 各公司 Global/Taiwan 評分 KPI，各評分維度長條圖，支援混合類型警告 |
-| **Comparison** | 雷達圖多公司比較，可選擇地區與公司 |
-| **Locations** | 地區評分熱力圖，按地點與公司過濾 |
+| **Overview** | 三個類別（R&D in Taiwan、Global Brands、Taiwan Tech OEMs）評分比較，頂部顯示 Source Mode 標籤（office/city/country/scan） |
+| **Comparison** | 雷達圖多維度比較，支援三個類別切換，ASUS 固定顯示在 legend 首位，預設選取 ASUS + 前 2 名公司 |
+| **Locations** | 地區評分熱力圖，Taiwan-only 顯示單一 Taiwan 資料，Global Brands 顯示區域加權計算 tooltip |
 | **Scraper** | Chrome 狀態管理、啟動/停止爬蟲、List Type 篩選、公司選擇、即時 Log |
-| **Settings** | 建立 URL 清單（Office/Country/City/Scan）、公司管理、查看清單內容、Scraper Config |
+| **Settings** | 建立 URL 清單（Office/Country/City/Scan）、公司管理、URL List 顯示 Source 欄位、Scraper Config |
+
+### Source Mode 標籤顏色對照
+
+- 🔴 **city**（紅色）- 城市級別匹配
+- 🟢 **country**（綠色）- 國家級別
+- 🟠 **office**（橙色）- 辦公室地點
+- 🔵 **scan**（藍色）- 全球掃描
+- ⚪ **Demo**（灰色）- 靜態模式（GitHub Pages）
+- 🟣 **Mixed**（紫色）- 混合模式（多種來源）
 
 ---
 
@@ -217,9 +226,9 @@ glassdoor-dashboard/
 
 | 頁面 | 看什麼 |
 |------|--------|
-| **Overview** | 各公司整體評分排名，頂部 run 下拉切換不同次結果 |
-| **Comparison** | 選公司 + 地區 → 雷達圖比較各維度 |
-| **Locations** | 地區熱力圖，哪個城市哪家公司分高 |
+| **Overview** | 三個類別（R&D in Taiwan、Global Brands、Taiwan Tech OEMs）評分排名與比較 |
+| **Comparison** | 雷達圖多維度比較，支援類別切換，預設 ASUS + 前 2 名 |
+| **Locations** | 地區熱力圖，Taiwan-only 與 Global Brands 加權計算 |
 
 ---
 
@@ -227,11 +236,11 @@ glassdoor-dashboard/
 
 | 頁面 | 功能 |
 |------|------|
-| **Overview** | 各公司 Global 評分一覽，顯示 List Type 標籤，支援混合類型警告 |
-| **Comparison** | 雷達圖多公司比較，可選擇地區與公司 |
-| **Locations** | 地區評分熱力圖，按地點與公司過濾 |
-| **Scraper** | Chrome 狀態管理、啟動/停止爬蟲、**List Type 篩選**、公司選擇 |
-| **Settings** | 建立 URL 清單（Office/Country/Scan）、公司管理、查看清單內容、Scraper Config |
+| **Overview** | 三個類別（R&D in Taiwan、Global Brands、Taiwan Tech OEMs）評分一覽，頂部 Source Mode 標籤 |
+| **Comparison** | 雷達圖多公司比較，ASUS legend 首位，預設 3 公司 |
+| **Locations** | 地區熱力圖，Taiwan-only / Global Brands 加權顯示 |
+| **Scraper** | Chrome 狀態管理、啟動/停止爬蟲、List Type 篩選、公司選擇 |
+| **Settings** | URL 清單建立（Office/Country/City/Scan）、Source 欄位顯示、Scraper Config |
 
 ---
 
