@@ -11,6 +11,7 @@
 - **爬蟲完成後自動刷新 run 選單** — `ScraperPage.vue` 偵測到爬蟲停止後，自動呼叫 `fetchRuns()` 並切換到最新 run
 
 ### Fixed
+- **Scraper All Companies 自動補 ASUS** — `Companies` 留空時視為 all companies；若當前 URL list 沒有 ASUS 檔案（例如 `city` mode），scraper 會自動加入 `asus_office.json` baseline，避免結果漏掉 ASUS
 - **ASUS OVERALL / RANK KPI 顯示 `—`** — CSV 儲存的公司名為 `"Asus"`，前端 hardcode `'ASUS'` 導致比對失敗；改用 `.toLowerCase()` 比對 + `getCompanyColor()` case-insensitive helper
 - **雷達圖顏色全灰** — `COMPANY_COLORS['Asus']` 因大小寫找不到回傳 `'#555'`；`getCompanyColor()` 現在 fallback 到 palette 顏色
 - **Comparison 頁面初始不選任何公司** — `DEFAULT_SELECTED = ['ASUS']` 從不匹配；改為 `loadData()` 完成後動態初始化 `selectedCompanies`

@@ -121,7 +121,11 @@
     <el-card>
       <template #header><span style="font-weight: 600">Company Summary</span></template>
       <el-table :data="filteredCompanies" stripe style="width: 100%" :default-sort="{ prop: 'overall', order: 'descending' }">
-        <el-table-column prop="rank" label="#" width="45" align="center" sortable />
+        <el-table-column prop="rank" label="#" width="45" align="center" sortable>
+          <template #default="{ row }">
+            {{ row.rank > 0 ? row.rank : '—' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="company" label="Company" min-width="120" sortable>
           <template #default="{ row }">
             <span v-if="row.company === 'ASUS'" class="asus-star">★</span>
@@ -140,13 +144,27 @@
             <span v-else>—</span>
           </template>
         </el-table-column>
-        <el-table-column prop="overall" label="Overall" min-width="70" align="center" sortable />
-        <el-table-column prop="culture" label="Culture" min-width="70" align="center" sortable />
-        <el-table-column prop="wlb" label="WLB" min-width="60" align="center" sortable />
-        <el-table-column prop="salary" label="Salary" min-width="60" align="center" sortable />
-        <el-table-column prop="career" label="Career" min-width="60" align="center" sortable />
-        <el-table-column prop="diversity" label="D&I" min-width="55" align="center" sortable />
-        <el-table-column prop="management" label="Mgmt" min-width="60" align="center" sortable />
+        <el-table-column prop="overall" label="Overall" min-width="70" align="center" sortable>
+          <template #default="{ row }">{{ formatScore(row.overall) }}</template>
+        </el-table-column>
+        <el-table-column prop="culture" label="Culture" min-width="70" align="center" sortable>
+          <template #default="{ row }">{{ formatScore(row.culture) }}</template>
+        </el-table-column>
+        <el-table-column prop="wlb" label="WLB" min-width="60" align="center" sortable>
+          <template #default="{ row }">{{ formatScore(row.wlb) }}</template>
+        </el-table-column>
+        <el-table-column prop="salary" label="Salary" min-width="60" align="center" sortable>
+          <template #default="{ row }">{{ formatScore(row.salary) }}</template>
+        </el-table-column>
+        <el-table-column prop="career" label="Career" min-width="60" align="center" sortable>
+          <template #default="{ row }">{{ formatScore(row.career) }}</template>
+        </el-table-column>
+        <el-table-column prop="diversity" label="D&I" min-width="55" align="center" sortable>
+          <template #default="{ row }">{{ formatScore(row.diversity) }}</template>
+        </el-table-column>
+        <el-table-column prop="management" label="Mgmt" min-width="60" align="center" sortable>
+          <template #default="{ row }">{{ formatScore(row.management) }}</template>
+        </el-table-column>
         <el-table-column prop="recommend" label="Recommend%" min-width="95" align="center" sortable>
           <template #default="{ row }">
             {{ row.recommend != null ? row.recommend.toFixed(0) + '%' : '—' }}
@@ -237,7 +255,32 @@ interface AsusRegionData {
   asusGap: number // vs average
 }
 
-const filteredCompanies = computed(() => companies.value)
+function createPlaceholderCompany(company: string): CompanyOverview {
+  return {
+    company,
+    rank: 0,
+    overall: null,
+    culture: null,
+    wlb: null,
+    salary: null,
+    career: null,
+    diversity: null,
+    management: null,
+    recommend: null,
+    ceo_approval: null,
+    total_reviews: null,
+    source_mode: 'unknown',
+  }
+}
+
+const filteredCompanies = computed(() => {
+  const categoryCompanies = categoryStore.currentCategory?.companies || []
+  const byName = new Map(
+    companies.value.map(company => [company.company.toLowerCase(), company] as const)
+  )
+
+  return categoryCompanies.map(name => byName.get(name.toLowerCase()) || createPlaceholderCompany(name))
+})
 
 const asusRegionData = computed<AsusRegionData[]>(() => {
   return regionData.value.map(region => {
@@ -278,7 +321,9 @@ const asusRank = computed(() => {
 })
 
 const topCompany = computed(() => {
-  const sorted = [...filteredCompanies.value].sort((a, b) => (b.overall || 0) - (a.overall || 0))
+  const sorted = [...filteredCompanies.value]
+    .filter(c => c.overall != null)
+    .sort((a, b) => (b.overall || 0) - (a.overall || 0))
   return sorted[0]?.company ?? '—'
 })
 
@@ -288,6 +333,10 @@ function getScoreClass(score: number): string {
   if (score >= 3.7) return 'average'
   if (score >= 3.3) return 'below-average'
   return 'poor'
+}
+
+function formatScore(score: number | null | undefined): string {
+  return score != null ? score.toFixed(2) : '—'
 }
 
 const barOption = computed(() => {
@@ -322,7 +371,8 @@ const barOption = computed(() => {
     series: [{
       type: 'bar',
       data: sorted.map(c => ({
-        value: c.overall || 0,
+        value: c.overall ?? 0,
+        displayValue: c.overall,
         itemStyle: { color: getCompanyColor(c.company) },
       })),
       barWidth: '50%',
@@ -331,7 +381,7 @@ const barOption = computed(() => {
         position: 'top',
         color: textColor,
         fontSize: 11,
-        formatter: (p: any) => p.value?.toFixed(2),
+        formatter: (p: any) => p.data?.displayValue != null ? p.data.displayValue.toFixed(2) : '—',
       },
     }],
   }

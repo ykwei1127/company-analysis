@@ -938,6 +938,18 @@ def main():
 
     include_baseline = (task == 'baseline') or (getattr(config, 'INCLUDE_BASELINE', False) if config else False)
     baseline_file = 'data/asus_office.json'
+    wants_all_companies = company_filter is None
+    wants_asus = wants_all_companies or any(c.strip().lower() == 'asus' for c in (company_filter or []))
+    has_asus_file_selected = any(
+        os.path.basename(f).lower() in ('asus_office.json', 'asus_country.json')
+        for f in matched_files
+    )
+    if task == 'matched' and wants_asus and not has_asus_file_selected:
+        include_baseline = True
+        if wants_all_companies:
+            print("[INFO] All companies 模式自動加入 ASUS baseline")
+        else:
+            print("[INFO] 已選 ASUS，使用 baseline 補抓 ASUS 資料")
     # CLI --ports overrides config
     if args.ports:
         parallel_ports = [int(p.strip()) for p in args.ports.split(',')]

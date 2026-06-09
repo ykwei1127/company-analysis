@@ -142,11 +142,37 @@ function getCompanyColor(name: string): string {
   return entry?.[1] ?? '#409eff'
 }
 
-const companyNames = computed(() => companies.value.map(c => c.company))
+function createPlaceholderCompany(company: string): CompanyOverview {
+  return {
+    company,
+    rank: 0,
+    overall: null,
+    culture: null,
+    wlb: null,
+    salary: null,
+    career: null,
+    diversity: null,
+    management: null,
+    recommend: null,
+    ceo_approval: null,
+    total_reviews: null,
+    source_mode: 'unknown',
+  }
+}
+
+const displayCompanies = computed(() => {
+  const categoryCompanies = categoryStore.currentCategory?.companies || []
+  const byName = new Map(
+    companies.value.map(company => [company.company.toLowerCase(), company] as const)
+  )
+  return categoryCompanies.map(name => byName.get(name.toLowerCase()) || createPlaceholderCompany(name))
+})
+
+const companyNames = computed(() => displayCompanies.value.map(c => c.company))
 
 // Sort companies with ASUS first for legend display
 const sortedCompanies = computed(() => {
-  const list = [...companies.value]
+  const list = [...displayCompanies.value]
   const asusIndex = list.findIndex(c => c.company === 'ASUS')
   if (asusIndex > 0) {
     const asus = list.splice(asusIndex, 1)[0]
@@ -156,7 +182,11 @@ const sortedCompanies = computed(() => {
 })
 
 const visibleCompanies = computed(() =>
-  companies.value.filter(c => selectedCompanies.value.includes(c.company))
+  displayCompanies.value.filter(c => selectedCompanies.value.includes(c.company))
+)
+
+const radarCompanies = computed(() =>
+  visibleCompanies.value.filter(c => DIMS.some(d => c[d] != null))
 )
 
 // Get default selected companies based on category
@@ -169,7 +199,7 @@ const getDefaultSelected = () => {
   const result = ['ASUS']
 
   // Get other companies with data, sorted by overall rating (descending)
-  const otherCompanies = companies.value
+  const otherCompanies = displayCompanies.value
     .filter(c => c.company !== 'ASUS' && c.overall != null)
     .sort((a, b) => (b.overall || 0) - (a.overall || 0))
     .slice(0, 2)
@@ -237,7 +267,7 @@ const radarOption = computed(() => {
     },
     series: [{
       type: 'radar',
-      data: visibleCompanies.value.map(c => ({
+      data: radarCompanies.value.map(c => ({
         name: c.company,
         value: DIMS.map(d => getRadarValue(c, d)),
         lineStyle: { color: getCompanyColor(c.company), width: 2 },
@@ -251,8 +281,8 @@ const radarOption = computed(() => {
 })
 
 const gapData = computed(() => {
-  const a = companies.value.find(c => c.company === companyA.value)
-  const b = companies.value.find(c => c.company === companyB.value)
+  const a = displayCompanies.value.find(c => c.company === companyA.value)
+  const b = displayCompanies.value.find(c => c.company === companyB.value)
   if (!a || !b) return []
   return DIMS.map(key => ({
     dimension: DIMENSION_LABELS[key],
@@ -268,7 +298,7 @@ async function loadData() {
   companies.value = data.companies || []
 
   // Set default selected companies based on category
-  const available: string[] = companies.value.map((c: CompanyOverview) => c.company)
+  const available: string[] = displayCompanies.value.map((c: CompanyOverview) => c.company)
   const defaults = getDefaultSelected()
   const matched = available.filter((n: string) =>
     defaults.some(d => d.toLowerCase() === n.toLowerCase())
