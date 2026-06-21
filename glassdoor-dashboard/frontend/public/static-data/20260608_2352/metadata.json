@@ -4,10 +4,6 @@
   ],
   "companies": [
     {
-      "name": "ASUS",
-      "mode": "city"
-    },
-    {
       "name": "AU Optronics",
       "mode": "city"
     },

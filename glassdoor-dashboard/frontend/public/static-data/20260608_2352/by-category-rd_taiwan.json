@@ -3,8 +3,23 @@
   "category_name": "R&D in Taiwan",
   "companies": [
     {
+      "company": "ASUS",
+      "total_reviews": 0,
+      "source_mode": "no_data",
+      "overall": null,
+      "culture": null,
+      "wlb": null,
+      "salary": null,
+      "career": null,
+      "diversity": null,
+      "management": null,
+      "recommend": null,
+      "ceo_approval": null,
+      "rank": 1
+    },
+    {
       "company": "Google",
-      "total_reviews": 48729,
+      "total_reviews": 48663,
       "source_mode": "city",
       "overall": 4.4,
       "culture": 4.3,
@@ -14,8 +29,8 @@
       "diversity": 4.4,
       "management": 3.9,
       "recommend": 87.04,
-      "ceo_approval": 82.99,
-      "rank": 1
+      "ceo_approval": 82.0,
+      "rank": 2
     },
     {
       "company": "MSI",
@@ -30,7 +45,7 @@
       "management": 3.33,
       "recommend": 76.49,
       "ceo_approval": 91.54,
-      "rank": 2
+      "rank": 3
     },
     {
       "company": "Acer",
@@ -45,11 +60,11 @@
       "management": 2.87,
       "recommend": 49.48,
       "ceo_approval": 69.04,
-      "rank": 3
+      "rank": 4
     },
     {
       "company": "Trend Micro",
-      "total_reviews": 2771,
+      "total_reviews": 2772,
       "source_mode": "city",
       "overall": 3.7,
       "culture": 4.0,
@@ -58,23 +73,8 @@
       "career": 3.72,
       "diversity": 3.98,
       "management": 3.25,
-      "recommend": 74.48,
+      "recommend": 74.35,
       "ceo_approval": 72.26,
-      "rank": 4
-    },
-    {
-      "company": "ASUS",
-      "total_reviews": 2567,
-      "source_mode": "city",
-      "overall": 3.66,
-      "culture": 3.18,
-      "wlb": 3.45,
-      "salary": 3.3,
-      "career": 3.27,
-      "diversity": 3.3,
-      "management": 2.86,
-      "recommend": 61.74,
-      "ceo_approval": 84.57,
       "rank": 5
     }
   ],

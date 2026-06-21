@@ -14,6 +14,12 @@
     },
     {
       "name": "ASUS",
+      "file": "asus_city.json",
+      "mode": "city",
+      "entries": 29
+    },
+    {
+      "name": "ASUS",
       "file": "asus_country.json",
       "mode": "country",
       "entries": 23
