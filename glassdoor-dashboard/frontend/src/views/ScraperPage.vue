@@ -120,13 +120,59 @@
         </div>
       </div>
     </el-card>
+
+    <!-- Deploy Section -->
+    <el-card style="margin-top: 16px">
+      <template #header>
+        <div class="card-header">
+          <span>更新並部署靜態網站</span>
+          <el-tag v-if="deployRunning" type="warning" size="small" effect="dark">Running</el-tag>
+          <el-tag v-else-if="deploySuccess === true" type="success" size="small">Done</el-tag>
+          <el-tag v-else-if="deploySuccess === false" type="danger" size="small">Failed</el-tag>
+        </div>
+      </template>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
+        <el-button
+          type="primary"
+          size="small"
+          @click="handleExport"
+          :loading="exportRunning"
+          :disabled="STATIC_MODE || deployRunning || exportRunning"
+        >
+          Step 1: 匯出靜態資料
+        </el-button>
+        <el-button
+          type="success"
+          size="small"
+          @click="handleDeploy"
+          :loading="deployRunning"
+          :disabled="STATIC_MODE || deployRunning || exportRunning"
+        >
+          Step 2: 建置並推送到 GitHub Pages
+        </el-button>
+        <el-button
+          size="small"
+          type="danger"
+          plain
+          @click="handleStopDeploy"
+          :disabled="STATIC_MODE || (!deployRunning && !exportRunning)"
+        >
+          Stop
+        </el-button>
+      </div>
+      <div class="log-container" v-if="deployLogs.length > 0">
+        <div v-for="(line, i) in deployLogs" :key="i" class="log-line" :class="logClass(line)">
+          {{ line }}
+        </div>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { InfoFilled, Refresh } from '@element-plus/icons-vue'
-import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus, launchChrome, closeAllChrome, getCompanies } from '../api'
+import { getScraperStatus, startScraper, stopScraper, checkLogin, getChromeStatus, launchChrome, closeAllChrome, getCompanies, startExport, startDeploy, getDeployStatus, stopDeployProcess } from '../api'
 import { useDashboardStore } from '../stores/dashboard'
 
 const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
@@ -403,7 +449,88 @@ onMounted(async () => {
   }).catch(() => {})
 })
 
-onUnmounted(() => { stopPolling(); stopElapsedTimer() })
+onUnmounted(() => { stopPolling(); stopElapsedTimer(); stopDeployPolling() })
+
+// ── Deploy / Export ─────────────────────────────────────────────────────────
+const exportRunning = ref(false)
+const deployRunning = ref(false)
+const deployLogs = ref<string[]>([])
+const deploySuccess = ref<boolean | null>(null)
+let deployPollTimer: ReturnType<typeof setInterval> | null = null
+
+function stopDeployPolling() {
+  if (deployPollTimer) { clearInterval(deployPollTimer); deployPollTimer = null }
+}
+
+function startDeployPolling() {
+  stopDeployPolling()
+  deployPollTimer = setInterval(async () => {
+    try {
+      const { data } = await getDeployStatus()
+      if (!data) return
+      const combined: string[] = []
+      if (data.export.logs?.length) {
+        combined.push('── export_static.py ──', ...data.export.logs)
+      }
+      if (data.deploy.logs?.length) {
+        combined.push('── npm run deploy ──', ...data.deploy.logs)
+      }
+      deployLogs.value = combined.slice(-200)
+      exportRunning.value = data.export.running
+      deployRunning.value = data.deploy.running
+      const finished = !data.export.running && !data.deploy.running
+      if (finished) {
+        stopDeployPolling()
+        // success = both steps succeeded (or only one was run and succeeded)
+        const expOk = data.export.success === null ? true : data.export.success
+        const depOk = data.deploy.success === null ? true : data.deploy.success
+        deploySuccess.value = expOk && depOk
+      }
+    } catch { /* ignore */ }
+  }, 2000)
+}
+
+async function handleExport() {
+  deployLogs.value = []
+  deploySuccess.value = null
+  try {
+    const { data } = await startExport()
+    if (data?.error) {
+      deployLogs.value = [data.error]
+      return
+    }
+    exportRunning.value = true
+    startDeployPolling()
+  } catch (e: any) {
+    deployLogs.value = [`Failed to start export: ${e.message}`]
+  }
+}
+
+async function handleDeploy() {
+  deployLogs.value = []
+  deploySuccess.value = null
+  try {
+    const { data } = await startDeploy()
+    if (data?.error) {
+      deployLogs.value = [data.error]
+      return
+    }
+    deployRunning.value = true
+    startDeployPolling()
+  } catch (e: any) {
+    deployLogs.value = [`Failed to start deploy: ${e.message}`]
+  }
+}
+
+async function handleStopDeploy() {
+  try {
+    await stopDeployProcess()
+    exportRunning.value = false
+    deployRunning.value = false
+    stopDeployPolling()
+    deployLogs.value.push('[SYSTEM] Stopped by user')
+  } catch { /* ignore */ }
+}
 </script>
 
 <style scoped>

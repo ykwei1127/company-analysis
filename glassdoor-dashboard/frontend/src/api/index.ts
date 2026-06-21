@@ -74,3 +74,9 @@ export const runFinderScan = (_companies?: string[]) => STATIC_MODE ? noop() : a
 export const getFinderStatus = () => STATIC_MODE ? noop() : api.get('/settings/finder/status')
 export const stopFinder = () => STATIC_MODE ? noop() : api.post('/settings/finder/stop')
 
+// Deploy — not available in static mode
+export const startExport = () => STATIC_MODE ? noop() : api.post('/deploy/export')
+export const startDeploy = () => STATIC_MODE ? noop() : api.post('/deploy/deploy')
+export const getDeployStatus = () => STATIC_MODE ? noop() : api.get('/deploy/status')
+export const stopDeployProcess = () => STATIC_MODE ? noop() : api.post('/deploy/stop')
+
