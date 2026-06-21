@@ -67,8 +67,14 @@ class GlassdoorScraper:
         except Exception:
             return False
 
-    def _wait_if_blocked(self, context='', timeout=300):
-        """If Cloudflare block is detected, pause and wait for user to manually pass verification.
+    def _wait_if_blocked(self, context='', timeout=300, auto_refresh_interval=15):
+        """If Cloudflare block is detected, automatically refresh the page periodically
+        until unblocked or timeout is reached.
+
+        Args:
+            context: descriptive label for logging
+            timeout: total seconds before giving up on this port
+            auto_refresh_interval: seconds between automatic page refreshes (default 15s)
 
         Returns:
             True if page recovered (or was never blocked), False if timed out.
@@ -76,21 +82,29 @@ class GlassdoorScraper:
         if not self._is_blocked():
             return True
         port = self._port
-        msg = f"[BLOCKED] Port {port} 被 Cloudflare 攔截（{context}），請手動通過驗證..."
+        msg = f"[BLOCKED] Port {port} 被 Cloudflare 攔截（{context}），將每 {auto_refresh_interval}s 自動刷新頁面..."
         self._log(msg)
         print(msg, flush=True)
         wait_count = 0
+        refresh_count = 0
         while True:
-            time.sleep(5)  # Check more frequently (was 10s)
+            time.sleep(5)
             wait_count += 1
             elapsed = wait_count * 5
 
-            # Refresh page state by getting current URL and title
             try:
-                current_url = self.driver.current_url
-                # Refresh page source to detect if user manually passed verification
+                # Auto-refresh every auto_refresh_interval seconds
+                if elapsed % auto_refresh_interval == 0:
+                    refresh_count += 1
+                    refresh_msg = f"[BLOCKED] Port {port} 自動刷新頁面（第 {refresh_count} 次，已等待 {elapsed}s）..."
+                    self._log(refresh_msg)
+                    print(refresh_msg, flush=True)
+                    self.driver.refresh()
+                    # Give the page a moment to start loading after refresh
+                    time.sleep(3)
+
                 if not self._is_blocked():
-                    msg = f"[BLOCKED] Port {port} 已恢復，繼續抓取"
+                    msg = f"[BLOCKED] Port {port} 已恢復（刷新 {refresh_count} 次後），繼續抓取"
                     self._log(msg)
                     print(msg, flush=True)
                     return True
@@ -102,13 +116,6 @@ class GlassdoorScraper:
                 self._log(msg)
                 print(msg, flush=True)
                 return False
-
-            if wait_count % 12 == 0:  # Log every 60s (was every 60s but now more frequent checks)
-                msg = f"[BLOCKED] Port {port} 仍被攔截，已等待 {elapsed}s..."
-                self._log(msg)
-                print(msg, flush=True)
-                # Hint to user
-                print(f"  💡 Tip: Please check Chrome window on port {port} and complete the CAPTCHA/verification if needed.")
 
     def extract_rating_data(self, url, company_name):
         """
@@ -620,11 +627,11 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
     # Skip baseline if asus_office.json or asus_country.json is already in matched_files
     # (avoids scraping ASUS twice)
     asus_in_matched = any(
-        os.path.basename(f) in ('asus_office.json', 'asus_country.json')
+        os.path.basename(f) in ('asus_office.json', 'asus_country.json', 'asus_city.json')
         for f in matched_files
     )
     if include_baseline and asus_in_matched:
-        print("[INFO] asus_office.json/asus_country.json 已在 matched files 中，略過 baseline 避免重複")
+        print("[INFO] asus_office.json/asus_country.json/asus_city.json 已在 matched files 中，略過 baseline 避免重複")
         include_baseline = False
 
     if include_baseline and os.path.exists(baseline_file):
@@ -941,7 +948,7 @@ def main():
     wants_all_companies = company_filter is None
     wants_asus = wants_all_companies or any(c.strip().lower() == 'asus' for c in (company_filter or []))
     has_asus_file_selected = any(
-        os.path.basename(f).lower() in ('asus_office.json', 'asus_country.json')
+        os.path.basename(f).lower() in ('asus_office.json', 'asus_country.json', 'asus_city.json')
         for f in matched_files
     )
     if task == 'matched' and wants_asus and not has_asus_file_selected:
@@ -979,11 +986,11 @@ def main():
 
             if include_baseline and os.path.exists(baseline_file):
                 asus_in_files = any(
-                    os.path.basename(f) in ('asus_office.json', 'asus_country.json')
+                    os.path.basename(f) in ('asus_office.json', 'asus_country.json', 'asus_city.json')
                     for f in matched_files
                 )
                 if asus_in_files:
-                    print("[INFO] asus_office.json/asus_country.json 已在 URL list files 中，略過 baseline 避免重複")
+                    print("[INFO] asus_office.json/asus_country.json/asus_city.json 已在 URL list files 中，略過 baseline 避免重複")
                 else:
                     print(f"\n[INCLUDE_BASELINE=True] 抓取基準公司 ASUS：{baseline_file}\n")
                     data += scraper.scrape_from_baseline_json(baseline_file, company_name='ASUS')
