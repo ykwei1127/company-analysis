@@ -561,20 +561,31 @@ def main():
         shutil.copytree(DATA_DIR, STATIC_DATA_DIR)
         
         # Create index.json for the Settings page to list available files
+        # Use same logic as backend settings.py to generate display names
+        _valid_suffixes = ("_office.json", "_country.json", "_city.json", "_scan.json")
         data_files = []
         for json_file in sorted(DATA_DIR.glob("*.json")):
-            # Parse filename to extract company name and mode
-            # Expected format: {company}_{mode}.json or {company}-{location}.json
-            stem = json_file.stem
-            parts = stem.rsplit('_', 1)
-            if len(parts) == 2:
-                name, mode = parts
+            basename = json_file.name
+            # Only include known URL list files (skip locations, etc.)
+            if not any(basename.endswith(s) for s in _valid_suffixes):
+                continue
+            # Derive mode from suffix (same as backend)
+            if basename.endswith("_office.json"):
+                mode = "office"
+            elif basename.endswith("_country.json"):
+                mode = "country"
+            elif basename.endswith("_city.json"):
+                mode = "city"
             else:
-                name = stem
-                mode = "unknown"
-            
-            # Try to normalize company name
-            normalized_name = normalize_company_name(name.replace('-', ' '))
+                mode = "scan"
+            # Derive display name from filename (same as backend: strip suffix, replace _ with space, title case)
+            normalized_name = (basename
+                .replace("_office.json", "")
+                .replace("_country.json", "")
+                .replace("_city.json", "")
+                .replace("_scan.json", "")
+                .replace("_", " ")
+                .title())
             
             # Count entries in the file
             try:

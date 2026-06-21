@@ -58,15 +58,23 @@ export const getChromeStatus = () => STATIC_MODE ? noop() : api.get('/scraper/ch
 export const launchChrome = (_port: number) => STATIC_MODE ? noop() : api.post('/scraper/launch-chrome', null, { params: { port: _port } })
 export const closeAllChrome = () => STATIC_MODE ? noop() : api.post('/scraper/close-chrome')
 
-// Settings — not available in static mode
+// Settings — read-only in static mode (load from pre-exported static files)
 export const getConfig = () => STATIC_MODE ? noop() : api.get('/settings/config')
 export const updateConfig = (_payload: any) => STATIC_MODE ? noop() : api.post('/settings/config', _payload)
-export const getCompanies = () => STATIC_MODE ? Promise.resolve({ data: { companies: [] } }) : api.get('/settings/companies')
+export const getCompanies = () =>
+  STATIC_MODE
+    ? staticGet(`${STATIC_BASE}/data/index.json`)
+    : api.get('/settings/companies')
 export const removeCompany = (_filename: string) => STATIC_MODE ? noop() : api.delete(`/settings/companies/${_filename}`)
 export const getCompaniesToMatch = () => STATIC_MODE ? noop() : api.get('/settings/companies-to-match')
 export const addCompanyToMatch = (_name: string) => STATIC_MODE ? noop() : api.post('/settings/companies-to-match/add', null, { params: { name: _name } })
 export const removeCompanyToMatch = (_name: string) => STATIC_MODE ? noop() : api.post('/settings/companies-to-match/remove', null, { params: { name: _name } })
-export const getBaseline = (_file?: string) => STATIC_MODE ? noop() : api.get('/settings/baseline', { params: _file ? { file: _file } : undefined })
+export const getBaseline = (_file?: string) =>
+  STATIC_MODE
+    ? (_file
+        ? staticGet(`${STATIC_BASE}/data/${_file}`).then(r => ({ data: { locations: r.data } }))
+        : staticGet(`${STATIC_BASE}/data/asus_office.json`).then(r => ({ data: { locations: r.data } })))
+    : api.get('/settings/baseline', { params: _file ? { file: _file } : undefined })
 export const runFinderOffice = (_companies?: string[]) => STATIC_MODE ? noop() : api.post('/settings/finder/office', null, { params: { companies: _companies?.join(',') } })
 export const runFinderCountry = (_companies?: string[]) => STATIC_MODE ? noop() : api.post('/settings/finder/country', null, { params: { companies: _companies?.join(',') } })
 export const runFinderCity = (_companies?: string[]) => STATIC_MODE ? noop() : api.post('/settings/finder/city', null, { params: { companies: _companies?.join(',') } })
