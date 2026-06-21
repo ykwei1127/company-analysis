@@ -1,0 +1,232 @@
+{
+  "companies": [
+    {
+      "name": "Acer Group",
+      "file": "acer_group_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Acer Group",
+      "file": "acer_group_office.json",
+      "mode": "office",
+      "entries": 5
+    },
+    {
+      "name": "Asus",
+      "file": "asus_city.json",
+      "mode": "city",
+      "entries": 29
+    },
+    {
+      "name": "Asus",
+      "file": "asus_country.json",
+      "mode": "country",
+      "entries": 23
+    },
+    {
+      "name": "Asus",
+      "file": "asus_office.json",
+      "mode": "office",
+      "entries": 29
+    },
+    {
+      "name": "Au Optronics",
+      "file": "au_optronics_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Au Optronics",
+      "file": "au_optronics_office.json",
+      "mode": "office",
+      "entries": 5
+    },
+    {
+      "name": "Compal Electronics",
+      "file": "compal_electronics_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Compal Electronics",
+      "file": "compal_electronics_office.json",
+      "mode": "office",
+      "entries": 5
+    },
+    {
+      "name": "Dell Technologies",
+      "file": "dell_technologies_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Dell Technologies",
+      "file": "dell_technologies_office.json",
+      "mode": "office",
+      "entries": 30
+    },
+    {
+      "name": "Delta Electronics",
+      "file": "delta_electronics_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Delta Electronics",
+      "file": "delta_electronics_office.json",
+      "mode": "office",
+      "entries": 9
+    },
+    {
+      "name": "Google",
+      "file": "google_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Google",
+      "file": "google_office.json",
+      "mode": "office",
+      "entries": 2
+    },
+    {
+      "name": "Hp Inc.",
+      "file": "hp_inc._city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Hp Inc.",
+      "file": "hp_inc._office.json",
+      "mode": "office",
+      "entries": 31
+    },
+    {
+      "name": "Inventec",
+      "file": "inventec_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Inventec",
+      "file": "inventec_office.json",
+      "mode": "office",
+      "entries": 3
+    },
+    {
+      "name": "Lenovo",
+      "file": "lenovo_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Lenovo",
+      "file": "lenovo_office.json",
+      "mode": "office",
+      "entries": 25
+    },
+    {
+      "name": "Msi",
+      "file": "msi_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Msi",
+      "file": "msi_office.json",
+      "mode": "office",
+      "entries": 2
+    },
+    {
+      "name": "Nvidia",
+      "file": "nvidia_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Nvidia",
+      "file": "nvidia_country.json",
+      "mode": "country",
+      "entries": 23
+    },
+    {
+      "name": "Nvidia",
+      "file": "nvidia_office.json",
+      "mode": "office",
+      "entries": 25
+    },
+    {
+      "name": "Pegatron",
+      "file": "pegatron_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Pegatron",
+      "file": "pegatron_office.json",
+      "mode": "office",
+      "entries": 3
+    },
+    {
+      "name": "Quanta Computer",
+      "file": "quanta_computer_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Quanta Computer",
+      "file": "quanta_computer_office.json",
+      "mode": "office",
+      "entries": 6
+    },
+    {
+      "name": "Trend Micro Inc.",
+      "file": "trend_micro_inc._city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Trend Micro Inc.",
+      "file": "trend_micro_inc._office.json",
+      "mode": "office",
+      "entries": 16
+    },
+    {
+      "name": "Tsmc",
+      "file": "tsmc_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Tsmc",
+      "file": "tsmc_office.json",
+      "mode": "office",
+      "entries": 4
+    },
+    {
+      "name": "Wistron",
+      "file": "wistron_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Wistron",
+      "file": "wistron_office.json",
+      "mode": "office",
+      "entries": 7
+    },
+    {
+      "name": "Wiwynn",
+      "file": "wiwynn_city.json",
+      "mode": "city",
+      "entries": 24
+    },
+    {
+      "name": "Wiwynn",
+      "file": "wiwynn_office.json",
+      "mode": "office",
+      "entries": 2
+    }
+  ]
+}

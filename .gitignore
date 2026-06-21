@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+~$*.xlsx
+.DS_Store
+logs/
+output/
+node_modules/
+glassdoor-dashboard/frontend/node_modules/
+glassdoor-dashboard/frontend/package-lock.json
+glassdoor-dashboard/frontend/dist/
+glassdoor-dashboard/frontend/src/auto-imports.d.ts
+glassdoor-dashboard/frontend/src/components.d.ts
+employer-brand-monitor/
+package-lock.json

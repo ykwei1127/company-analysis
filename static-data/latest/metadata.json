@@ -1,0 +1,79 @@
+{
+  "match_modes": [
+    "city"
+  ],
+  "companies": [
+    {
+      "name": "ASUS",
+      "mode": "city"
+    },
+    {
+      "name": "AU Optronics",
+      "mode": "city"
+    },
+    {
+      "name": "Acer Group",
+      "mode": "city"
+    },
+    {
+      "name": "Compal Electronics",
+      "mode": "city"
+    },
+    {
+      "name": "Dell Technologies",
+      "mode": "city"
+    },
+    {
+      "name": "Delta Electronics",
+      "mode": "city"
+    },
+    {
+      "name": "Google",
+      "mode": "city"
+    },
+    {
+      "name": "HP Inc.",
+      "mode": "city"
+    },
+    {
+      "name": "Inventec",
+      "mode": "city"
+    },
+    {
+      "name": "Lenovo",
+      "mode": "city"
+    },
+    {
+      "name": "MSI",
+      "mode": "city"
+    },
+    {
+      "name": "NVIDIA",
+      "mode": "city"
+    },
+    {
+      "name": "Pegatron",
+      "mode": "city"
+    },
+    {
+      "name": "Quanta Computer",
+      "mode": "city"
+    },
+    {
+      "name": "TSMC",
+      "mode": "city"
+    },
+    {
+      "name": "Trend Micro Inc.",
+      "mode": "city"
+    },
+    {
+      "name": "Wistron",
+      "mode": "city"
+    },
+    {
+      "name": "Wiwynn",
+      "mode": "city"
+    }
+  ]
+}

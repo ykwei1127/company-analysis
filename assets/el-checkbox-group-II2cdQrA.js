@@ -1,0 +1,1 @@
+import{P as c,b1 as h,bM as d}from"./index-_L58gXSw.js";const b=a=>a,p=({atEndEdge:a,atStartEdge:f,layout:u},i)=>{let n,l=0;const r=e=>e<0&&f.value||e>0&&a.value;return{hasReachedEdge:r,onWheel:e=>{c(n);let{deltaX:o,deltaY:t}=e;e.shiftKey&&t!==0&&(o=t,t=0);const s=u.value==="horizontal"?o:t;r(s)||(l+=s,!h()&&s!==0&&e.preventDefault(),n=d(()=>{i(l),l=0}))}}};export{b as m,p as u};

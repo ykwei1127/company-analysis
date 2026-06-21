@@ -1,0 +1,35 @@
+[
+  {
+    "location": "Global",
+    "country": "Global",
+    "page_heading": "Inventec",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Reviews-E13485.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Taiwan",
+    "country": "Taiwan",
+    "page_heading": "Inventec Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Taiwan-Reviews-EI_IE13485.0,8_IL.9,15_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Santa Clara, CA",
+    "country": "United States",
+    "page_heading": "Inventec",
+    "heading_is_generic": true,
+    "list_rating": 3.8,
+    "address": "Santa Clara, CA, 0, United States",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Santa-Clara-Reviews-EI_IE13485.0,8_IL.9,20_IC1147439.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

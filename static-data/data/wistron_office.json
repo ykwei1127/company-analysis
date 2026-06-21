@@ -1,0 +1,79 @@
+[
+  {
+    "location": "Global",
+    "country": "Global",
+    "page_heading": "Wistron",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Wistron-Reviews-E15218.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Taiwan",
+    "country": "Taiwan",
+    "page_heading": "Wistron Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Wistron-Taiwan-Reviews-EI_IE15218.0,7_IL.8,14_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Lake Forest, CA",
+    "country": "United States",
+    "page_heading": "Wistron",
+    "heading_is_generic": true,
+    "list_rating": null,
+    "address": "17 Spectrum Pointe Drive, Suite 507, Lake Forest, CA, 92630, United States",
+    "url": null,
+    "reviews_count": null,
+    "status": "no_review_url"
+  },
+  {
+    "location": "Rolling Meadows, IL",
+    "country": "United States",
+    "page_heading": "Wistron",
+    "heading_is_generic": true,
+    "list_rating": 3.8,
+    "address": "Rolling Meadows, IL, 0, United States",
+    "url": "https://www.glassdoor.com/Reviews/Wistron-Rolling-Meadows-Reviews-EI_IE15218.0,7_IL.8,23_IC1128962.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Shanghai, 23",
+    "country": "China",
+    "page_heading": "Wistron",
+    "heading_is_generic": true,
+    "list_rating": null,
+    "address": "Room 203, Building 21, No.2388 Chen Hang Rd, Pujiang Town, Minhang, Shanghai, 23, 201114, China",
+    "url": null,
+    "reviews_count": null,
+    "status": "no_review_url"
+  },
+  {
+    "location": "Taipei, TPQ",
+    "country": "Taiwan",
+    "page_heading": "Wistron",
+    "heading_is_generic": true,
+    "list_rating": 3.3,
+    "address": "32F, No. 93, Section 1, Xintai 5th Road, Xizhi District, Taipei, TPQ, 22175, Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Wistron-Taipei-Reviews-EI_IE15218.0,7_IL.8,14_IC3271041.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "location": "Wuhan, 12",
+    "country": "China",
+    "page_heading": "Wistron",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Building C21, Wuhan Best City, No.8, Huacheng Avenue, The East Lake High-tech Development Zone, Wuhan, 12, China",
+    "url": "https://www.glassdoor.com/Reviews/Wistron-Wuhan-Reviews-EI_IE15218.0,7_IL.8,13_IC2478891.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]
