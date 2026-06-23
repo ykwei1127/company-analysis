@@ -673,21 +673,40 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                 })
 
     # --- Build country-level fallback lookup table ---
+    # Scans ALL *_country.json and *_office.json in the data/ directory (not just
+    # matched_files), so fallback works even when the user only selected city files.
     # Maps (company_lower, country_lower) -> {'url': ..., 'mode': 'country'|'office'}
     # Priority: country entry > office entry with matching country > office Global entry
     _country_fallback: dict = {}  # (company_lower, country_lower) -> url
     _global_fallback: dict = {}   # company_lower -> url (Global office/country entry)
-    for f in matched_files:
-        basename = os.path.basename(f)
-        file_company = basename.replace('_office.json', '').replace('_scan.json', '').replace('_city.json', '').replace('_country.json', '').replace('_', ' ').title()
-        with open(f, encoding='utf-8') as _fh:
-            _entries_fb = json.load(_fh)
+
+    # Collect all country/office JSON files from the data/ directory.
+    # baseline_file is typically 'data/asus_office.json', so its parent is already 'data/'.
+    _data_dir = os.path.dirname(os.path.abspath(baseline_file))
+    if not os.path.isdir(_data_dir):
+        _data_dir = 'data'
+    _fallback_files = []
+    if os.path.isdir(_data_dir):
+        for _fn in os.listdir(_data_dir):
+            if _fn.endswith('_country.json') or _fn.endswith('_office.json'):
+                _fallback_files.append(os.path.join(_data_dir, _fn))
+    # Also include baseline_file itself (asus_office.json)
+    if os.path.exists(baseline_file) and baseline_file not in _fallback_files:
+        _fallback_files.append(baseline_file)
+
+    for _fb_file in _fallback_files:
+        _fb_basename = os.path.basename(_fb_file)
+        _fb_company = _fb_basename.replace('_office.json', '').replace('_country.json', '').replace('_', ' ').title()
+        try:
+            with open(_fb_file, encoding='utf-8') as _fh:
+                _entries_fb = json.load(_fh)
+        except Exception:
+            continue
         for _e in _entries_fb:
             if _e.get('status') != 'found' or not _e.get('url'):
                 continue
-            _c = (_e.get('company') or file_company).lower()
-            if basename.endswith('_country.json'):
-                # country entries: key = (company, baseline_country)
+            _c = (_e.get('company') or _fb_company).lower()
+            if _fb_basename.endswith('_country.json'):
                 _country = (_e.get('baseline_country') or _e.get('matched_city') or '').lower()
                 if _country and _country not in ('global', ''):
                     _key = (_c, _country)
@@ -696,8 +715,7 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                 if (_e.get('baseline_location') or '').lower() in ('global', '') or _country in ('global', ''):
                     if _c not in _global_fallback:
                         _global_fallback[_c] = {'url': _e['url'], 'mode': 'country'}
-            elif basename.endswith('_office.json'):
-                # office entries: use location/country field
+            elif _fb_basename.endswith('_office.json'):
                 _loc = (_e.get('location') or '').lower()
                 _cntry = (_e.get('country') or '').lower()
                 if _loc == 'global' or _cntry == 'global':
@@ -707,23 +725,6 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                     _key = (_c, _cntry)
                     if _key not in _country_fallback:
                         _country_fallback[_key] = {'url': _e['url'], 'mode': 'office'}
-    # Also consider baseline_file (asus_office.json) for Global fallback
-    if os.path.exists(baseline_file):
-        with open(baseline_file, encoding='utf-8') as _fh:
-            _entries_fb = json.load(_fh)
-        for _e in _entries_fb:
-            if _e.get('status') != 'found' or not _e.get('url'):
-                continue
-            _c = 'asus'
-            _loc = (_e.get('location') or '').lower()
-            _cntry = (_e.get('country') or '').lower()
-            if _loc == 'global' or _cntry == 'global':
-                if _c not in _global_fallback:
-                    _global_fallback[_c] = {'url': _e['url'], 'mode': 'office'}
-            elif _cntry and _cntry != 'global':
-                _key = (_c, _cntry)
-                if _key not in _country_fallback:
-                    _country_fallback[_key] = {'url': _e['url'], 'mode': 'office'}
 
     def _get_fallback(company: str, country: str):
         """Return fallback dict {url, mode} or None."""
