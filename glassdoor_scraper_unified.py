@@ -573,6 +573,7 @@ def _worker(port, task_queue, mode, headless, log_path=None, _progress=None):
                 if raw == 'BLOCKED_TIMEOUT':
                     data = 'BLOCKED_TIMEOUT'
                 else:
+                    data = None  # will be set below; initialize to avoid UnboundLocalError
                     sleep_sec = 0.5
                     # --- Country fallback: if page has no rating data, try fallback URL ---
                     fallback_info = task.get('fallback')
