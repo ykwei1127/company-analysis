@@ -447,10 +447,15 @@ class GlassdoorScraper:
 
         # Color coding for Source Mode column
         mode_colors = {
-            'city': 'CCE5FF',      # Light blue
-            'country': 'D4EDDA',    # Light green
-            'scan': 'FFF3CD',       # Light orange
-            'unknown': 'F8D7DA'     # Light red
+            'city': 'CCE5FF',               # Light blue
+            'country': 'D4EDDA',             # Light green
+            'office': 'E8D5F5',              # Light purple
+            'scan': 'FFF3CD',                # Light orange
+            'unknown': 'F8D7DA',             # Light red
+            'city+country_fb': 'B8D4F0',     # Darker blue (city with country fallback)
+            'city+office_fb': 'C8C8F0',      # Blue-purple (city with office fallback)
+            'office+country_fb': 'D4C8F5',   # Darker purple (office with country fallback)
+            'office+office_fb': 'C0A8E8',    # Deep purple (office with office fallback)
         }
 
         # Find Source Mode column index
@@ -460,13 +465,14 @@ class GlassdoorScraper:
                 source_mode_col = idx
                 break
 
-        # Apply colors to Source Mode column
+        # Apply colors to Source Mode column (prefix match for fallback variants)
         if source_mode_col:
             for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
                 cell = row[source_mode_col - 1]  # 0-indexed
-                mode = cell.value
-                if mode in mode_colors:
-                    cell.fill = PatternFill(start_color=mode_colors[mode], end_color=mode_colors[mode], fill_type='solid')
+                mode = cell.value or ''
+                color = mode_colors.get(mode) or mode_colors.get(mode.split('+')[0])
+                if color:
+                    cell.fill = PatternFill(start_color=color, end_color=color, fill_type='solid')
 
         # 居中對齊數據
         for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
@@ -568,19 +574,38 @@ def _worker(port, task_queue, mode, headless, log_path=None, _progress=None):
                     data = 'BLOCKED_TIMEOUT'
                 else:
                     sleep_sec = 0.5
-                    if raw:
-                        raw['Baseline Location'] = baseline_loc
-                        raw['Actual City'] = actual_city
-                        raw['Country'] = country
-                        raw['Review URL'] = url
-                        raw['Source Mode'] = src_mode
-                        if raw.get('Overall') is not None:
-                            sleep_sec = 1.5
-                        data = [raw]
-                    else:
-                        data = []
-                    _progress_fn(display_name)
-                    time.sleep(sleep_sec)
+                    # --- Country fallback: if page has no rating data, try fallback URL ---
+                    fallback_info = task.get('fallback')
+                    if raw and raw.get('Overall') is None and fallback_info:
+                        fb_url = fallback_info['url']
+                        fb_mode = fallback_info['mode']
+                        _log(f"  ↩ {baseline_loc} 無評分資料，嘗試 fallback ({fb_mode}): {fb_url}")
+                        time.sleep(0.5)
+                        fb_raw = scraper.extract_rating_data(fb_url, f"{display_name} [fb]")
+                        if fb_raw == 'BLOCKED_TIMEOUT':
+                            data = 'BLOCKED_TIMEOUT'
+                        else:
+                            if fb_raw and fb_raw.get('Overall') is not None:
+                                _log(f"  ✓ fallback 成功，Overall={fb_raw['Overall']}")
+                                raw = fb_raw
+                                src_mode = f"{src_mode}+{fb_mode}_fb"
+                                url = fb_url
+                            else:
+                                _log(f"  ⚠ fallback 也無評分資料，保留空值")
+                    if data != 'BLOCKED_TIMEOUT':
+                        if raw:
+                            raw['Baseline Location'] = baseline_loc
+                            raw['Actual City'] = actual_city
+                            raw['Country'] = country
+                            raw['Review URL'] = url
+                            raw['Source Mode'] = src_mode
+                            if raw.get('Overall') is not None:
+                                sleep_sec = 1.5
+                            data = [raw]
+                        else:
+                            data = []
+                        _progress_fn(display_name)
+                        time.sleep(sleep_sec)
             else:
                 data = []
 
@@ -646,6 +671,69 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                     'location_filter': _e['location'],
                 })
 
+    # --- Build country-level fallback lookup table ---
+    # Maps (company_lower, country_lower) -> {'url': ..., 'mode': 'country'|'office'}
+    # Priority: country entry > office entry with matching country > office Global entry
+    _country_fallback: dict = {}  # (company_lower, country_lower) -> url
+    _global_fallback: dict = {}   # company_lower -> url (Global office/country entry)
+    for f in matched_files:
+        basename = os.path.basename(f)
+        file_company = basename.replace('_office.json', '').replace('_scan.json', '').replace('_city.json', '').replace('_country.json', '').replace('_', ' ').title()
+        with open(f, encoding='utf-8') as _fh:
+            _entries_fb = json.load(_fh)
+        for _e in _entries_fb:
+            if _e.get('status') != 'found' or not _e.get('url'):
+                continue
+            _c = (_e.get('company') or file_company).lower()
+            if basename.endswith('_country.json'):
+                # country entries: key = (company, baseline_country)
+                _country = (_e.get('baseline_country') or _e.get('matched_city') or '').lower()
+                if _country and _country not in ('global', ''):
+                    _key = (_c, _country)
+                    if _key not in _country_fallback:
+                        _country_fallback[_key] = {'url': _e['url'], 'mode': 'country'}
+                if (_e.get('baseline_location') or '').lower() in ('global', '') or _country in ('global', ''):
+                    if _c not in _global_fallback:
+                        _global_fallback[_c] = {'url': _e['url'], 'mode': 'country'}
+            elif basename.endswith('_office.json'):
+                # office entries: use location/country field
+                _loc = (_e.get('location') or '').lower()
+                _cntry = (_e.get('country') or '').lower()
+                if _loc == 'global' or _cntry == 'global':
+                    if _c not in _global_fallback:
+                        _global_fallback[_c] = {'url': _e['url'], 'mode': 'office'}
+                elif _cntry and _cntry != 'global':
+                    _key = (_c, _cntry)
+                    if _key not in _country_fallback:
+                        _country_fallback[_key] = {'url': _e['url'], 'mode': 'office'}
+    # Also consider baseline_file (asus_office.json) for Global fallback
+    if os.path.exists(baseline_file):
+        with open(baseline_file, encoding='utf-8') as _fh:
+            _entries_fb = json.load(_fh)
+        for _e in _entries_fb:
+            if _e.get('status') != 'found' or not _e.get('url'):
+                continue
+            _c = 'asus'
+            _loc = (_e.get('location') or '').lower()
+            _cntry = (_e.get('country') or '').lower()
+            if _loc == 'global' or _cntry == 'global':
+                if _c not in _global_fallback:
+                    _global_fallback[_c] = {'url': _e['url'], 'mode': 'office'}
+            elif _cntry and _cntry != 'global':
+                _key = (_c, _cntry)
+                if _key not in _country_fallback:
+                    _country_fallback[_key] = {'url': _e['url'], 'mode': 'office'}
+
+    def _get_fallback(company: str, country: str):
+        """Return fallback dict {url, mode} or None."""
+        _c = company.lower()
+        _cntry = (country or '').lower()
+        if _cntry and _cntry not in ('global', 'unknown', ''):
+            fb = _country_fallback.get((_c, _cntry))
+            if fb:
+                return fb
+        return _global_fallback.get(_c)
+
     for f in matched_files:
         basename = os.path.basename(f)
         if basename.endswith('_country.json'):
@@ -667,11 +755,20 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                 continue
             _company = _e.get('company') or file_company
             _baseline_loc = _e.get('baseline_location') or _e.get('location') or _e.get('country', 'Unknown')
+            _entry_country = _e.get('baseline_country') or _e.get('country') or ''
+            # Attach fallback only for city/office modes (country mode already is country-level)
+            _fallback = None
+            if src_mode in ('city', 'office'):
+                _fb = _get_fallback(_company, _entry_country)
+                # Only use fallback if it's a different URL from the entry itself
+                if _fb and _fb['url'] != _e['url']:
+                    _fallback = _fb
             tasks_all.append({
                 'type': 'matched_entry',
                 'entry': _e,
                 'source_mode': src_mode,
                 'name': f"{_company} - {_baseline_loc}",
+                'fallback': _fallback,  # {'url': ..., 'mode': ...} or None
             })
 
     if not tasks_all:
