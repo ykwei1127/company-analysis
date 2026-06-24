@@ -921,10 +921,29 @@ class CompanyFinder:
         # 如果被 redirect 到其他頁則無效
         if f'_{code_type}{code}' not in final_url:
             return None, None, was_rate_limited
+        
+        # 驗證頁面內容是否包含正確的公司名稱（避免頁面重定向到錯誤內容）
+        page_valid = False
+        try:
+            page_title = self.driver.title.lower()
+            page_source = self.driver.page_source.lower()
+            # 檢查頁面標題或內容是否包含公司名稱
+            if slug.lower() in page_title or slug.lower() in page_source:
+                page_valid = True
+            # 特殊處理：如果頁面顯示的是其他公司，則無效
+            if 'aruba' in page_title or 'aruba' in page_source:
+                print(f"    ❌ 頁面被重定向到 Aruba，跳過")
+                return None, None, was_rate_limited
+        except Exception:
+            pass
+        
+        if not page_valid:
+            print(f"    ❌ 頁面內容驗證失敗，可能重定向到錯誤頁面")
+            return None, None, was_rate_limited
+        
         # 嘗試抓評論數
         count = None
         try:
-            page_source = self.driver.page_source
             m = re.search(r'(\d[\d,]+)\s*(?:Employee\s+)?Reviews?', page_source[:3000], re.IGNORECASE)
             if m:
                 count = int(m.group(1).replace(',', ''))
