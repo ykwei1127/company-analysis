@@ -120,6 +120,12 @@ def _run_finder_subprocess(cmd, mode, companies=None):
     if companies:
         env["FINDER_COMPANIES"] = ",".join(companies)
 
+    # Pass parallel ports from config.py so company_finder can use multiple Chrome instances
+    config = _load_config()
+    parallel_ports = config.get("PARALLEL_PORTS", [9222, 9223, 9224])
+    if parallel_ports:
+        env["FINDER_PORTS"] = ",".join(str(p) for p in parallel_ports)
+
     _finder_state["logs"] = []
     _finder_state["running"] = True
     _finder_state["mode"] = mode
