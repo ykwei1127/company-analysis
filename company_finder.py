@@ -53,6 +53,9 @@ class TeeLogger:
 # 全域設定
 # ============================================================
 CHROME_DEBUG_PORT = 9222
+# 多 port 平行設定：預設使用 [9222]，可透過環境變數 FINDER_PORTS 覆蓋
+# 例如：set FINDER_PORTS=9222,9223,9224
+CHROME_DEBUG_PORTS = [int(p.strip()) for p in os.environ.get('FINDER_PORTS', str(CHROME_DEBUG_PORT)).split(',') if p.strip()]
 BASELINE_FILE = 'data/asus_office.json'  # ASUS 辦公室 URL 清單
 
 # 比對模式：'city'（原始邏輯，用同國家城市 IC code）或 'country'（國家級 IN code）
@@ -1208,50 +1211,58 @@ def run_country(companies=None):
     import time as _time
     _total_start = _time.time()
 
-    finder = CompanyFinder(CHROME_DEBUG_PORT)
-    all_company_results = {}
+    # 多 port 平行模式
+    if len(CHROME_DEBUG_PORTS) > 1:
+        all_company_results = parallel_find(
+            CHROME_DEBUG_PORTS, 'country', companies_to_run,
+            baseline=baseline_found, log_ts=datetime.now().strftime('%Y%m%d_%H%M%S')
+        )
+    else:
+        finder = CompanyFinder(CHROME_DEBUG_PORT)
+        all_company_results = {}
 
-    try:
-        for company_entry in companies_to_run:
-            # 支援直接填字串（公司名）或完整 dict
-            if isinstance(company_entry, str):
-                company_config = finder.search_company(company_entry)
-                if not company_config:
-                    print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
-                    continue
-            else:
-                company_config = company_entry
-            company_name = company_config['name']
-            print(f"\n{'='*60}")
-            print(f"正在處理：{company_name}")
-            _t0 = _time.time()
+        try:
+            for company_entry in companies_to_run:
+                # 支援直接填字串（公司名）或完整 dict
+                if isinstance(company_entry, str):
+                    company_config = finder.search_company(company_entry)
+                    if not company_config:
+                        print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
+                        continue
+                else:
+                    company_config = company_entry
+                company_name = company_config['name']
+                print(f"\n{'='*60}")
+                print(f"正在處理：{company_name}")
+                _t0 = _time.time()
 
-            results = finder.match_by_country(company_config, baseline_found)
+                results = finder.match_by_country(company_config, baseline_found)
 
-            _elapsed = _time.time() - _t0
-            finder.print_match_results(results, company_name)
-            finder.save_results(results, company_name,
-                                output_file=f"data/{company_name.lower().replace(' ', '_')}_country.json")
-            print(f"  ⏱  {company_name} 耗時：{_elapsed:.0f}s")
-            all_company_results[company_name] = results
+                _elapsed = _time.time() - _t0
+                finder.print_match_results(results, company_name)
+                finder.save_results(results, company_name,
+                                    output_file=f"data/{company_name.lower().replace(' ', '_')}_country.json")
+                print(f"  ⏱  {company_name} 耗時：{_elapsed:.0f}s")
+                all_company_results[company_name] = results
 
-        # 彙整摘要
-        print(f"\n{'='*60}")
-        print("比對摘要：")
-        print(f"{'='*60}")
-        for company_name, results in all_company_results.items():
-            found = sum(1 for r in results if r['status'] == 'found')
-            print(f"  {company_name}: {found}/{len(results)} 個地區有 review")
+        except Exception as e:
+            print(f"\n錯誤：{e}")
+            import traceback; traceback.print_exc()
+        finally:
+            finder.close()
 
-    except Exception as e:
-        print(f"\n錯誤：{e}")
-        import traceback; traceback.print_exc()
-    finally:
-        _total = _time.time() - _total_start
-        print(f"\n{'='*60}")
-        print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
-        print(f"{'='*60}")
-        finder.close()
+    # 彙整摘要
+    print(f"\n{'='*60}")
+    print("比對摘要：")
+    print(f"{'='*60}")
+    for company_name, results in all_company_results.items():
+        found = sum(1 for r in results if r['status'] == 'found')
+        print(f"  {company_name}: {found}/{len(results)} 個地區有 review")
+
+    _total = _time.time() - _total_start
+    print(f"\n{'='*60}")
+    print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+    print(f"{'='*60}")
 
 
 def run_scan():
@@ -1284,35 +1295,42 @@ def run_scan():
     import time as _time
     _total_start = _time.time()
 
-    finder = CompanyFinder(CHROME_DEBUG_PORT)
+    # 多 port 平行模式
+    if len(CHROME_DEBUG_PORTS) > 1:
+        parallel_find(
+            CHROME_DEBUG_PORTS, 'scan', companies_to_run,
+            log_ts=datetime.now().strftime('%Y%m%d_%H%M%S')
+        )
+    else:
+        finder = CompanyFinder(CHROME_DEBUG_PORT)
+        try:
+            for company_entry in companies_to_run:
+                if isinstance(company_entry, str):
+                    company_config = finder.search_company(company_entry)
+                    if not company_config:
+                        print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
+                        continue
+                else:
+                    company_config = company_entry
+                company_name = company_config['name']
+                print(f"\n{'='*60}")
+                print(f"掃描：{company_name}")
 
-    try:
-        for company_entry in companies_to_run:
-            if isinstance(company_entry, str):
-                company_config = finder.search_company(company_entry)
-                if not company_config:
-                    print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
-                    continue
-            else:
-                company_config = company_entry
-            company_name = company_config['name']
-            print(f"\n{'='*60}")
-            print(f"掃描：{company_name}")
+                results = finder.scan_all_countries(company_config)
+                # 儲存完整掃描結果
+                finder.save_results(results, company_name,
+                                    output_file=f"data/{company_name.lower().replace(' ', '_')}_scan.json")
 
-            results = finder.scan_all_countries(company_config)
-            # 儲存完整掃描結果
-            finder.save_results(results, company_name,
-                                output_file=f"data/{company_name.lower().replace(' ', '_')}_scan.json")
+        except Exception as e:
+            print(f"\n錯誤：{e}")
+            import traceback; traceback.print_exc()
+        finally:
+            finder.close()
 
-    except Exception as e:
-        print(f"\n錯誤：{e}")
-        import traceback; traceback.print_exc()
-    finally:
-        _total = _time.time() - _total_start
-        print(f"\n{'='*60}")
-        print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
-        print(f"{'='*60}")
-        finder.close()
+    _total = _time.time() - _total_start
+    print(f"\n{'='*60}")
+    print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+    print(f"{'='*60}")
 
 
 def run_city():
@@ -1359,11 +1377,141 @@ def run_city():
     import time as _time
     _total_start = _time.time()
 
-    finder = CompanyFinder(CHROME_DEBUG_PORT)
-    all_company_results = {}
+    # 多 port 平行模式
+    if len(CHROME_DEBUG_PORTS) > 1:
+        all_company_results = parallel_find(
+            CHROME_DEBUG_PORTS, 'city', companies_to_run,
+            baseline=baseline_found, log_ts=datetime.now().strftime('%Y%m%d_%H%M%S')
+        )
+    else:
+        finder = CompanyFinder(CHROME_DEBUG_PORT)
+        all_company_results = {}
 
+        try:
+            for company_entry in companies_to_run:
+                if isinstance(company_entry, str):
+                    company_config = finder.search_company(company_entry)
+                    if not company_config:
+                        print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
+                        continue
+                else:
+                    company_config = company_entry
+                company_name = company_config['name']
+                print(f"\n{'='*60}")
+                print(f"正在處理：{company_name}")
+                _t0 = _time.time()
+
+                results = finder.match_against_baseline(company_config, baseline_found)
+
+                _elapsed = _time.time() - _t0
+                finder.print_match_results(results, company_name)
+                safe_name = company_name.lower().replace(' ', '_')
+                finder.save_results(results, company_name,
+                                    output_file=f"data/{safe_name}_city.json")
+                print(f"  ⏱  {company_name} 耗時：{_elapsed:.0f}s")
+                all_company_results[company_name] = results
+
+        except Exception as e:
+            print(f"\n錯誤：{e}")
+            import traceback; traceback.print_exc()
+        finally:
+            finder.close()
+
+    # 彙整摘要
+    print(f"\n{'='*60}")
+    print("比對摘要：")
+    print(f"{'='*60}")
+    for company_name, results in all_company_results.items():
+        found = sum(1 for r in results if r['status'] == 'found')
+        print(f"  {company_name}: {found}/{len(results)} 個地區有 review")
+
+    _total = _time.time() - _total_start
+    print(f"\n{'='*60}")
+    print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+    print(f"{'='*60}")
+
+
+# ============================================================
+# Parallel URL-list finding across multiple Chrome ports
+# ============================================================
+
+def _finder_worker(port, mode, task_queue, log_path=None):
+    """Single Chrome port worker: creates one CompanyFinder and processes tasks."""
+    import io
+    import threading
+    import queue as queue_mod
+
+    buf = io.StringIO()
+    _lock = threading.Lock()
+    _log_file = None
+    if log_path:
+        os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        _log_file = open(log_path, 'w', encoding='utf-8')
+
+    def _log(msg='', end='\n'):
+        s = str(msg) + end
+        with _lock:
+            buf.write(s)
+            if _log_file:
+                _log_file.write(s)
+                _log_file.flush()
+
+    finder = CompanyFinder(port)
+    results_collected = {}
     try:
-        for company_entry in companies_to_run:
+        while True:
+            try:
+                task = task_queue.get_nowait()
+            except queue_mod.Empty:
+                break
+
+            company_config = task['company_config']
+            company_name = company_config['name']
+            baseline = task.get('baseline')
+            safe_name = company_name.lower().replace(' ', '_')
+            output_file = f"data/{safe_name}_{mode}.json"
+            task_name = f"{company_name} ({mode})"
+
+            _log(f"\n正在處理：{company_name}")
+            _t0 = time.time()
+            try:
+                if mode == 'country':
+                    results = finder.match_by_country(company_config, baseline)
+                elif mode == 'city':
+                    results = finder.match_against_baseline(company_config, baseline)
+                elif mode == 'scan':
+                    results = finder.scan_all_countries(company_config)
+                else:
+                    raise ValueError(f"Unknown mode: {mode}")
+
+                finder.save_results(results, company_name, output_file=output_file)
+                results_collected[company_name] = results
+                _elapsed = time.time() - _t0
+                _log(f"  完成！{company_name} 共 {len(results)} 個地區（{_elapsed:.0f}s）")
+                print(f"[DONE] Port {port} {task_name} {len(results)} entries  log: {log_path}", flush=True)
+            except Exception as e:
+                _log(f"  錯誤：{e}")
+                print(f"[ERROR] Port {port} {task_name}: {e}", flush=True)
+                # Put task back for other ports to retry
+                task_queue.put(task)
+                _log(f"[REQUEUE] Port {port} 任務 {task_name} 已放回佇列")
+                break
+            finally:
+                task_queue.task_done()
+    finally:
+        finder.close()
+        if _log_file:
+            _log_file.close()
+
+    return results_collected
+
+
+def _resolve_company_configs(companies, port):
+    """Resolve string company names to full configs using a single Chrome port."""
+    finder = CompanyFinder(port)
+    configs = []
+    try:
+        for company_entry in companies:
             if isinstance(company_entry, str):
                 company_config = finder.search_company(company_entry)
                 if not company_config:
@@ -1371,38 +1519,84 @@ def run_city():
                     continue
             else:
                 company_config = company_entry
-            company_name = company_config['name']
-            print(f"\n{'='*60}")
-            print(f"正在處理：{company_name}")
-            _t0 = _time.time()
-
-            results = finder.match_against_baseline(company_config, baseline_found)
-
-            _elapsed = _time.time() - _t0
-            finder.print_match_results(results, company_name)
-            safe_name = company_name.lower().replace(' ', '_')
-            finder.save_results(results, company_name,
-                                output_file=f"data/{safe_name}_city.json")
-            print(f"  ⏱  {company_name} 耗時：{_elapsed:.0f}s")
-            all_company_results[company_name] = results
-
-        # 彙整摘要
-        print(f"\n{'='*60}")
-        print("比對摘要：")
-        print(f"{'='*60}")
-        for company_name, results in all_company_results.items():
-            found = sum(1 for r in results if r['status'] == 'found')
-            print(f"  {company_name}: {found}/{len(results)} 個地區有 review")
-
-    except Exception as e:
-        print(f"\n錯誤：{e}")
-        import traceback; traceback.print_exc()
+            configs.append(company_config)
     finally:
-        _total = _time.time() - _total_start
-        print(f"\n{'='*60}")
-        print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
-        print(f"{'='*60}")
         finder.close()
+    return configs
+
+
+def parallel_find(ports, mode, companies, baseline=None, log_ts=None):
+    """
+    多 port 平行抓取 URL list。
+
+    Args:
+        ports: list of int，Chrome debugger ports
+        mode: 'country', 'city', or 'scan'
+        companies: list of company configs or names
+        baseline: list of baseline locations（country/city 模式需要）
+        log_ts: str，log 檔案時間戳
+
+    Returns:
+        dict {company_name: results}
+    """
+    import threading
+    import queue as queue_mod
+    from concurrent.futures import ThreadPoolExecutor
+
+    if not ports:
+        raise ValueError("ports must not be empty")
+
+    # Pre-resolve company configs using the first port
+    print(f"\n預先解析公司資訊（使用 port {ports[0]}）...")
+    company_configs = _resolve_company_configs(companies, ports[0])
+    if not company_configs:
+        print("沒有可處理的公司")
+        return {}
+    print(f"共 {len(company_configs)} 間公司待處理")
+
+    # Build shared task queue
+    task_queue = queue_mod.Queue()
+    for company_config in company_configs:
+        task = {'company_config': company_config}
+        if baseline is not None:
+            task['baseline'] = baseline
+        task_queue.put(task)
+
+    ts = log_ts or datetime.now().strftime('%Y%m%d_%H%M%S')
+    port_logs = {port: f'logs/company_finder_{ts}_port{port}.txt' for port in ports}
+
+    print(f"\n⚡ 平行模式：使用 {len(ports)} 個 Chrome（ports: {ports}）")
+
+    executor = ThreadPoolExecutor(max_workers=len(ports))
+    futures = {
+        executor.submit(_finder_worker, port, mode, task_queue, port_logs[port]): port
+        for port in ports
+    }
+
+    all_results = {}
+    try:
+        for future in futures:
+            port = futures[future]
+            try:
+                port_results = future.result()
+                all_results.update(port_results)
+                print(f"[DONE] Port {port} completed {len(port_results)} companies", flush=True)
+            except Exception as e:
+                print(f"[ERROR] Port {port} error: {e}", flush=True)
+    except KeyboardInterrupt:
+        print("\n[WARN] Ctrl+C received, stopping workers...", flush=True)
+        for f in futures:
+            f.cancel()
+        executor.shutdown(wait=False, cancel_futures=True)
+        raise
+
+    executor.shutdown(wait=True)
+
+    if not task_queue.empty():
+        remaining = task_queue.qsize()
+        print(f"[WARN] {remaining} tasks remaining in queue but all ports stopped.", flush=True)
+
+    return all_results
 
 
 if __name__ == '__main__':
