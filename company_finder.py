@@ -1141,35 +1141,43 @@ def run_office():
     import time as _time
     _total_start = _time.time()
 
-    finder = CompanyFinder(CHROME_DEBUG_PORT)
-    try:
-        for company_entry in companies_to_run:
-            if isinstance(company_entry, str):
-                company_config = finder.search_company(company_entry)
-                if not company_config:
-                    print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
-                    continue
-            else:
-                company_config = company_entry
-            company_name = company_config['name']
-            print(f"\n{'='*60}")
-            print(f"正在處理：{company_name}")
+    # 多 port 平行模式
+    if len(CHROME_DEBUG_PORTS) > 1:
+        parallel_find(
+            CHROME_DEBUG_PORTS, 'office', companies_to_run,
+            log_ts=datetime.now().strftime('%Y%m%d_%H%M%S')
+        )
+    else:
+        finder = CompanyFinder(CHROME_DEBUG_PORT)
+        try:
+            for company_entry in companies_to_run:
+                if isinstance(company_entry, str):
+                    company_config = finder.search_company(company_entry)
+                    if not company_config:
+                        print(f"跳過 {company_entry}（無法取得 Glassdoor ID）")
+                        continue
+                else:
+                    company_config = company_entry
+                company_name = company_config['name']
+                print(f"\n{'='*60}")
+                print(f"正在處理：{company_name}")
 
-            results = finder.explore_all_locations(company_config)
-            safe_name = company_name.lower().replace(' ', '_')
-            finder.save_results(results, company_name,
-                                output_file=f"data/{safe_name}_office.json")
-            print(f"\n完成！{company_name} 共 {len(results)} 個地區")
+                results = finder.explore_all_locations(company_config)
+                safe_name = company_name.lower().replace(' ', '_')
+                finder.save_results(results, company_name,
+                                    output_file=f"data/{safe_name}_office.json")
+                print(f"\n完成！{company_name} 共 {len(results)} 個地區")
 
-    except Exception as e:
-        print(f"\n錯誤：{e}")
-        import traceback; traceback.print_exc()
-    finally:
-        _total = _time.time() - _total_start
-        print(f"\n{'='*60}")
-        print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
-        print(f"{'='*60}")
-        finder.close()
+        except Exception as e:
+            print(f"\n錯誤：{e}")
+            import traceback; traceback.print_exc()
+        finally:
+            finder.close()
+
+    _total = _time.time() - _total_start
+    print(f"\n{'='*60}")
+    print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+    print(f"{'='*60}")
 
 
 def run_country(companies=None):
@@ -1475,7 +1483,9 @@ def _finder_worker(port, mode, task_queue, log_path=None):
             _log(f"\n正在處理：{company_name}")
             _t0 = time.time()
             try:
-                if mode == 'country':
+                if mode == 'office':
+                    results = finder.explore_all_locations(company_config)
+                elif mode == 'country':
                     results = finder.match_by_country(company_config, baseline)
                 elif mode == 'city':
                     results = finder.match_against_baseline(company_config, baseline)
