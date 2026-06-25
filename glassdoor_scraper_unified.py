@@ -577,22 +577,27 @@ def _worker(port, task_queue, mode, headless, log_path=None, _progress=None):
                     sleep_sec = 0.5
                     # --- Country fallback: if page has no rating data, try fallback URL ---
                     fallback_info = task.get('fallback')
-                    if raw and raw.get('Overall') is None and fallback_info:
-                        fb_url = fallback_info['url']
-                        fb_mode = fallback_info['mode']
-                        _log(f"  ↩ {baseline_loc} 無評分資料，嘗試 fallback ({fb_mode}): {fb_url}")
-                        time.sleep(0.5)
-                        fb_raw = scraper.extract_rating_data(fb_url, f"{display_name} [fb]")
-                        if fb_raw == 'BLOCKED_TIMEOUT':
-                            data = 'BLOCKED_TIMEOUT'
-                        else:
-                            if fb_raw and fb_raw.get('Overall') is not None:
-                                _log(f"  ✓ fallback 成功，Overall={fb_raw['Overall']}")
-                                raw = fb_raw
-                                src_mode = f"{src_mode}+{fb_mode}_fb"
-                                url = fb_url
+                    if raw and raw.get('Overall') is None:
+                        if fallback_info:
+                            fb_url = fallback_info['url']
+                            fb_mode = fallback_info['mode']
+                            _log(f"  ↩ {baseline_loc} 無評分資料，嘗試 fallback ({fb_mode}): {fb_url}")
+                            time.sleep(0.5)
+                            fb_raw = scraper.extract_rating_data(fb_url, f"{display_name} [fb]")
+                            if fb_raw == 'BLOCKED_TIMEOUT':
+                                data = 'BLOCKED_TIMEOUT'
                             else:
-                                _log(f"  ⚠ fallback 也無評分資料，保留空值")
+                                if fb_raw and fb_raw.get('Overall') is not None:
+                                    _log(f"  ✓ fallback 成功，Overall={fb_raw['Overall']}")
+                                    raw = fb_raw
+                                    src_mode = f"{src_mode}+{fb_mode}_fb"
+                                    url = fb_url
+                                else:
+                                    _log(f"  ⚠ fallback 也無評分資料，保留空值")
+                                    src_mode = f"{src_mode}+empty"
+                        else:
+                            _log(f"  ⚠ 無評分資料且無 country fallback，保留空值")
+                            src_mode = f"{src_mode}+empty"
                     if data != 'BLOCKED_TIMEOUT':
                         if raw:
                             raw['Baseline Location'] = baseline_loc
@@ -712,29 +717,27 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
                     _key = (_c, _country)
                     if _key not in _country_fallback:
                         _country_fallback[_key] = {'url': _e['url'], 'mode': 'country'}
-                if (_e.get('baseline_location') or '').lower() in ('global', '') or _country in ('global', ''):
-                    if _c not in _global_fallback:
-                        _global_fallback[_c] = {'url': _e['url'], 'mode': 'country'}
+                # Global entries are intentionally not used as fallback
             elif _fb_basename.endswith('_office.json'):
                 _loc = (_e.get('location') or '').lower()
                 _cntry = (_e.get('country') or '').lower()
-                if _loc == 'global' or _cntry == 'global':
-                    if _c not in _global_fallback:
-                        _global_fallback[_c] = {'url': _e['url'], 'mode': 'office'}
-                elif _cntry and _cntry != 'global':
+                # Only use non-Global office entries as country-level fallback
+                if _cntry and _cntry != 'global':
                     _key = (_c, _cntry)
                     if _key not in _country_fallback:
                         _country_fallback[_key] = {'url': _e['url'], 'mode': 'office'}
+                # Global office entries are intentionally not used as fallback
 
     def _get_fallback(company: str, country: str):
-        """Return fallback dict {url, mode} or None."""
+        """Return fallback dict {url, mode} or None.
+        Only country-level fallback is allowed; Global fallback is disabled
+        to avoid misleading location-level statistics.
+        """
         _c = company.lower()
         _cntry = (country or '').lower()
         if _cntry and _cntry not in ('global', 'unknown', ''):
-            fb = _country_fallback.get((_c, _cntry))
-            if fb:
-                return fb
-        return _global_fallback.get(_c)
+            return _country_fallback.get((_c, _cntry))
+        return None
 
     for f in matched_files:
         basename = os.path.basename(f)
