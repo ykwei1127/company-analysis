@@ -299,7 +299,9 @@ class CompanyFinder:
             list_rating = city_info['list_rating']
             address = city_info['address']
             print(f"\n[{i}/{len(city_links)}] {city_name} (列表評分: {list_rating})")
-            review_url, review_count, page_heading = self._find_review_url_from_city_page(city_loc_url, numeric_id)
+            review_url, review_count, page_heading = self._find_review_url_from_city_page(
+                city_loc_url, numeric_id, expected_city=city_name
+            )
 
             country = self._extract_country(page_heading, address)
 
@@ -371,15 +373,20 @@ class CompanyFinder:
         city_links = self._collect_city_links(numeric_id)
         print(f"找到 {len(city_links)} 個城市辦公室")
 
-        # 建立 country → city 對照表（一個國家可能有多個城市，取第一個）
-        country_to_city = {}
+        # 建立 country → list of cities 對照表（一個國家可能有多個城市）
+        country_to_cities = {}
         for city_name, city_info in city_links.items():
             address = city_info['address'] or ''
             country = self._extract_country(None, address)
-            if country and country not in country_to_city:
-                country_to_city[country] = (city_name, city_info)
+            if country:
+                if country not in country_to_cities:
+                    country_to_cities[country] = []
+                country_to_cities[country].append((city_name, city_info))
 
-        print(f"可比對國家：{sorted(country_to_city.keys())}")
+        # Also build a flat city_name → city_info lookup for exact matching
+        city_name_to_info = {city_name: city_info for city_name, city_info in city_links.items()}
+
+        print(f"可比對國家：{sorted(country_to_cities.keys())}")
 
         global_review_url = company_config.get('global_review_url')
         results = []
@@ -461,16 +468,42 @@ class CompanyFinder:
                     })
                 continue
 
+            # 在新公司的城市裡找對應城市
+            # 策略：1. 精確城市名比對 2. 同國家其他城市 3. IC/IN code probe
+            ref_city = ref_location.split(',')[0].strip()  # e.g. "Taipei" from "Taipei, Taiwan"
             matched_city = None
             matched_info = None
-            for country, (city_name, city_info) in country_to_city.items():
-                if self._country_match(ref_country, country):
+
+            # 1. Try exact city name match across all collected cities
+            for city_name, city_info in city_links.items():
+                city_only = city_name.split(',')[0].strip()
+                if self._normalize_city(city_only) == self._normalize_city(ref_city):
                     matched_city = city_name
                     matched_info = city_info
+                    print(f"  📍 精確城市比對：{matched_city}")
                     break
 
+            # 2. If no exact match, try country-level match (fallback)
             if not matched_city:
-                # Locations 頁找不到 → 用 IC/IN Code 直接 probe
+                for country, city_list in country_to_cities.items():
+                    if self._country_match(ref_country, country):
+                        # Pick the city that best matches the ref_city name if possible
+                        best_city = city_list[0]
+                        best_score = 0
+                        for city_name, city_info in city_list:
+                            city_only = city_name.split(',')[0].strip()
+                            ref_norm = self._normalize_city(ref_city)
+                            city_norm = self._normalize_city(city_only)
+                            score = 1 if (ref_norm in city_norm or city_norm in ref_norm) else 0
+                            if score > best_score:
+                                best_score = score
+                                best_city = (city_name, city_info)
+                        matched_city, matched_info = best_city
+                        print(f"  📍 同國家 fallback：{matched_city}")
+                        break
+
+            if not matched_city:
+                # 3. Locations 頁找不到 → 用 IC/IN Code 直接 probe
                 code_info = ic_map.get(ref_location)
                 if code_info:
                     city_label = ref_location.split(',')[0].strip()  # e.g. "Taipei" or "Taiwan"
@@ -499,9 +532,9 @@ class CompanyFinder:
                 })
                 continue
 
-            print(f"  📍 找到對應城市：{matched_city}")
+            print(f"  正在驗證 city 頁面：{matched_city}")
             review_url, review_count, page_heading = self._find_review_url_from_city_page(
-                matched_info['url'], numeric_id
+                matched_info['url'], numeric_id, expected_city=ref_city
             )
 
             if review_url:
@@ -811,7 +844,17 @@ class CompanyFinder:
                 continue
         return city_links
 
-    def _find_review_url_from_city_page(self, city_loc_url, numeric_id):
+    def _find_review_url_from_city_page(self, city_loc_url, numeric_id, expected_city=None):
+        """Open a city location page and find the review URL.
+
+        Args:
+            city_loc_url: city office location page URL
+            numeric_id: company numeric ID
+            expected_city: optional city name to validate against page content
+
+        Returns:
+            (review_url, reviews_count, page_heading) or (None, None, page_heading)
+        """
         self.driver.get(city_loc_url)
         try:
             WebDriverWait(self.driver, 8).until(
@@ -833,6 +876,15 @@ class CompanyFinder:
                     break
             except Exception:
                 continue
+
+        # Validate page content against expected city if provided
+        if expected_city and page_heading:
+            expected_norm = self._normalize_city(expected_city)
+            heading_norm = self._normalize_city(page_heading)
+            url_norm = self._normalize_city(self.driver.current_url)
+            if expected_norm not in heading_norm and expected_norm not in url_norm:
+                print(f"    ⚠️  城市驗證失敗：預期 {expected_city}，頁面顯示 {page_heading}")
+                return None, None, page_heading
 
         all_links = self.driver.find_elements(By.TAG_NAME, 'a')
         for link in all_links:
@@ -973,6 +1025,25 @@ class CompanyFinder:
         a = country_a.lower().strip()
         b = country_b.lower().strip()
         return a == b or a in b or b in a
+
+    def _normalize_city(self, city_text):
+        """Normalize city text for matching: lowercase, remove country suffix, keep only first city name."""
+        if not city_text:
+            return ''
+        text = city_text.lower()
+        # Remove URL encoding and special chars
+        text = text.replace('%20', ' ')
+        # Take only the part before common separators (e.g., "Taipei, Taiwan" -> "taipei")
+        for sep in [',', ' - ', '–', '—']:
+            if sep in text:
+                text = text.split(sep)[0].strip()
+                break
+        # Remove common suffix words like "reviews", "office", "location"
+        for word in ['reviews', 'review', 'office', 'locations', 'location']:
+            text = text.replace(word, '').strip()
+        # Remove extra spaces and common punctuation
+        text = re.sub(r'[^a-z0-9\s]', '', text).strip()
+        return text
 
     def save_results(self, results, company_name, output_file=None):
         if output_file is None:
