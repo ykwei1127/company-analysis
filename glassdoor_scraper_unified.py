@@ -302,6 +302,8 @@ class GlassdoorScraper:
                 source_mode = 'city'
             elif basename.endswith('_office.json'):
                 source_mode = 'office'
+            elif basename.endswith('_mix.json'):
+                source_mode = 'mix'
             else:
                 source_mode = 'unknown'
 
@@ -749,10 +751,12 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
             src_mode = 'city'
         elif basename.endswith('_office.json'):
             src_mode = 'office'
+        elif basename.endswith('_mix.json'):
+            src_mode = 'mix'
         else:
             src_mode = 'unknown'
-        # Derive company name from filename for office/scan modes (no 'company' field in entries)
-        file_company = basename.replace('_office.json', '').replace('_scan.json', '').replace('_city.json', '').replace('_country.json', '').replace('_', ' ').title()
+        # Derive company name from filename for office/scan/mix modes (no 'company' field in some entries)
+        file_company = basename.replace('_office.json', '').replace('_scan.json', '').replace('_city.json', '').replace('_country.json', '').replace('_mix.json', '').replace('_', ' ').title()
         with open(f, encoding='utf-8') as _fh:
             _entries = json.load(_fh)
         for _e in _entries:
@@ -762,6 +766,7 @@ def parallel_scrape(ports, matched_files, include_baseline, baseline_file,
             _baseline_loc = _e.get('baseline_location') or _e.get('location') or _e.get('country', 'Unknown')
             _entry_country = _e.get('baseline_country') or _e.get('country') or ''
             # Attach fallback only for city/office modes (country mode already is country-level)
+            # Mix mode is already a comprehensive merge, so no extra fallback needed.
             _fallback = None
             if src_mode in ('city', 'office'):
                 _fb = _get_fallback(_company, _entry_country)
@@ -995,13 +1000,14 @@ def main():
     _stem, _ext = os.path.splitext(_base_output)
     output_file = f"{_stem}_{_ts}{_ext}"
 
-    # 掃描 data/ 目錄中的 URL 清單檔案（office/country/scan）
+    # 掃描 data/ 目錄中的 URL 清單檔案（office/country/city/scan/mix）
     # 根據 source_mode_filter 和 company_filter 過濾檔案
     matched_files = sorted(
         glob.glob('data/*_office.json') +
         glob.glob('data/*_country.json') +
         glob.glob('data/*_city.json') +
-        glob.glob('data/*_scan.json')
+        glob.glob('data/*_scan.json') +
+        glob.glob('data/*_mix.json')
     )
 
     # Apply source mode filter
@@ -1016,6 +1022,8 @@ def main():
             elif source_mode_filter == 'city' and basename.endswith('_city.json'):
                 filtered.append(f)
             elif source_mode_filter == 'scan' and basename.endswith('_scan.json'):
+                filtered.append(f)
+            elif source_mode_filter == 'mix' and basename.endswith('_mix.json'):
                 filtered.append(f)
         matched_files = filtered
         print(f"🔍 Source Mode Filter: {source_mode_filter} -> {len(matched_files)} files selected")

@@ -1,15 +1,19 @@
 """
 Glassdoor 跨公司地區比較工具
 
-三種模式：
+四種模式：
 1. office：從公司的 Office Locations 頁抓取城市級 Review URL
 2. country：用國家 IN code 抓取國家級 Review URL
-3. scan：掃描全世界國家，找出有 review 的地區
+3. city：以 ASUS Office 清單為基準，比對其他公司同國家城市 URL
+4. scan：掃描全世界國家，找出有 review 的地區
+5. mix：合併 office + country + city 三種模式的結果，依 URL 去重
 
 使用方式：
     python company_finder.py office        # 建立辦公室城市 URL 清單
     python company_finder.py country       # 建立國家級 URL 清單
+    python company_finder.py city          # 建立城市比對 URL 清單
     python company_finder.py scan          # 掃描全世界國家
+    python company_finder.py mix           # 合併既有 office/country/city 清單
 
 前置條件：
     已執行 啟動Chrome.bat 並在 Chrome 中登入 Glassdoor
@@ -60,6 +64,9 @@ BASELINE_FILE = 'data/asus_office.json'  # ASUS 辦公室 URL 清單
 
 # 比對模式：'city'（原始邏輯，用同國家城市 IC code）或 'country'（國家級 IN code）
 MATCH_MODE = 'country'
+
+# City Match 模式下，除了精確對應的基準城市外，每個國家再額外抓取的城市數量上限
+MAX_EXTRA_CITIES = 3
 
 # Glassdoor 國家 IN codes（固定值）
 COUNTRY_IN_CODES = {
@@ -469,40 +476,47 @@ class CompanyFinder:
                 continue
 
             # 在新公司的城市裡找對應城市
-            # 策略：1. 精確城市名比對 2. 同國家其他城市 3. IC/IN code probe
+            # 策略：
+            # 1. 精確城市名比對
+            # 2. 同國家其他城市（最多 MAX_EXTRA_CITIES 個）
+            # 3. IC/IN code probe
             ref_city = ref_location.split(',')[0].strip()  # e.g. "Taipei" from "Taipei, Taiwan"
-            matched_city = None
-            matched_info = None
+            candidates = []  # list of (city_name, city_info, is_exact)
 
             # 1. Try exact city name match across all collected cities
             for city_name, city_info in city_links.items():
                 city_only = city_name.split(',')[0].strip()
                 if self._normalize_city(city_only) == self._normalize_city(ref_city):
-                    matched_city = city_name
-                    matched_info = city_info
-                    print(f"  📍 精確城市比對：{matched_city}")
+                    candidates.append((city_name, city_info, True))
+                    print(f"  📍 精確城市比對：{city_name}")
                     break
 
-            # 2. If no exact match, try country-level match (fallback)
-            if not matched_city:
-                for country, city_list in country_to_cities.items():
-                    if self._country_match(ref_country, country):
-                        # Pick the city that best matches the ref_city name if possible
-                        best_city = city_list[0]
-                        best_score = 0
-                        for city_name, city_info in city_list:
-                            city_only = city_name.split(',')[0].strip()
-                            ref_norm = self._normalize_city(ref_city)
-                            city_norm = self._normalize_city(city_only)
-                            score = 1 if (ref_norm in city_norm or city_norm in ref_norm) else 0
-                            if score > best_score:
-                                best_score = score
-                                best_city = (city_name, city_info)
-                        matched_city, matched_info = best_city
-                        print(f"  📍 同國家 fallback：{matched_city}")
-                        break
+            # 2. Collect up to MAX_EXTRA_CITIES additional cities from the same country
+            for country, city_list in country_to_cities.items():
+                if self._country_match(ref_country, country):
+                    # Sort cities by name similarity to ref_city (best first)
+                    def _city_score(item):
+                        city_name = item[0]
+                        city_only = city_name.split(',')[0].strip()
+                        ref_norm = self._normalize_city(ref_city)
+                        city_norm = self._normalize_city(city_only)
+                        if ref_norm == city_norm:
+                            return -2
+                        if ref_norm in city_norm or city_norm in ref_norm:
+                            return -1
+                        return 0
 
-            if not matched_city:
+                    sorted_city_list = sorted(city_list, key=_city_score)
+                    for city_name, city_info in sorted_city_list:
+                        if any(c[0] == city_name for c in candidates):
+                            continue
+                        candidates.append((city_name, city_info, False))
+                        print(f"  📍 額外城市：{city_name}")
+                        if len(candidates) >= 1 + MAX_EXTRA_CITIES:
+                            break
+                    break
+
+            if not candidates:
                 # 3. Locations 頁找不到 → 用 IC/IN Code 直接 probe
                 code_info = ic_map.get(ref_location)
                 if code_info:
@@ -532,52 +546,75 @@ class CompanyFinder:
                 })
                 continue
 
-            print(f"  正在驗證 city 頁面：{matched_city}")
-            review_url, review_count, page_heading = self._find_review_url_from_city_page(
-                matched_info['url'], numeric_id, expected_city=ref_city
-            )
+            # 4. Validate each candidate city and add to results
+            found_any_city = False
+            exact_candidate_present = any(is_exact for _, _, is_exact in candidates)
+            for idx, (matched_city, matched_info, is_exact) in enumerate(candidates):
+                expected_city = matched_city.split(',')[0].strip()
+                print(f"  正在驗證 city 頁面：{matched_city} (exact={is_exact})")
+                review_url, review_count, page_heading = self._find_review_url_from_city_page(
+                    matched_info['url'], numeric_id, expected_city=expected_city
+                )
 
-            if review_url:
-                print(f"  ✅ Review URL：{review_url}")
-                results.append({
-                    'baseline_location': ref_location,
-                    'baseline_country': ref_country,
-                    'company': company_name,
-                    'matched_city': matched_city,
-                    'url': review_url,
-                    'reviews_count': review_count,
-                    'status': 'found',
-                })
-            else:
-                # city 頁找不到 review URL → 用 IC/IN Code probe
-                code_info = ic_map.get(ref_location)
-                if code_info:
-                    city_label = ref_location.split(',')[0].strip()
-                    probe_url, probe_count, _ = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
-                    if probe_url:
-                        print(f"  ✅ IC probe 找到 Review URL：{probe_url}")
+                if review_url:
+                    found_any_city = True
+                    print(f"  ✅ Review URL：{review_url}")
+                    results.append({
+                        'baseline_location': ref_location,
+                        'baseline_country': ref_country,
+                        'company': company_name,
+                        'matched_city': matched_city,
+                        'url': review_url,
+                        'reviews_count': review_count,
+                        'status': 'found',
+                    })
+                else:
+                    if is_exact:
+                        # city 頁找不到 review URL → 用 IC/IN Code probe
+                        code_info = ic_map.get(ref_location)
+                        if code_info:
+                            city_label = ref_location.split(',')[0].strip()
+                            probe_url, probe_count, _ = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
+                            if probe_url:
+                                found_any_city = True
+                                print(f"  ✅ IC probe 找到 Review URL：{probe_url}")
+                                results.append({
+                                    'baseline_location': ref_location,
+                                    'baseline_country': ref_country,
+                                    'company': company_name,
+                                    'matched_city': city_label,
+                                    'url': probe_url,
+                                    'reviews_count': probe_count,
+                                    'status': 'found',
+                                })
+                                time.sleep(1)
+                                continue
+                        print(f"  ⚠️  城市存在但無 Review URL")
                         results.append({
                             'baseline_location': ref_location,
                             'baseline_country': ref_country,
                             'company': company_name,
-                            'matched_city': city_label,
-                            'url': probe_url,
-                            'reviews_count': probe_count,
-                            'status': 'found',
+                            'matched_city': matched_city,
+                            'url': None,
+                            'reviews_count': None,
+                            'status': 'no_review_url',
                         })
-                        time.sleep(1)
-                        continue
-                print(f"  ⚠️  城市存在但無 Review URL")
+                    else:
+                        print(f"  ⚠️  額外城市無 Review URL：{matched_city}")
+                if idx < len(candidates) - 1:
+                    time.sleep(1)
+
+            if not found_any_city and not exact_candidate_present:
+                print(f"  ➖ {company_name} 無對應城市 URL")
                 results.append({
                     'baseline_location': ref_location,
                     'baseline_country': ref_country,
                     'company': company_name,
-                    'matched_city': matched_city,
+                    'matched_city': None,
                     'url': None,
                     'reviews_count': None,
-                    'status': 'no_review_url',
+                    'status': 'not_in_company',
                 })
-            time.sleep(1)
 
         return results
 
@@ -1073,6 +1110,104 @@ class CompanyFinder:
             for r in not_in:
                 print(f"  {r['baseline_location']:<25} ({r['baseline_country']})")
 
+    # ----------------------------------------------------------------
+    # Mix 模式：合併 office + country + city 結果
+    # ----------------------------------------------------------------
+    @staticmethod
+    def _normalize_mix_entry(entry, mode, company_name):
+        """把 office / country / city 的 entry 轉成 mix 統一格示。"""
+        if not isinstance(entry, dict):
+            return None
+
+        normalized = dict(entry)
+        normalized['source_mode'] = mode
+        normalized['company'] = company_name
+
+        if mode == 'office':
+            normalized['baseline_location'] = entry.get('location') or entry.get('baseline_location', 'Unknown')
+            normalized['baseline_country'] = entry.get('country') or entry.get('baseline_country', '')
+            normalized['matched_city'] = entry.get('location') or entry.get('matched_city', '')
+        elif mode in ('country', 'city'):
+            normalized['baseline_location'] = entry.get('baseline_location') or entry.get('location', 'Unknown')
+            normalized['baseline_country'] = entry.get('baseline_country') or entry.get('country', '')
+            normalized['matched_city'] = entry.get('matched_city') or entry.get('baseline_location', '')
+        else:
+            return None
+
+        return normalized
+
+    @staticmethod
+    def _merge_company_mix(results_by_mode, company_name):
+        """
+        合併 office / country / city 三種結果，依 URL 去重。
+
+        策略：
+        1. 相同 URL 只保留一筆
+        2. source_modes 記錄這個 URL 出現在哪些模式
+        3. 元資料優先採用 office（最細），其次 city，最後 country
+        """
+        by_url = {}
+        priority_order = {'office': 1, 'city': 2, 'country': 3}
+
+        for mode in ['office', 'city', 'country']:
+            entries = results_by_mode.get(mode, [])
+            for entry in entries:
+                if not isinstance(entry, dict):
+                    continue
+                norm = CompanyFinder._normalize_mix_entry(entry, mode, company_name)
+                if not norm:
+                    continue
+                url = norm.get('url')
+                if not url:
+                    continue
+
+                existing = by_url.get(url)
+                if existing is None:
+                    by_url[url] = {
+                        'baseline_location': norm.get('baseline_location', 'Unknown'),
+                        'baseline_country': norm.get('baseline_country', ''),
+                        'company': company_name,
+                        'matched_city': norm.get('matched_city', ''),
+                        'url': url,
+                        'reviews_count': norm.get('reviews_count'),
+                        'status': norm.get('status', 'found'),
+                        'source_modes': [mode],
+                    }
+                    # 保留 office 才有的額外欄位
+                    if mode == 'office':
+                        for key in ['page_heading', 'heading_is_generic', 'list_rating', 'address']:
+                            if key in norm:
+                                by_url[url][key] = norm[key]
+                    continue
+
+                # 已存在：更新 source_modes 與最佳元資料
+                if mode not in existing['source_modes']:
+                    existing['source_modes'].append(mode)
+
+                current_priority = priority_order.get(existing.get('_priority_mode'), 99)
+                new_priority = priority_order.get(mode, 99)
+                if new_priority < current_priority:
+                    existing['baseline_location'] = norm.get('baseline_location', existing['baseline_location'])
+                    existing['baseline_country'] = norm.get('baseline_country', existing['baseline_country'])
+                    existing['matched_city'] = norm.get('matched_city', existing['matched_city'])
+                    existing['reviews_count'] = norm.get('reviews_count') if norm.get('reviews_count') is not None else existing['reviews_count']
+                    existing['_priority_mode'] = mode
+                    if mode == 'office':
+                        for key in ['page_heading', 'heading_is_generic', 'list_rating', 'address']:
+                            if key in norm:
+                                existing[key] = norm[key]
+
+        # 移除內部欄位並排序 source_modes
+        merged = []
+        for entry in by_url.values():
+            entry.pop('_priority_mode', None)
+            entry['source_modes'] = sorted(entry['source_modes'], key=lambda m: priority_order.get(m, 99))
+            merged.append(entry)
+
+        # 依國家、城市排序
+        merged.sort(key=lambda e: (e.get('baseline_country') or '', e.get('baseline_location') or ''))
+        return merged
+
     def search_company(self, company_name):
         """
         在 Glassdoor 搜尋公司名稱，自動取得 company_id 和 locations_url。
@@ -1184,6 +1319,86 @@ class CompanyFinder:
 # ----------------------------------------------------------------
 # 主程式
 # ----------------------------------------------------------------
+def run_mix(companies=None):
+    """合併 office + country + city 三種模式的 URL 清單，依 URL 去重後輸出 mix 檔。"""
+    print("=" * 60)
+    print("模式：合併 Office + Country + City URL 清單（Mix）")
+    print("=" * 60)
+
+    companies_to_run = companies if companies is not None else COMPANIES_TO_MATCH
+
+    # 檢查環境變數（從後端傳遞的公司列表）
+    env_companies = os.environ.get('FINDER_COMPANIES')
+    if env_companies:
+        selected_names = [n.strip() for n in env_companies.split(',') if n.strip()]
+        print(f"從環境變數讀取公司列表：{selected_names}")
+        companies_to_run = []
+        for entry in COMPANIES_TO_MATCH:
+            name = entry if isinstance(entry, str) else entry.get('name')
+            if name in selected_names:
+                companies_to_run.append(entry)
+        print(f"篩選後要處理的公司：{len(companies_to_run)} 個")
+
+    if not companies_to_run:
+        print("請在 COMPANIES_TO_MATCH 中加入要處理的公司名稱")
+        return
+
+    import time as _time
+    _total_start = _time.time()
+    all_results = {}
+
+    for company_entry in companies_to_run:
+        if isinstance(company_entry, str):
+            company_name = company_entry
+        else:
+            company_name = company_entry.get('name')
+        if not company_name:
+            print("跳過無名稱的公司設定")
+            continue
+
+        safe_name = company_name.lower().replace(' ', '_')
+        print(f"\n{'='*60}")
+        print(f"正在合併：{company_name}")
+
+        results_by_mode = {}
+        for mode in ['office', 'country', 'city']:
+            filepath = f"data/{safe_name}_{mode}.json"
+            if not os.path.exists(filepath):
+                print(f"  ⏭  缺少 {mode} 檔案：{filepath}")
+                continue
+            try:
+                with open(filepath, encoding='utf-8') as f:
+                    results_by_mode[mode] = json.load(f)
+                print(f"  📂 載入 {mode}：{len(results_by_mode[mode])} 筆")
+            except Exception as e:
+                print(f"  ⚠️  讀取 {mode} 檔案失敗：{e}")
+
+        if not results_by_mode:
+            print(f"  ➖ 沒有可合併的檔案")
+            continue
+
+        merged = CompanyFinder._merge_company_mix(results_by_mode, company_name)
+        output_file = f"data/{safe_name}_mix.json"
+        os.makedirs(os.path.dirname(output_file) or '.', exist_ok=True)
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(merged, f, ensure_ascii=False, indent=2)
+        print(f"\n結果已儲存至：{output_file}")
+        print(f"  ✅ 合併完成：{len(merged)} 個獨立 URL（來源：{', '.join(results_by_mode.keys())}）")
+        all_results[company_name] = merged
+
+    print(f"\n{'='*60}")
+    print("合併摘要：")
+    print(f"{'='*60}")
+    for company_name, results in all_results.items():
+        found = sum(1 for r in results if r['status'] == 'found')
+        print(f"  {company_name}: {found}/{len(results)} 個獨立 URL")
+
+    _total = _time.time() - _total_start
+    print(f"\n{'='*60}")
+    print(f"⏱  總耗時：{_total:.0f}s（{_total/60:.1f} 分鐘）")
+    print(f"{'='*60}")
+
+
 def run_office():
     """建立公司辦公室城市 URL 清單（原 explore 模式）"""
     print("=" * 60)
@@ -1695,12 +1910,14 @@ if __name__ == '__main__':
             run_city()
         elif mode == 'scan':
             run_scan()
+        elif mode == 'mix':
+            run_mix()
         # Legacy aliases
         elif mode == 'explore':
             run_office()
         elif mode == 'match':
             run_country()
         else:
-            print(f"未知模式：{mode}，請使用 office、country、city 或 scan")
+            print(f"未知模式：{mode}，請使用 office、country、city、scan 或 mix")
     finally:
         logger.close()

@@ -1,8 +1,8 @@
 # Glassdoor 爬蟲配置文件
 
-INCLUDE_BASELINE = False  # Deprecated: ASUS is now scraped via asus_office.json like any other company
+INCLUDE_BASELINE = False
 
-PARALLEL_PORTS = [9222, 9223, 9224]
+PARALLEL_PORTS = [9222, 9223, 9224, 9225, 9226, 9227]
 
 SCRAPER_CONFIG = {
     'mode': 'manual',

@@ -79,6 +79,7 @@ export const runFinderOffice = (_companies?: string[]) => STATIC_MODE ? noop() :
 export const runFinderCountry = (_companies?: string[]) => STATIC_MODE ? noop() : api.post('/settings/finder/country', null, { params: { companies: _companies?.join(',') } })
 export const runFinderCity = (_companies?: string[]) => STATIC_MODE ? noop() : api.post('/settings/finder/city', null, { params: { companies: _companies?.join(',') } })
 export const runFinderScan = (_companies?: string[]) => STATIC_MODE ? noop() : api.post('/settings/finder/scan', null, { params: { companies: _companies?.join(',') } })
+export const runFinderMix = (_companies?: string[]) => STATIC_MODE ? noop() : api.post('/settings/finder/mix', null, { params: { companies: _companies?.join(',') } })
 export const getFinderStatus = () => STATIC_MODE ? noop() : api.get('/settings/finder/status')
 export const stopFinder = () => STATIC_MODE ? noop() : api.post('/settings/finder/stop')
 

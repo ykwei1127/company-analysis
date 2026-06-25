@@ -1,6 +1,6 @@
 """
 Settings & Company Management API endpoints.
-Manages scraper config, company list, URL list building (office/country/scan), and baseline locations.
+Manages scraper config, company list, URL list building (office/country/city/scan/mix), and baseline locations.
 """
 import json
 import os
@@ -56,14 +56,14 @@ def update_config(payload: dict):
 
 @router.get("/settings/companies")
 def list_companies():
-    """List all company URL list files (office/country/city/scan)."""
+    """List all company URL list files (office/country/city/scan/mix)."""
     companies = []
-    # Match all four types of URL list files
-    for pattern in ["*_office.json", "*_country.json", "*_city.json", "*_scan.json"]:
+    # Match all five types of URL list files
+    for pattern in ["*_office.json", "*_country.json", "*_city.json", "*_scan.json", "*_mix.json"]:
         for f in sorted(glob.glob(str(DATA_DIR / pattern))):
             basename = os.path.basename(f)
             # Derive display name from filename
-            name = basename.replace("_office.json", "").replace("_country.json", "").replace("_city.json", "").replace("_scan.json", "").replace("_", " ").title()
+            name = basename.replace("_office.json", "").replace("_country.json", "").replace("_city.json", "").replace("_scan.json", "").replace("_mix.json", "").replace("_", " ").title()
             # Determine list type from suffix
             if basename.endswith("_office.json"):
                 list_type = "office"
@@ -73,6 +73,8 @@ def list_companies():
                 list_type = "city"
             elif basename.endswith("_scan.json"):
                 list_type = "scan"
+            elif basename.endswith("_mix.json"):
+                list_type = "mix"
             else:
                 list_type = "unknown"
             try:
@@ -94,7 +96,7 @@ def list_companies():
 def remove_company(filename: str):
     """Remove a company's URL list JSON file."""
     filepath = DATA_DIR / filename
-    valid_suffixes = ("_office.json", "_country.json", "_city.json", "_scan.json")
+    valid_suffixes = ("_office.json", "_country.json", "_city.json", "_scan.json", "_mix.json")
     if filepath.exists() and any(filename.endswith(s) for s in valid_suffixes):
         filepath.unlink()
         return {"status": "deleted", "file": filename}
@@ -217,6 +219,19 @@ def run_finder_city(
     return {"status": "started"}
 
 
+@router.post("/settings/finder/mix")
+def run_finder_mix(
+    companies: Optional[str] = Query(None, description="Comma-separated company names"),
+):
+    """Run company_finder.py mix mode (merge office/country/city lists)."""
+    if _finder_state["running"]:
+        return {"status": "already_running"}
+    companies_list = [c.strip() for c in companies.split(',') if c.strip()] if companies else None
+    cmd = [str(VENV_PYTHON), str(COMPANY_FINDER_SCRIPT), "mix"]
+    _run_finder_subprocess(cmd, "mix", companies=companies_list)
+    return {"status": "started"}
+
+
 # Legacy endpoint aliases for backward compatibility
 @router.post("/settings/finder/match")
 def run_match_legacy(
@@ -272,7 +287,7 @@ def get_baseline(file: Optional[str] = Query(None, description="URL list filenam
     """Get URL list entries from a specific file, or ASUS office locations by default."""
     if file:
         # Validate filename to prevent path traversal
-        valid_suffixes = ("_office.json", "_country.json", "_city.json", "_scan.json")
+        valid_suffixes = ("_office.json", "_country.json", "_city.json", "_scan.json", "_mix.json")
         if not any(file.endswith(s) for s in valid_suffixes):
             return {"locations": []}
         filepath = DATA_DIR / file
@@ -402,12 +417,12 @@ def remove_company_from_match(name: str):
     # Also delete matched JSON files for this company
     files_removed = []
     safe_name = name.lower().replace(' ', '_')
-    for suffix in ['_office.json', '_country.json', '_scan.json']:
+    for suffix in ['_office.json', '_country.json', '_city.json', '_scan.json', '_mix.json']:
         file_path = DATA_DIR / f"{safe_name}{suffix}"
         if file_path.exists():
             file_path.unlink()
             files_removed.append(file_path.name)
-    
+
     return {"removed_from_list": removed, "files_removed": files_removed}
 
 

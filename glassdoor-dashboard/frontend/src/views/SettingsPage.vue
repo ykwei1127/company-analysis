@@ -219,6 +219,29 @@
                 <el-icon><Search /></el-icon> Build Scan List
               </el-button>
             </el-card>
+
+            <!-- Mix -->
+            <el-card shadow="hover" style="flex: 1; min-width: 200px;">
+              <template #header>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong>Mix</strong>
+                  <el-tag size="small" type="info">mix</el-tag>
+                </div>
+              </template>
+              <p style="font-size: 12px; color: var(--el-text-color-secondary); margin: 0 0 12px 0;">
+                Merge office, country, and city lists for each company, deduplicating by URL.
+              </p>
+              <el-button
+                size="small"
+                type="info"
+                plain
+                @click="handleBuildMix"
+                :loading="finderRunning && currentTask === 'mix'"
+                :disabled="STATIC_MODE || finderRunning"
+              >
+                <el-icon><Refresh /></el-icon> Build Mix List
+              </el-button>
+            </el-card>
           </div>
 
           <el-collapse style="margin-bottom: 12px;">
@@ -346,21 +369,22 @@
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { Loading, Refresh, Search, InfoFilled } from '@element-plus/icons-vue'
 import { useFinderStore } from '../stores/finder'
-import { 
+import {
   getCompanies,
   removeCompany,
   runFinderOffice,
   runFinderCountry,
   runFinderCity,
-  runFinderScan, 
-  getFinderStatus, 
-  stopFinder, 
-  getConfig, 
-  updateConfig, 
-  getCompaniesToMatch, 
-  addCompanyToMatch, 
-  removeCompanyToMatch, 
-  getBaseline 
+  runFinderScan,
+  runFinderMix,
+  getFinderStatus,
+  stopFinder,
+  getConfig,
+  updateConfig,
+  getCompaniesToMatch,
+  addCompanyToMatch,
+  removeCompanyToMatch,
+  getBaseline
 } from '../api'
 
 const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
@@ -411,7 +435,7 @@ const config = ref({
   scraper_config: { mode: 'manual', wait_time: 5, delay_between_requests: 3 },
   output_config: {},
 })
-const portsStr = ref('9222,9223,9224')
+const portsStr = ref('9222,9223,9224,9225,9226,9227')
 
 async function loadConfig() {
   try {
@@ -603,6 +627,15 @@ async function handleScan() {
     ? selectedMatchCompanies.value
     : availableMatchCompanies.value.map(c => c.name)
   await runFinderScan(companiesToRun)
+}
+
+async function handleBuildMix() {
+  finderStore.start('mix')
+  startFinderPolling()
+  const companiesToRun = selectedMatchCompanies.value.length > 0
+    ? selectedMatchCompanies.value
+    : availableMatchCompanies.value.map(c => c.name)
+  await runFinderMix(companiesToRun)
 }
 
 function startFinderPolling() {

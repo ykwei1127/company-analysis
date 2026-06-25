@@ -56,6 +56,7 @@
             <el-option label="Country" value="country" />
             <el-option label="City Match" value="city" />
             <el-option label="World Scan" value="scan" />
+            <el-option label="Mix" value="mix" />
           </el-select>
         </div>
         <div class="control-group" style="flex-wrap: wrap;">
@@ -177,7 +178,7 @@ import { useDashboardStore } from '../stores/dashboard'
 
 const STATIC_MODE = import.meta.env.VITE_STATIC_MODE === 'true'
 
-const ALL_PORTS = [9222, 9223, 9224]
+const ALL_PORTS = [9222, 9223, 9224, 9225, 9226, 9227]
 const selectedPorts = ref<number[]>([9222])
 const mode = ref('matched')
 const sourceMode = ref('all')  // 'all', 'office', 'country', 'city', 'scan'
