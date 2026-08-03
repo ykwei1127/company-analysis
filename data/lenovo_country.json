@@ -1,0 +1,182 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": null,
+    "company": "Lenovo",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-Reviews-E8034.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Lenovo",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-Taiwan-Reviews-EI_IE8034.0,6_IL.7,13_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Lenovo",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-United-States-Reviews-EI_IE8034.0,6_IL.7,20_IN1.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Lenovo",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-Canada-Reviews-EI_IE8034.0,6_IL.7,13_IN3.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Lenovo",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-Spain-Reviews-EI_IE8034.0,6_IL.7,12_IN219.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Lenovo",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-Netherlands-Reviews-EI_IE8034.0,6_IL.7,18_IN178.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Lenovo",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-France-Reviews-EI_IE8034.0,6_IL.7,13_IN86.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Lenovo",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-Germany-Reviews-EI_IE8034.0,6_IL.7,14_IN96.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Lenovo",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-India-Reviews-EI_IE8034.0,6_IL.7,12_IN115.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Lenovo",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-South-Korea-Reviews-EI_IE8034.0,6_IL.7,18_IN135.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Singapore",
+    "baseline_country": "Singapore",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Lenovo",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Lenovo",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-Australia-Reviews-EI_IE8034.0,6_IL.7,16_IN16.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

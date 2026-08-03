@@ -21,10 +21,10 @@
     "baseline_location": "Fremont, CA",
     "baseline_country": "United States",
     "company": "TSMC",
-    "matched_city": "Fremont",
-    "url": "https://www.glassdoor.com/Reviews/TSMC-Fremont-Reviews-EI_IE4130.0,4_IL.5,12_IC1147355.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Markham, ON",
@@ -63,15 +63,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Hemel Hempstead, ENG",
-    "baseline_country": "United Kingdom",
-    "company": "TSMC",
-    "matched_city": "Hemel Hempstead",
-    "url": "https://www.glassdoor.com/Reviews/TSMC-Hemel%20Hempstead-Reviews-EI_IE4130.0,4_IL.5,20_IC2669775.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Milan, LOM",
     "baseline_country": "Italy",
     "company": "TSMC",
@@ -84,10 +75,10 @@
     "baseline_location": "Noisy-le-Grand, A8",
     "baseline_country": "France",
     "company": "TSMC",
-    "matched_city": "Noisy-le-Grand",
-    "url": "https://www.glassdoor.com/Reviews/TSMC-Noisy-le-Grand-Reviews-EI_IE4130.0,4_IL.5,19_IC3100822.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Ratingen, NW",
@@ -126,15 +117,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Kuala Lumpur, 14",
-    "baseline_country": "Malaysia",
-    "company": "TSMC",
-    "matched_city": "Kuala Lumpur",
-    "url": "https://www.glassdoor.com/Reviews/TSMC-Kuala%20Lumpur-Reviews-EI_IE4130.0,4_IL.5,17_IC2986682.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Manila, D9",
     "baseline_country": "Philippines",
     "company": "TSMC",
@@ -165,10 +147,10 @@
     "baseline_location": "Singapore",
     "baseline_country": "Singapore",
     "company": "TSMC",
-    "matched_city": "Singapore",
-    "url": "https://www.glassdoor.com/Reviews/TSMC-Singapore-Reviews-EI_IE4130.0,4_IL.5,14_IN215.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Taipei, TPQ",
@@ -194,15 +176,6 @@
     "company": "TSMC",
     "matched_city": "Santiago",
     "url": "https://www.glassdoor.com/Reviews/TSMC-Santiago-Reviews-EI_IE4130.0,4_IL.5,13_IC2434030.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
-    "baseline_location": "São Paulo, SP",
-    "baseline_country": "Brazil",
-    "company": "TSMC",
-    "matched_city": "São Paulo",
-    "url": "https://www.glassdoor.com/Reviews/TSMC-S%C3%A3o%20Paulo-Reviews-EI_IE4130.0,4_IL.5,14_IC2479061.htm",
     "reviews_count": null,
     "status": "found"
   },

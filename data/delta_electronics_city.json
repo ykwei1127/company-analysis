@@ -63,15 +63,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Hemel Hempstead, ENG",
-    "baseline_country": "United Kingdom",
-    "company": "Delta Electronics",
-    "matched_city": "Hemel Hempstead",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Hemel%20Hempstead-Reviews-EI_IE41146.0,17_IL.18,33_IC2669775.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Milan, LOM",
     "baseline_country": "Italy",
     "company": "Delta Electronics",
@@ -84,10 +75,10 @@
     "baseline_location": "Noisy-le-Grand, A8",
     "baseline_country": "France",
     "company": "Delta Electronics",
-    "matched_city": "Noisy-le-Grand",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Noisy-le-Grand-Reviews-EI_IE41146.0,17_IL.18,32_IC3100822.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Ratingen, NW",
@@ -126,15 +117,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Kuala Lumpur, 14",
-    "baseline_country": "Malaysia",
-    "company": "Delta Electronics",
-    "matched_city": "Kuala Lumpur",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Kuala%20Lumpur-Reviews-EI_IE41146.0,17_IL.18,30_IC2986682.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Manila, D9",
     "baseline_country": "Philippines",
     "company": "Delta Electronics",
@@ -165,10 +147,10 @@
     "baseline_location": "Singapore",
     "baseline_country": "Singapore",
     "company": "Delta Electronics",
-    "matched_city": "Singapore",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Singapore-Reviews-EI_IE41146.0,17_IL.18,27_IN215.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Taipei, TPQ",
@@ -198,21 +180,12 @@
     "status": "found"
   },
   {
-    "baseline_location": "São Paulo, SP",
-    "baseline_country": "Brazil",
-    "company": "Delta Electronics",
-    "matched_city": "São Paulo",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-S%C3%A3o%20Paulo-Reviews-EI_IE41146.0,17_IL.18,27_IC2479061.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Sydney, NSW",
     "baseline_country": "Australia",
     "company": "Delta Electronics",
-    "matched_city": "Sydney",
-    "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Sydney-Reviews-EI_IE41146.0,17_IL.18,24_IC2235932.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   }
 ]

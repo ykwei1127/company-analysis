@@ -63,15 +63,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Hemel Hempstead, ENG",
-    "baseline_country": "United Kingdom",
-    "company": "Pegatron",
-    "matched_city": "Hemel Hempstead",
-    "url": "https://www.glassdoor.com/Reviews/Pegatron-Hemel%20Hempstead-Reviews-EI_IE337948.0,8_IL.9,24_IC2669775.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Milan, LOM",
     "baseline_country": "Italy",
     "company": "Pegatron",
@@ -84,10 +75,10 @@
     "baseline_location": "Noisy-le-Grand, A8",
     "baseline_country": "France",
     "company": "Pegatron",
-    "matched_city": "Noisy-le-Grand",
-    "url": "https://www.glassdoor.com/Reviews/Pegatron-Noisy-le-Grand-Reviews-EI_IE337948.0,8_IL.9,23_IC3100822.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Ratingen, NW",
@@ -126,15 +117,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Kuala Lumpur, 14",
-    "baseline_country": "Malaysia",
-    "company": "Pegatron",
-    "matched_city": "Kuala Lumpur",
-    "url": "https://www.glassdoor.com/Reviews/Pegatron-Kuala%20Lumpur-Reviews-EI_IE337948.0,8_IL.9,21_IC2986682.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Manila, D9",
     "baseline_country": "Philippines",
     "company": "Pegatron",
@@ -156,19 +138,19 @@
     "baseline_location": "Seoul, 11",
     "baseline_country": "South Korea",
     "company": "Pegatron",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Seoul",
+    "url": "https://www.glassdoor.com/Reviews/Pegatron-Seoul-Reviews-EI_IE337948.0,8_IL.9,14_IC3021489.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Singapore",
     "baseline_country": "Singapore",
     "company": "Pegatron",
-    "matched_city": "Singapore",
-    "url": "https://www.glassdoor.com/Reviews/Pegatron-Singapore-Reviews-EI_IE337948.0,8_IL.9,18_IN215.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Taipei, TPQ",
@@ -194,15 +176,6 @@
     "company": "Pegatron",
     "matched_city": "Santiago",
     "url": "https://www.glassdoor.com/Reviews/Pegatron-Santiago-Reviews-EI_IE337948.0,8_IL.9,17_IC2434030.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
-    "baseline_location": "São Paulo, SP",
-    "baseline_country": "Brazil",
-    "company": "Pegatron",
-    "matched_city": "São Paulo",
-    "url": "https://www.glassdoor.com/Reviews/Pegatron-S%C3%A3o%20Paulo-Reviews-EI_IE337948.0,8_IL.9,18_IC2479061.htm",
     "reviews_count": null,
     "status": "found"
   },

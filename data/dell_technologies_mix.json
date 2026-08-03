@@ -1,0 +1,716 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": "",
+    "company": "Dell Technologies",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Reviews-E1327.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Dell Technologies",
+    "matched_city": "Sydney",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Sydney-Reviews-EI_IE1327.0,17_IL.18,24_IC2235932.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Dell Technologies",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Australia-Reviews-EI_IE1327.0,17_IL.18,27_IN16.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Dell Technologies",
+    "matched_city": "Markham",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Markham-Reviews-EI_IE1327.0,17_IL.18,25_IC2280736.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Dell Technologies",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Canada-Reviews-EI_IE1327.0,17_IL.18,24_IN3.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Dell Technologies",
+    "matched_city": "Santiago",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Santiago-Reviews-EI_IE1327.0,17_IL.18,26_IC2434030.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Dell Technologies",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-France-Reviews-EI_IE1327.0,17_IL.18,24_IN86.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Dell Technologies",
+    "matched_city": "Ratingen",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Ratingen-Reviews-EI_IE1327.0,17_IL.18,26_IC2584004.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Dell Technologies",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Germany-Reviews-EI_IE1327.0,17_IL.18,25_IN96.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Dell Technologies",
+    "matched_city": "Budapest",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Budapest-Reviews-EI_IE1327.0,17_IL.18,26_IC3125126.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Dell Technologies",
+    "matched_city": "Bengaluru, KA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Bengaluru-Reviews-EI_IE1327.0,17_IL.18,27_IC2940587.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Bengaluru, KA, India"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Dell Technologies",
+    "matched_city": "Domlur, KA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Domlur-Reviews-EI_IE1327.0,17_IL.18,24_IC4470560.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 5.0,
+    "address": "Domlur, KA, India"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Dell Technologies",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-India-Reviews-EI_IE1327.0,17_IL.18,23_IN115.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Dell Technologies",
+    "matched_city": "Jakarta",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Jakarta-Reviews-EI_IE1327.0,17_IL.18,25_IC2709872.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Dell Technologies",
+    "matched_city": "Milan",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Milan-Reviews-EI_IE1327.0,17_IL.18,23_IC2802090.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Dell Technologies",
+    "matched_city": "Tokyo",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Tokyo-Reviews-EI_IE1327.0,17_IL.18,23_IC2851580.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Dell Technologies",
+    "matched_city": "Emmen",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Emmen-Reviews-EI_IE1327.0,17_IL.18,23_IC3060162.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Dell Technologies",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Netherlands-Reviews-EI_IE1327.0,17_IL.18,29_IN178.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Dell Technologies",
+    "matched_city": "Manila",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Manila-Reviews-EI_IE1327.0,17_IL.18,24_IC2363570.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Dell Technologies",
+    "matched_city": "Seoul",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Seoul-Reviews-EI_IE1327.0,17_IL.18,23_IC3021489.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Dell Technologies",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-South-Korea-Reviews-EI_IE1327.0,17_IL.18,29_IN135.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Dell Technologies",
+    "matched_city": "Barcelona",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Barcelona-Reviews-EI_IE1327.0,17_IL.18,27_IC2547194.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Dell Technologies",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Spain-Reviews-EI_IE1327.0,17_IL.18,23_IN219.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Taipei, TPQ",
+    "baseline_country": "Taiwan",
+    "company": "Dell Technologies",
+    "matched_city": "Taipei",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Taipei-Reviews-EI_IE1327.0,17_IL.18,24_IC3271041.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Dell Technologies",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Taiwan-Reviews-EI_IE1327.0,17_IL.18,24_IN240.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "Dell Technologies Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Dell Technologies",
+    "matched_city": "Bangkok",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Bangkok-Reviews-EI_IE1327.0,17_IL.18,25_IC3179725.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Dell Technologies",
+    "matched_city": "Dubai",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Dubai-Reviews-EI_IE1327.0,17_IL.18,23_IC2204498.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Boydton, VA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Boydton, VA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Boydton-Reviews-EI_IE1327.0,17_IL.18,25_IC1129623.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 1.0,
+    "address": "Boydton, VA, United States"
+  },
+  {
+    "baseline_location": "Cambridge, MA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Cambridge, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Cambridge-Reviews-EI_IE1327.0,17_IL.18,27_IC1154545.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 3.5,
+    "address": "Cambridge, MA, United States"
+  },
+  {
+    "baseline_location": "Canada, KY",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Canada, KY",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Canada-Reviews-EI_IE1327.0,17_IL.18,24_IC1137126.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 5.0,
+    "address": "Canada, KY, United States"
+  },
+  {
+    "baseline_location": "Canton, MA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Canton, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Canton-Reviews-EI_IE1327.0,17_IL.18,24_IC1154546.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 1.7,
+    "address": "Canton, MA, United States"
+  },
+  {
+    "baseline_location": "Cedar Park, TX",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Cedar Park, TX",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Cedar-Park-Reviews-EI_IE1327.0,17_IL.18,28_IC1139765.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Cedar Park, TX, United States"
+  },
+  {
+    "baseline_location": "Framingham, MA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Framingham, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Framingham-Reviews-EI_IE1327.0,17_IL.18,28_IC1154571.htm",
+    "reviews_count": 3,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies Framingham, MA",
+    "heading_is_generic": false,
+    "list_rating": 4.0,
+    "address": "Framingham, MA, United States"
+  },
+  {
+    "baseline_location": "Franklin, MA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Franklin, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Franklin-Reviews-EI_IE1327.0,17_IL.18,26_IC1154572.htm",
+    "reviews_count": 121,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies Franklin, MA",
+    "heading_is_generic": false,
+    "list_rating": 3.6,
+    "address": "Franklin, MA, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Aliso, CA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Aliso-Reviews-EI_IE1327.0,17_IL.18,23_IC3789361.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Aliso, CA, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Austin, TX",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Austin-Reviews-EI_IE1327.0,17_IL.18,24_IC1139761.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 3.6,
+    "address": "Austin, TX, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Bedford, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Bedford-Reviews-EI_IE1327.0,17_IL.18,25_IC1154527.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.9,
+    "address": "Bedford, MA, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Boston, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Boston-Reviews-EI_IE1327.0,17_IL.18,24_IC1154532.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 3.6,
+    "address": "Boston, MA, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-United-States-Reviews-EI_IE1327.0,17_IL.18,31_IN1.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Georgetown, TX",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Georgetown, TX",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Georgetown-Reviews-EI_IE1327.0,17_IL.18,28_IC1139774.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 5.0,
+    "address": "Georgetown, TX, United States"
+  },
+  {
+    "baseline_location": "Hopkinton, MA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Hopkinton, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Hopkinton-Reviews-EI_IE1327.0,17_IL.18,27_IC1154589.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 3.5,
+    "address": "Hopkinton, MA, United States"
+  },
+  {
+    "baseline_location": "India, TX",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "India, TX",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-India-Reviews-EI_IE1327.0,17_IL.18,23_IC3759223.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.6,
+    "address": "India, TX, United States"
+  },
+  {
+    "baseline_location": "Land O' Lakes, FL",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Land O' Lakes, FL",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Land-O-Lakes-Reviews-EI_IE1327.0,17_IL.18,30_IC3817049.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Land O' Lakes, FL, United States"
+  },
+  {
+    "baseline_location": "Leander, TX",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Leander, TX",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Leander-Reviews-EI_IE1327.0,17_IL.18,25_IC1139779.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 3.0,
+    "address": "Leander, TX, United States"
+  },
+  {
+    "baseline_location": "Pflugerville, TX",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Pflugerville, TX",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Pflugerville-Reviews-EI_IE1327.0,17_IL.18,30_IC1139790.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.1,
+    "address": "Pflugerville, TX, United States"
+  },
+  {
+    "baseline_location": "Quincy, MA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Quincy, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Quincy-Reviews-EI_IE1327.0,17_IL.18,24_IC1154667.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 2.9,
+    "address": "Quincy, MA, United States"
+  },
+  {
+    "baseline_location": "Round Rock, TX",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Round Rock, TX",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Round-Rock-Reviews-EI_IE1327.0,17_IL.18,28_IC1139794.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 3.3,
+    "address": "Round Rock, TX, United States"
+  },
+  {
+    "baseline_location": "San Marcos, TX",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "San Marcos, TX",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-San-Marcos-Reviews-EI_IE1327.0,17_IL.18,28_IC1139795.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "San Marcos, TX, United States"
+  },
+  {
+    "baseline_location": "Satellite Beach, FL",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Satellite Beach, FL",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Satellite-Beach-Reviews-EI_IE1327.0,17_IL.18,33_IC1154294.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Satellite Beach, FL, United States"
+  },
+  {
+    "baseline_location": "Wellesley, MA",
+    "baseline_country": "United States",
+    "company": "Dell Technologies",
+    "matched_city": "Wellesley, MA",
+    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Wellesley-Reviews-EI_IE1327.0,17_IL.18,27_IC1154708.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "Dell Technologies",
+    "heading_is_generic": true,
+    "list_rating": 1.9,
+    "address": "Wellesley, MA, United States"
+  }
+]

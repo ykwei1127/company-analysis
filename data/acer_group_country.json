@@ -1,0 +1,182 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": null,
+    "company": "Acer Group",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Reviews-E3802.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Acer Group",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Taiwan-Reviews-EI_IE3802.0,10_IL.11,17_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Acer Group",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-United-States-Reviews-EI_IE3802.0,10_IL.11,24_IN1.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Acer Group",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Canada-Reviews-EI_IE3802.0,10_IL.11,17_IN3.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Acer Group",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Spain-Reviews-EI_IE3802.0,10_IL.11,16_IN219.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Acer Group",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Netherlands-Reviews-EI_IE3802.0,10_IL.11,22_IN178.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Acer Group",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-France-Reviews-EI_IE3802.0,10_IL.11,17_IN86.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Acer Group",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Germany-Reviews-EI_IE3802.0,10_IL.11,18_IN96.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Acer Group",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-India-Reviews-EI_IE3802.0,10_IL.11,16_IN115.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Acer Group",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-South-Korea-Reviews-EI_IE3802.0,10_IL.11,22_IN135.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Singapore",
+    "baseline_country": "Singapore",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Acer Group",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Acer Group",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Australia-Reviews-EI_IE3802.0,10_IL.11,20_IN16.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

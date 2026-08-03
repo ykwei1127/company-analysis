@@ -1,0 +1,648 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": "",
+    "company": "NVIDIA",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Reviews-E7633.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "NVIDIA",
+    "matched_city": "Sydney",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Sydney-Reviews-EI_IE7633.0,6_IL.7,13_IC2235932.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "NVIDIA",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Australia-Reviews-EI_IE7633.0,6_IL.7,16_IN16.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "NVIDIA",
+    "matched_city": "Toronto, ON",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Toronto-Reviews-EI_IE7633.0,6_IL.7,14_IC2281069.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.9,
+    "address": "Toronto, ON, Canada"
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "NVIDIA",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Canada-Reviews-EI_IE7633.0,6_IL.7,13_IN3.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "NVIDIA",
+    "matched_city": "Santiago",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Santiago-Reviews-EI_IE7633.0,6_IL.7,15_IC2434030.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Pudong, 23",
+    "baseline_country": "China",
+    "company": "NVIDIA",
+    "matched_city": "Pudong, 23",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Pudong-Reviews-EI_IE7633.0,6_IL.7,13_IC2415109.htm",
+    "reviews_count": 9,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA Pudong (China)",
+    "heading_is_generic": false,
+    "list_rating": 4.8,
+    "address": "Pudong, 23, China"
+  },
+  {
+    "baseline_location": "Shanghai, 23",
+    "baseline_country": "China",
+    "company": "NVIDIA",
+    "matched_city": "Shanghai, 23",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Shanghai-Reviews-EI_IE7633.0,6_IL.7,15_IC2416009.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.4,
+    "address": "Shanghai, 23, China"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "NVIDIA",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-France-Reviews-EI_IE7633.0,6_IL.7,13_IN86.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "NVIDIA",
+    "matched_city": "Munich, BY",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Munich-Reviews-EI_IE7633.0,6_IL.7,13_IC4990924.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 5.0,
+    "address": "Munich, BY, Germany"
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "NVIDIA",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Germany-Reviews-EI_IE7633.0,6_IL.7,14_IN96.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "NVIDIA",
+    "matched_city": "Budapest",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Budapest-Reviews-EI_IE7633.0,6_IL.7,15_IC3125126.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "NVIDIA",
+    "matched_city": "Bengaluru, KA",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Bengaluru-Reviews-EI_IE7633.0,6_IL.7,16_IC2940587.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.5,
+    "address": "Bengaluru, KA, India"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "NVIDIA",
+    "matched_city": "Mumbai, MH",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Mumbai-Reviews-EI_IE7633.0,6_IL.7,13_IC2851180.htm",
+    "reviews_count": 21,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA Mumbai (India)",
+    "heading_is_generic": false,
+    "list_rating": 3.9,
+    "address": "Mumbai, MH, India"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "NVIDIA",
+    "matched_city": "Pune, MH",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Pune-Reviews-EI_IE7633.0,6_IL.7,11_IC2856202.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.2,
+    "address": "Pune, MH, India"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "NVIDIA",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-India-Reviews-EI_IE7633.0,6_IL.7,12_IN115.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "NVIDIA",
+    "matched_city": "Jakarta",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Jakarta-Reviews-EI_IE7633.0,6_IL.7,14_IC2709872.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "NVIDIA",
+    "matched_city": "Milan",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Milan-Reviews-EI_IE7633.0,6_IL.7,12_IC2802090.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "NVIDIA",
+    "matched_city": "Tokyo",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Tokyo-Reviews-EI_IE7633.0,6_IL.7,12_IC2851580.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "NVIDIA",
+    "matched_city": "Emmen",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Emmen-Reviews-EI_IE7633.0,6_IL.7,12_IC3060162.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "NVIDIA",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Netherlands-Reviews-EI_IE7633.0,6_IL.7,18_IN178.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "NVIDIA",
+    "matched_city": "Manila",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Manila-Reviews-EI_IE7633.0,6_IL.7,13_IC2363570.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Moscow, 48",
+    "baseline_country": "Russia",
+    "company": "NVIDIA",
+    "matched_city": "Moscow, 48",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Moscow-Reviews-EI_IE7633.0,6_IL.7,13_IC3348306.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 5.0,
+    "address": "Moscow, 48, Russia"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "NVIDIA",
+    "matched_city": "Seoul",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Seoul-Reviews-EI_IE7633.0,6_IL.7,12_IC3021489.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "NVIDIA",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-South-Korea-Reviews-EI_IE7633.0,6_IL.7,18_IN135.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "NVIDIA",
+    "matched_city": "Barcelona",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Barcelona-Reviews-EI_IE7633.0,6_IL.7,16_IC2547194.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "NVIDIA",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Spain-Reviews-EI_IE7633.0,6_IL.7,12_IN219.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Taipei, TPQ",
+    "baseline_country": "Taiwan",
+    "company": "NVIDIA",
+    "matched_city": "Hsinchu, TXG",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Hsinchu-Reviews-EI_IE7633.0,6_IL.7,14_IC4915323.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.1,
+    "address": "Hsinchu, TXG, Taiwan"
+  },
+  {
+    "baseline_location": "Taipei, TPQ",
+    "baseline_country": "Taiwan",
+    "company": "NVIDIA",
+    "matched_city": "Taipei, TPQ",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Taipei-Reviews-EI_IE7633.0,6_IL.7,13_IC3271041.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.1,
+    "address": "Taipei, TPQ, Taiwan"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "NVIDIA",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Taiwan-Reviews-EI_IE7633.0,6_IL.7,13_IN240.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "NVIDIA Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "NVIDIA",
+    "matched_city": "Bangkok",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Bangkok-Reviews-EI_IE7633.0,6_IL.7,14_IC3179725.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "NVIDIA",
+    "matched_city": "Dubai",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Dubai-Reviews-EI_IE7633.0,6_IL.7,12_IC2204498.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Reading, ENG",
+    "baseline_country": "United Kingdom",
+    "company": "NVIDIA",
+    "matched_city": "Reading, ENG",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Reading-Reviews-EI_IE7633.0,6_IL.7,14_IC2675152.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.5,
+    "address": "Reading, ENG, United Kingdom"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Austin, TX",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Austin-Reviews-EI_IE7633.0,6_IL.7,13_IC1139761.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.2,
+    "address": "Austin, TX, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Beaverton, OR",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Beaverton-Reviews-EI_IE7633.0,6_IL.7,16_IC1151576.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 2.0,
+    "address": "Beaverton, OR, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Durham, NC",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Durham-Reviews-EI_IE7633.0,6_IL.7,13_IC1138697.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.9,
+    "address": "Durham, NC, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Bellevue, WA",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Bellevue-Reviews-EI_IE7633.0,6_IL.7,15_IC1150442.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-United-States-Reviews-EI_IE7633.0,6_IL.7,20_IN1.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Hillsboro, OR",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Hillsboro, OR",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Hillsboro-Reviews-EI_IE7633.0,6_IL.7,16_IC1151603.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.9,
+    "address": "Hillsboro, OR, United States"
+  },
+  {
+    "baseline_location": "Redmond, WA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Redmond, WA",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Redmond-Reviews-EI_IE7633.0,6_IL.7,14_IC1150499.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.9,
+    "address": "Redmond, WA, United States"
+  },
+  {
+    "baseline_location": "Saint Louis, MO",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Saint Louis, MO",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Saint-Louis-Reviews-EI_IE7633.0,6_IL.7,18_IC1131270.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Saint Louis, MO, United States"
+  },
+  {
+    "baseline_location": "San Francisco, CA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "San Francisco, CA",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-San-Francisco-Reviews-EI_IE7633.0,6_IL.7,20_IC1147401.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.4,
+    "address": "San Francisco, CA, United States"
+  },
+  {
+    "baseline_location": "San Jose, CA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "San Jose, CA",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-San-Jose-Reviews-EI_IE7633.0,6_IL.7,15_IC1147436.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.6,
+    "address": "San Jose, CA, United States"
+  },
+  {
+    "baseline_location": "Santa Clara, CA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Santa Clara, CA",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Santa-Clara-Reviews-EI_IE7633.0,6_IL.7,18_IC1147439.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.7,
+    "address": "Santa Clara, CA, United States"
+  },
+  {
+    "baseline_location": "Westford, MA",
+    "baseline_country": "United States",
+    "company": "NVIDIA",
+    "matched_city": "Westford, MA",
+    "url": "https://www.glassdoor.com/Reviews/NVIDIA-Westford-Reviews-EI_IE7633.0,6_IL.7,15_IC1154720.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "NVIDIA",
+    "heading_is_generic": true,
+    "list_rating": 4.9,
+    "address": "Westford, MA, United States"
+  }
+]

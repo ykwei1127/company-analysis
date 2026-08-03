@@ -975,7 +975,7 @@ def main():
     parser.add_argument('--mode', choices=['manual', 'auto'], default=None, help='Chrome connection mode (manual=attach to existing, auto=launch new)')
     parser.add_argument('--task', choices=['matched', 'baseline'], default=None, help='Scraping task type')
     parser.add_argument('--ports', default=None, help='Comma-separated Chrome debug ports')
-    parser.add_argument('--source-mode', choices=['all', 'office', 'city', 'country', 'scan'], default='all', help='Filter matched files by source mode (office/city/country/scan)')
+    parser.add_argument('--source-mode', choices=['all', 'office', 'city', 'country', 'scan', 'mix'], default='all', help='Filter matched files by source mode (office/city/country/scan/mix)')
     parser.add_argument('--companies', default=None, help='Comma-separated company names to filter (e.g., "ASUS,NVIDIA")')
     parser.add_argument('--no-confirm', action='store_true', help='Skip interactive confirmation prompt')
     args = parser.parse_args()

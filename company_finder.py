@@ -24,6 +24,7 @@ import re
 import json
 import sys
 import os
+from urllib.parse import unquote
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -307,7 +308,7 @@ class CompanyFinder:
             address = city_info['address']
             print(f"\n[{i}/{len(city_links)}] {city_name} (列表評分: {list_rating})")
             review_url, review_count, page_heading = self._find_review_url_from_city_page(
-                city_loc_url, numeric_id, expected_city=city_name
+                city_loc_url, numeric_id, expected_city=city_name, expected_company=company_name
             )
 
             country = self._extract_country(page_heading, address)
@@ -438,7 +439,8 @@ class CompanyFinder:
                     country_label = ref_country.replace(' ', '-')
                     probe_url, probe_count, _ = self._probe_url_by_ic(
                         slug, numeric_id, country_label,
-                        {'code': in_code, 'type': 'IN'}
+                        {'code': in_code, 'type': 'IN'},
+                        expected_label=ref_country
                     )
                     if probe_url:
                         print(f"  ✅ Country-level URL (IN={in_code})：{probe_url}")
@@ -521,7 +523,7 @@ class CompanyFinder:
                 code_info = ic_map.get(ref_location)
                 if code_info:
                     city_label = ref_location.split(',')[0].strip()  # e.g. "Taipei" or "Taiwan"
-                    probe_url, probe_count, _ = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
+                    probe_url, probe_count, _ = self._probe_url_by_ic(slug, numeric_id, city_label, code_info, expected_label=ref_city)
                     if probe_url:
                         print(f"  ✅ IC probe 找到 Review URL：{probe_url}")
                         results.append({
@@ -553,7 +555,7 @@ class CompanyFinder:
                 expected_city = matched_city.split(',')[0].strip()
                 print(f"  正在驗證 city 頁面：{matched_city} (exact={is_exact})")
                 review_url, review_count, page_heading = self._find_review_url_from_city_page(
-                    matched_info['url'], numeric_id, expected_city=expected_city
+                    matched_info['url'], numeric_id, expected_city=expected_city, expected_company=company_name
                 )
 
                 if review_url:
@@ -574,7 +576,7 @@ class CompanyFinder:
                         code_info = ic_map.get(ref_location)
                         if code_info:
                             city_label = ref_location.split(',')[0].strip()
-                            probe_url, probe_count, _ = self._probe_url_by_ic(slug, numeric_id, city_label, code_info)
+                            probe_url, probe_count, _ = self._probe_url_by_ic(slug, numeric_id, city_label, code_info, expected_label=ref_city)
                             if probe_url:
                                 found_any_city = True
                                 print(f"  ✅ IC probe 找到 Review URL：{probe_url}")
@@ -711,7 +713,8 @@ class CompanyFinder:
             country_label = ref_country.replace(' ', '-')
             probe_url, probe_count, _ = self._probe_url_by_ic(
                 slug, numeric_id, country_label,
-                {'code': in_code, 'type': 'IN'}
+                {'code': in_code, 'type': 'IN'},
+                expected_label=ref_country
             )
 
             if probe_url:
@@ -794,7 +797,8 @@ class CompanyFinder:
 
             probe_url, probe_count, was_limited = self._probe_url_by_ic(
                 slug, numeric_id, country_label,
-                {'code': in_code, 'type': 'IN'}
+                {'code': in_code, 'type': 'IN'},
+                expected_label=country
             )
 
             # 如果遇到 rate limit，大幅增加後續延遲
@@ -852,6 +856,16 @@ class CompanyFinder:
     def _collect_city_links(self, numeric_id):
         city_links = {}
         all_links = self.driver.find_elements(By.TAG_NAME, 'a')
+        generic_tokens = [
+            'add a review',
+            'cookie consent',
+            'rate a company',
+            'search for companies',
+            'search for company',
+            'locations',
+            'location',
+            'survey',
+        ]
         for link in all_links:
             try:
                 href = link.get_attribute('href') or ''
@@ -868,6 +882,9 @@ class CompanyFinder:
                 clean_href = href.split('?')[0]
                 lines = [l.strip() for l in text.split('\n') if l.strip()]
                 city_name = lines[0] if lines else ''
+                city_lower = city_name.lower()
+                if any(tok in city_lower for tok in generic_tokens):
+                    continue
                 rating_match = re.search(r'(\d\.\d)', text)
                 list_rating = float(rating_match.group(1)) if rating_match else None
                 address = lines[-1] if len(lines) > 1 else None
@@ -881,13 +898,14 @@ class CompanyFinder:
                 continue
         return city_links
 
-    def _find_review_url_from_city_page(self, city_loc_url, numeric_id, expected_city=None):
+    def _find_review_url_from_city_page(self, city_loc_url, numeric_id, expected_city=None, expected_company=None):
         """Open a city location page and find the review URL.
 
         Args:
             city_loc_url: city office location page URL
             numeric_id: company numeric ID
             expected_city: optional city name to validate against page content
+            expected_company: optional company name; heading may legitimately be the company name on office pages
 
         Returns:
             (review_url, reviews_count, page_heading) or (None, None, page_heading)
@@ -900,6 +918,7 @@ class CompanyFinder:
         except Exception:
             pass
 
+        page_title = self.driver.title.strip()
         page_heading = None
         for sel in ['h1', 'h2', '[class*="heading"]', '[class*="Heading"]']:
             try:
@@ -915,13 +934,11 @@ class CompanyFinder:
                 continue
 
         # Validate page content against expected city if provided
-        if expected_city and page_heading:
-            expected_norm = self._normalize_city(expected_city)
-            heading_norm = self._normalize_city(page_heading)
-            url_norm = self._normalize_city(self.driver.current_url)
-            if expected_norm not in heading_norm and expected_norm not in url_norm:
-                print(f"    ⚠️  城市驗證失敗：預期 {expected_city}，頁面顯示 {page_heading}")
-                return None, None, page_heading
+        if expected_city and not self._validate_review_page(
+            expected_city, page_title, page_heading, self.driver.current_url,
+            context='城市', expected_company=expected_company, allow_company_heading=True
+        ):
+            return None, None, page_heading
 
         all_links = self.driver.find_elements(By.TAG_NAME, 'a')
         for link in all_links:
@@ -970,7 +987,57 @@ class CompanyFinder:
             pass
         return False
 
-    def _probe_url_by_ic(self, slug, numeric_id, city_label, code_info):
+    def _normalize_url_text(self, url_text):
+        if not url_text:
+            return ''
+        text = unquote(url_text).lower().replace('%20', ' ')
+        text = re.sub(r'[\/_\-]+', ' ', text)
+        return self._normalize_city(text)
+
+    def _label_variants(self, expected_label):
+        if not expected_label:
+            return []
+        variants = [expected_label]
+        alias_map = {
+            'United States': ['US', 'USA', 'U.S.', 'U.S.A.'],
+            'United Kingdom': ['UK', 'U.K.', 'Great Britain', 'Britain'],
+            'South Korea': ['Korea', 'Republic of Korea', 'ROK'],
+        }
+        variants.extend(alias_map.get(expected_label, []))
+        seen = []
+        for item in variants:
+            norm = self._normalize_city(item)
+            if norm and norm not in seen:
+                seen.append(norm)
+        return seen
+
+    def _validate_review_page(self, expected_label, page_title=None, page_heading=None, current_url=None, context='', expected_company=None, allow_company_heading=False):
+        if not expected_label:
+            return True
+        variants = self._label_variants(expected_label)
+        company_variants = self._label_variants(expected_company) if expected_company else []
+        title_norm = self._normalize_city(page_title or '')
+        heading_norm = self._normalize_city(page_heading or '')
+        url_norm = self._normalize_url_text(current_url or '')
+        title_ok = any(v in title_norm for v in variants)
+        url_ok = any(v in url_norm for v in variants)
+        heading_ok = any(v in heading_norm for v in variants)
+        if allow_company_heading and company_variants:
+            heading_ok = heading_ok or any(v in heading_norm for v in company_variants)
+
+        is_city_like = bool(re.search(r'_(IC|IL)\.', current_url or '', re.IGNORECASE))
+        if is_city_like:
+            if not title_ok or not heading_ok:
+                print(f"    ⚠️  {context}驗證失敗：預期 {expected_label}，title={page_title or '-'}，heading={page_heading or '-'}，url={current_url or '-'}")
+                return False
+            return True
+
+        if not title_ok or not heading_ok or not url_ok:
+            print(f"    ⚠️  {context}驗證失敗：預期 {expected_label}，title={page_title or '-'}，heading={page_heading or '-'}，url={current_url or '-'}")
+            return False
+        return True
+
+    def _probe_url_by_ic(self, slug, numeric_id, city_label, code_info, expected_label=None):
         """用 IC/IN Code 直接拼出 Review URL，載入後確認頁面是否有效。
         code_info: {'code': '3271041', 'type': 'IC'} 或 {'code': '218', 'type': 'IN'}
         Returns: (url, reviews_count, was_rate_limited) or (None, None, False)
@@ -1013,26 +1080,36 @@ class CompanyFinder:
         # 如果被 redirect 到其他頁則無效
         if f'_{code_type}{code}' not in final_url:
             return None, None, was_rate_limited
-        
-        # 驗證頁面內容是否包含正確的公司名稱（避免頁面重定向到錯誤內容）
-        page_valid = False
+
+        page_title = ''
+        page_heading = None
+        page_source = ''
         try:
-            page_title = self.driver.title.lower()
+            page_title = self.driver.title.strip()
             page_source = self.driver.page_source.lower()
-            # 檢查頁面標題或內容是否包含公司名稱
-            if slug.lower() in page_title or slug.lower() in page_source:
-                page_valid = True
-            # 特殊處理：如果頁面顯示的是其他公司，則無效
-            if 'aruba' in page_title or 'aruba' in page_source:
-                print(f"    ❌ 頁面被重定向到 Aruba，跳過")
-                return None, None, was_rate_limited
+            for sel in ['h1', 'h2', '[class*="heading"]', '[class*="Heading"]']:
+                elems = self.driver.find_elements(By.CSS_SELECTOR, sel)
+                for elem in elems:
+                    t = elem.text.strip()
+                    if t and 3 < len(t) < 80:
+                        page_heading = t
+                        break
+                if page_heading:
+                    break
         except Exception:
             pass
-        
-        if not page_valid:
+
+        if 'aruba' in page_title.lower() or 'aruba' in page_source:
+            print(f"    ❌ 頁面被重定向到 Aruba，跳過")
+            return None, None, was_rate_limited
+
+        if slug.lower() not in page_title.lower() and slug.lower() not in page_source:
             print(f"    ❌ 頁面內容驗證失敗，可能重定向到錯誤頁面")
             return None, None, was_rate_limited
-        
+
+        if expected_label and not self._validate_review_page(expected_label, page_title, page_heading, final_url, context='頁面'):
+            return None, None, was_rate_limited
+
         # 嘗試抓評論數
         count = None
         try:
@@ -1234,21 +1311,31 @@ class CompanyFinder:
 
         import re as re_module
         name_keywords = [re_module.sub(r'[^\w]', '', w).lower() for w in company_name.split() if len(w) > 1]
+        min_keyword_hits = 1 if len(name_keywords) <= 1 else 2
+
+        def _candidate_score(href: str, link_text: str = ''):
+            href_lower = (href or '').lower()
+            text_lower = (link_text or '').lower()
+            blob = f'{href_lower} {text_lower}'
+            if not any(p in href_lower for p in ['/overview/', '/reviews/', '/location/', '/working-at-']):
+                return 0
+            return sum(1 for kw in name_keywords if kw and kw in blob)
 
         all_links = self.driver.find_elements(By.TAG_NAME, 'a')
         for link in all_links:
             try:
                 href = link.get_attribute('href') or ''
+                link_text = ' '.join(filter(None, [
+                    (link.text or '').strip(),
+                    (link.get_attribute('title') or '').strip(),
+                    (link.get_attribute('aria-label') or '').strip(),
+                ]))
                 # 支援兩種 ID 格式：-E7633 和 EI_IE7633
                 m = re.search(r'[-_]E(?:I_IE)?(\d+)(?:\.htm|$|[,.])', href)
                 if not m:
                     continue
-                # 確認是公司頁，排除 job/salary 等
-                if not any(p in href for p in ['/Overview/', '/Reviews/', '/Location/']):
-                    continue
-                # 驗證 href 包含公司名稱關鍵字，避免抓到殘留的其他公司
-                href_lower = href.lower()
-                if not all(kw in href_lower for kw in name_keywords):
+                # 放寬條件：只要是公司頁型態，且與公司名稱有足夠關聯即可
+                if _candidate_score(href, link_text) < min_keyword_hits:
                     continue
                 numeric_id = m.group(1)
                 # 從 href 取公司 slug
@@ -1281,20 +1368,31 @@ class CompanyFinder:
             )
         except Exception:
             pass
+        def _candidate_score(href: str, link_text: str = ''):
+            href_lower = (href or '').lower()
+            text_lower = (link_text or '').lower()
+            blob = f'{href_lower} {text_lower}'
+            if not any(p in href_lower for p in ['/overview/', '/reviews/', '/location/', '/working-at-']):
+                return 0
+            return sum(1 for kw in name_keywords if kw and kw in blob)
+
+        min_keyword_hits = 1 if len(name_keywords) <= 1 else 2
         all_links = self.driver.find_elements(By.TAG_NAME, 'a')
         for link in all_links:
             try:
                 href = link.get_attribute('href') or ''
+                link_text = ' '.join(filter(None, [
+                    (link.text or '').strip(),
+                    (link.get_attribute('title') or '').strip(),
+                    (link.get_attribute('aria-label') or '').strip(),
+                ]))
                 m = re.search(r'[-_]E(\d+)(?:\.htm|$|[,.])', href)
                 if not m:
                     continue
-                if '/Overview/' not in href and '/Reviews/' not in href:
-                    continue
-                href_lower = href.lower()
-                if not all(kw in href_lower for kw in name_keywords):
+                if _candidate_score(href, link_text) < min_keyword_hits:
                     continue
                 numeric_id = m.group(1)
-                slug_match = re.search(r'/(?:Overview|Reviews)/([^/]+)-(?:Overview|Reviews)-(?:EI_IE|E)\d+', href)
+                slug_match = re.search(r'/(?:Overview|Reviews|Location)/(?:Working-at-)?([^/]+?)-(?:Overview|Reviews|Office-Locations|EI_IE)\d+', href)
                 slug = slug_match.group(1) if slug_match else company_name.replace(' ', '-')
                 company_id = f"E{numeric_id}"
                 locations_url = f"https://www.glassdoor.com/Location/All-{slug}-Office-Locations-{company_id}.htm"
@@ -1752,6 +1850,7 @@ def _finder_worker(port, mode, task_queue, log_path=None):
 
     finder = CompanyFinder(port)
     results_collected = {}
+    max_retries = 1
     try:
         while True:
             try:
@@ -1762,6 +1861,7 @@ def _finder_worker(port, mode, task_queue, log_path=None):
             company_config = task['company_config']
             company_name = company_config['name']
             baseline = task.get('baseline')
+            retries = task.get('retries', 0)
             safe_name = company_name.lower().replace(' ', '_')
             output_file = f"data/{safe_name}_{mode}.json"
             task_name = f"{company_name} ({mode})"
@@ -1788,10 +1888,14 @@ def _finder_worker(port, mode, task_queue, log_path=None):
             except Exception as e:
                 _log(f"  錯誤：{e}")
                 print(f"[ERROR] Port {port} {task_name}: {e}", flush=True)
-                # Put task back for other ports to retry
-                task_queue.put(task)
-                _log(f"[REQUEUE] Port {port} 任務 {task_name} 已放回佇列")
-                break
+                if retries < max_retries:
+                    retry_task = dict(task)
+                    retry_task['retries'] = retries + 1
+                    task_queue.put(retry_task)
+                    _log(f"[REQUEUE] Port {port} 任務 {task_name} 已放回佇列（retry {retries + 1}/{max_retries}）")
+                else:
+                    _log(f"[SKIP] Port {port} 任務 {task_name} 已達重試上限，略過")
+                continue
             finally:
                 task_queue.task_done()
     finally:

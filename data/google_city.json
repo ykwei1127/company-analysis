@@ -63,15 +63,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Hemel Hempstead, ENG",
-    "baseline_country": "United Kingdom",
-    "company": "Google",
-    "matched_city": "Hemel Hempstead",
-    "url": "https://www.glassdoor.com/Reviews/Google-Hemel%20Hempstead-Reviews-EI_IE9079.0,6_IL.7,22_IC2669775.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Milan, LOM",
     "baseline_country": "Italy",
     "company": "Google",
@@ -84,10 +75,10 @@
     "baseline_location": "Noisy-le-Grand, A8",
     "baseline_country": "France",
     "company": "Google",
-    "matched_city": "Noisy-le-Grand",
-    "url": "https://www.glassdoor.com/Reviews/Google-Noisy-le-Grand-Reviews-EI_IE9079.0,6_IL.7,21_IC3100822.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Ratingen, NW",
@@ -126,15 +117,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Kuala Lumpur, 14",
-    "baseline_country": "Malaysia",
-    "company": "Google",
-    "matched_city": "Kuala Lumpur",
-    "url": "https://www.glassdoor.com/Reviews/Google-Kuala%20Lumpur-Reviews-EI_IE9079.0,6_IL.7,19_IC2986682.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Manila, D9",
     "baseline_country": "Philippines",
     "company": "Google",
@@ -165,10 +147,10 @@
     "baseline_location": "Singapore",
     "baseline_country": "Singapore",
     "company": "Google",
-    "matched_city": "Singapore",
-    "url": "https://www.glassdoor.com/Reviews/Google-Singapore-Reviews-EI_IE9079.0,6_IL.7,16_IN215.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Taipei, TPQ",
@@ -194,15 +176,6 @@
     "company": "Google",
     "matched_city": "Santiago",
     "url": "https://www.glassdoor.com/Reviews/Google-Santiago-Reviews-EI_IE9079.0,6_IL.7,15_IC2434030.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
-    "baseline_location": "São Paulo, SP",
-    "baseline_country": "Brazil",
-    "company": "Google",
-    "matched_city": "São Paulo",
-    "url": "https://www.glassdoor.com/Reviews/Google-S%C3%A3o%20Paulo-Reviews-EI_IE9079.0,6_IL.7,16_IC2479061.htm",
     "reviews_count": null,
     "status": "found"
   },

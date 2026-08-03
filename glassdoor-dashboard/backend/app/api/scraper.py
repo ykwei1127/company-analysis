@@ -9,6 +9,8 @@ import socket
 from pathlib import Path
 from typing import Optional
 
+from .settings import _load_config
+
 from fastapi import APIRouter
 
 router = APIRouter(tags=["scraper"])
@@ -68,7 +70,7 @@ async def scraper_start(ports: str = "9222", mode: str = "matched", source_mode:
     Args:
         ports: Comma-separated Chrome debug ports
         mode: 'matched' or 'baseline'
-        source_mode: 'all', 'office', 'country', or 'scan'
+        source_mode: 'all', 'office', 'city', 'country', 'scan', or 'mix'
         companies: Comma-separated company names to filter (e.g., "ASUS,NVIDIA")
     """
     if _scraper_state["running"]:
@@ -178,7 +180,8 @@ def check_login(port: int = 9222):
 @router.get("/scraper/chrome-status")
 def chrome_status():
     """Check Chrome debug instances."""
-    ports = [9222, 9223, 9224]
+    config = _load_config()
+    ports = config.get("PARALLEL_PORTS", [9222, 9223, 9224, 9225, 9226, 9227])
     results = {}
     for port in ports:
         results[port] = _is_port_open(port)
@@ -216,7 +219,12 @@ def launch_chrome(port: int = 9222):
     # Find the actual ASUS Glassdoor URL from matched data
     test_url = _get_asus_glassdoor_url()
 
-    user_data_dir = os.path.expandvars(r"%USERPROFILE%\selenium\ChromeProfile" + (str(port) if port != 9222 else ""))
+    config = _load_config()
+    port_suffix = "" if port == 9222 else str(port)
+    user_data_dir = os.path.expandvars(r"%USERPROFILE%\selenium\ChromeProfile" + port_suffix)
+    all_ports = config.get("PARALLEL_PORTS", [9222, 9223, 9224, 9225, 9226, 9227])
+    if port not in all_ports:
+        return {"status": "error", "message": f"Port {port} is not in configured parallel ports: {all_ports}"}
     cmd = [
         chrome_path,
         f"--remote-debugging-port={port}",

@@ -90,29 +90,29 @@
   {
     "location": "Hemel Hempstead, ENG",
     "country": "United Kingdom",
-    "page_heading": "ASUS Hemel Hempstead (United Kingdom)",
-    "heading_is_generic": false,
+    "page_heading": null,
+    "heading_is_generic": true,
     "list_rating": 3.9,
     "address": "Hemel Hempstead Industrial Estate, Hemel Hempstead, ENG, HP2 4FQ, United Kingdom",
-    "url": "https://www.glassdoor.com/Reviews/ASUS-Hemel-Hempstead-Reviews-EI_IE40093.0,4_IL.5,20_IC2669775.htm",
-    "reviews_count": 19,
-    "status": "found"
+    "url": null,
+    "reviews_count": null,
+    "status": "no_review_url"
   },
   {
     "location": "Milan, LOM",
     "country": "Italy",
-    "page_heading": "ASUS Milan (Italy)",
-    "heading_is_generic": false,
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
     "list_rating": 1.0,
     "address": "Str. Padana Superiore, 28, Milan, LOM, 20063, Italy",
     "url": "https://www.glassdoor.com/Reviews/ASUS-Milan-Reviews-EI_IE40093.0,4_IL.5,10_IC2802090.htm",
-    "reviews_count": 2,
+    "reviews_count": null,
     "status": "found"
   },
   {
     "location": "Moravská Ostrava, MO",
     "country": "Czech Republic",
-    "page_heading": "ASUS Moravská Ostrava (Czech Republic)",
+    "page_heading": "ASUS",
     "heading_is_generic": true,
     "list_rating": null,
     "address": "Hrušovská 2678/20, Moravská Ostrava, MO, 702 00, Czech Republic",
@@ -202,11 +202,11 @@
     "country": "Malaysia",
     "page_heading": "ASUS",
     "heading_is_generic": true,
-    "list_rating": 4.2,
+    "list_rating": 4.6,
     "address": "10, Menara Keck Seng, 203, Jalan Bukit Bintang, Bukit Bintang, Kuala Lumpur, 14, 55100 , Malaysia",
-    "url": "https://www.glassdoor.com/Reviews/ASUS-Kuala-Lumpur-Reviews-EI_IE40093.0,4_IL.5,17_IC2986682.htm",
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "no_review_url"
   },
   {
     "location": "Manila, D9",
@@ -257,7 +257,7 @@
     "country": "Taiwan",
     "page_heading": "ASUS",
     "heading_is_generic": true,
-    "list_rating": 3.7,
+    "list_rating": 3.8,
     "address": "No. 15, Li-De Road, Beitou District, Taipei, TPQ, 112, Taiwan",
     "url": "https://www.glassdoor.com/Reviews/ASUS-Taipei-Reviews-EI_IE40093.0,4_IL.5,11_IC3271041.htm",
     "reviews_count": null,
@@ -301,11 +301,11 @@
     "country": "Brazil",
     "page_heading": "ASUS",
     "heading_is_generic": true,
-    "list_rating": 3.2,
+    "list_rating": 3.1,
     "address": "Alameda Olga, 388 - Barra Funda, São Paulo, SP, 01155-040, Brazil",
-    "url": "https://www.glassdoor.com/Reviews/ASUS-S%C3%A3o-Paulo-Reviews-EI_IE40093.0,4_IL.5,14_IC2479061.htm",
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "no_review_url"
   },
   {
     "location": "Sydney, NSW",

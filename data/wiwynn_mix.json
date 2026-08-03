@@ -1,0 +1,350 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": "",
+    "company": "Wiwynn",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Reviews-E1161475.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "Wiwynn",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Wiwynn",
+    "matched_city": "Sydney",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Sydney-Reviews-EI_IE1161475.0,6_IL.7,13_IC2235932.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Wiwynn",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Australia-Reviews-EI_IE1161475.0,6_IL.7,16_IN16.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Wiwynn",
+    "matched_city": "Markham",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Markham-Reviews-EI_IE1161475.0,6_IL.7,14_IC2280736.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Wiwynn",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Canada-Reviews-EI_IE1161475.0,6_IL.7,13_IN3.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Wiwynn",
+    "matched_city": "Santiago",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Santiago-Reviews-EI_IE1161475.0,6_IL.7,15_IC2434030.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Wiwynn",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-France-Reviews-EI_IE1161475.0,6_IL.7,13_IN86.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Wiwynn",
+    "matched_city": "Ratingen",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Ratingen-Reviews-EI_IE1161475.0,6_IL.7,15_IC2584004.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Wiwynn",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Germany-Reviews-EI_IE1161475.0,6_IL.7,14_IN96.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Wiwynn",
+    "matched_city": "Budapest",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Budapest-Reviews-EI_IE1161475.0,6_IL.7,15_IC3125126.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Wiwynn",
+    "matched_city": "Mumbai",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Mumbai-Reviews-EI_IE1161475.0,6_IL.7,13_IC2851180.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Wiwynn",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-India-Reviews-EI_IE1161475.0,6_IL.7,12_IN115.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Wiwynn",
+    "matched_city": "Jakarta",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Jakarta-Reviews-EI_IE1161475.0,6_IL.7,14_IC2709872.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Wiwynn",
+    "matched_city": "Milan",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Milan-Reviews-EI_IE1161475.0,6_IL.7,12_IC2802090.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Wiwynn",
+    "matched_city": "Tokyo",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Tokyo-Reviews-EI_IE1161475.0,6_IL.7,12_IC2851580.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Wiwynn",
+    "matched_city": "Emmen",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Emmen-Reviews-EI_IE1161475.0,6_IL.7,12_IC3060162.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Wiwynn",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Netherlands-Reviews-EI_IE1161475.0,6_IL.7,18_IN178.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Wiwynn",
+    "matched_city": "Manila",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Manila-Reviews-EI_IE1161475.0,6_IL.7,13_IC2363570.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Wiwynn",
+    "matched_city": "Seoul",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Seoul-Reviews-EI_IE1161475.0,6_IL.7,12_IC3021489.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Wiwynn",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-South-Korea-Reviews-EI_IE1161475.0,6_IL.7,18_IN135.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Wiwynn",
+    "matched_city": "Barcelona",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Barcelona-Reviews-EI_IE1161475.0,6_IL.7,16_IC2547194.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Wiwynn",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Spain-Reviews-EI_IE1161475.0,6_IL.7,12_IN219.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Taipei, TPQ",
+    "baseline_country": "Taiwan",
+    "company": "Wiwynn",
+    "matched_city": "Taipei",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Taipei-Reviews-EI_IE1161475.0,6_IL.7,13_IC3271041.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Wiwynn",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Taiwan-Reviews-EI_IE1161475.0,6_IL.7,13_IN240.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "Wiwynn Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Wiwynn",
+    "matched_city": "Bangkok",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Bangkok-Reviews-EI_IE1161475.0,6_IL.7,14_IC3179725.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Wiwynn",
+    "matched_city": "Dubai",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Dubai-Reviews-EI_IE1161475.0,6_IL.7,12_IC2204498.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Wiwynn",
+    "matched_city": "Fremont",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-Fremont-Reviews-EI_IE1161475.0,6_IL.7,14_IC1147355.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Wiwynn",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Wiwynn-United-States-Reviews-EI_IE1161475.0,6_IL.7,20_IN1.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  }
+]

@@ -24,7 +24,7 @@
     >
       <div style="font-size: 13px; line-height: 1.6;">
         Please start Chrome with remote debugging port first.<br>
-        Run: <code>啟動Chrome.bat</code> (port 9222, 9223, 9224)<br>
+        Run: <code>啟動Chrome.bat</code> (port 9222, 9223, 9224, 9225, 9226, 9227)<br>
         Or use <router-link to="/scraper" style="color: var(--el-color-primary);">Scraper page</router-link> to launch Chrome.
         <div style="margin-top: 8px;">
           <el-button size="small" type="primary" @click="checkChromeStatus">Check Chrome Status</el-button>
@@ -431,7 +431,7 @@ const configLoaded = ref(false)
 const configSaved = ref(false)
 const config = ref({
   include_baseline: true,
-  parallel_ports: [9222, 9223, 9224],
+  parallel_ports: [9222, 9223, 9224, 9225, 9226, 9227],
   scraper_config: { mode: 'manual', wait_time: 5, delay_between_requests: 3 },
   output_config: {},
 })

@@ -22,17 +22,6 @@
     "status": "found"
   },
   {
-    "location": "Add a review",
-    "country": null,
-    "page_heading": "Rate a company",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
     "location": "Boise, ID",
     "country": "United States",
     "page_heading": "HP Inc.",
@@ -70,7 +59,7 @@
     "country": "Mexico",
     "page_heading": "HP Inc.",
     "heading_is_generic": true,
-    "list_rating": 4.2,
+    "list_rating": 4.1,
     "address": "Montemorelos 299, Loma Bonita, Guadalajara, JAL, 45060, Mexico",
     "url": "https://www.glassdoor.com/Reviews/HP-Inc-Guadalajara-Reviews-EI_IE1093161.0,6_IL.7,18_IC3486357.htm",
     "reviews_count": null,
@@ -103,7 +92,7 @@
     "country": "United States",
     "page_heading": "HP Inc.",
     "heading_is_generic": true,
-    "list_rating": 3.9,
+    "list_rating": 4.2,
     "address": "Portland, OR, United States",
     "url": "https://www.glassdoor.com/Reviews/HP-Inc-Portland-Reviews-EI_IE1093161.0,6_IL.7,15_IC1151614.htm",
     "reviews_count": null,
@@ -169,7 +158,7 @@
     "country": "United States",
     "page_heading": "HP Inc.",
     "heading_is_generic": true,
-    "list_rating": 3.6,
+    "list_rating": 3.7,
     "address": "Vancouver, WA, United States",
     "url": "https://www.glassdoor.com/Reviews/HP-Inc-Vancouver-Reviews-EI_IE1093161.0,6_IL.7,16_IC1150413.htm",
     "reviews_count": null,
@@ -259,16 +248,16 @@
     "heading_is_generic": true,
     "list_rating": 3.9,
     "address": "Sant Cugat del Vallès, CT, Spain",
-    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Sant-Cugat-del-Vall%C3%A8s-Reviews-EI_IE1093161.0,6_IL.7,28_IC4843928.htm",
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "no_review_url"
   },
   {
     "location": "Bengaluru, KA",
     "country": "India",
     "page_heading": "HP Inc.",
     "heading_is_generic": true,
-    "list_rating": 4.0,
+    "list_rating": 3.9,
     "address": "Bengaluru, KA, India",
     "url": "https://www.glassdoor.com/Reviews/HP-Inc-Bengaluru-Reviews-EI_IE1093161.0,6_IL.7,16_IC2940587.htm",
     "reviews_count": null,
@@ -279,7 +268,7 @@
     "country": "Singapore",
     "page_heading": "HP Inc.",
     "heading_is_generic": true,
-    "list_rating": 4.1,
+    "list_rating": 4.0,
     "address": "1 Depot Close, Singapore, Singapore, 109841 , Singapore",
     "url": "https://www.glassdoor.com/Reviews/HP-Inc-Singapore-Reviews-EI_IE1093161.0,6_IL.7,16_IC3235921.htm",
     "reviews_count": null,
@@ -317,27 +306,5 @@
     "url": "https://www.glassdoor.com/Reviews/HP-Inc-Whitefield-Reviews-EI_IE1093161.0,6_IL.7,17_IC2941717.htm",
     "reviews_count": null,
     "status": "found"
-  },
-  {
-    "location": "HP Inc. locations",
-    "country": null,
-    "page_heading": "HP Inc. Office Locations",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
-    "location": "Cookie Consent Tool",
-    "country": null,
-    "page_heading": "HP Inc. Office Locations",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
   }
 ]

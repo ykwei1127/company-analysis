@@ -1,0 +1,182 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": null,
+    "company": "Trend Micro Inc.",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Reviews-E8983.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Trend Micro Inc.",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Taiwan-Reviews-EI_IE8983.0,15_IL.16,22_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Trend Micro Inc.",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-United-States-Reviews-EI_IE8983.0,15_IL.16,29_IN1.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Trend Micro Inc.",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Canada-Reviews-EI_IE8983.0,15_IL.16,22_IN3.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Trend Micro Inc.",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Spain-Reviews-EI_IE8983.0,15_IL.16,21_IN219.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Trend Micro Inc.",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Netherlands-Reviews-EI_IE8983.0,15_IL.16,27_IN178.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Trend Micro Inc.",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-France-Reviews-EI_IE8983.0,15_IL.16,22_IN86.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Trend Micro Inc.",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Germany-Reviews-EI_IE8983.0,15_IL.16,23_IN96.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Trend Micro Inc.",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-India-Reviews-EI_IE8983.0,15_IL.16,21_IN115.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Trend Micro Inc.",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-South-Korea-Reviews-EI_IE8983.0,15_IL.16,27_IN135.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Singapore",
+    "baseline_country": "Singapore",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Trend Micro Inc.",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Trend Micro Inc.",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Trend-Micro-Inc-Australia-Reviews-EI_IE8983.0,15_IL.16,25_IN16.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

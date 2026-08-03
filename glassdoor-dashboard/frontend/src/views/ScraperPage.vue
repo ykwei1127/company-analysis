@@ -17,15 +17,21 @@
     <!-- Chrome Status -->
     <el-card style="margin-bottom: 16px">
       <template #header><span>Chrome Debug Instances</span></template>
-      <div class="chrome-status">
-        <div v-for="(open, port) in chromeStatus" :key="port" class="port-status">
-          <span class="port-label">Port {{ port }}</span>
-          <el-tag :type="open ? 'success' : 'danger'" size="small">{{ open ? 'Connected' : 'Offline' }}</el-tag>
-          <el-button v-if="!open && !STATIC_MODE" size="small" type="primary" plain @click="handleLaunchChrome(Number(port))" :loading="launchingPort === Number(port)">Launch</el-button>
+      <div class="chrome-status-panel">
+        <div class="port-grid">
+          <div v-for="(open, port) in chromeStatus" :key="port" class="port-status">
+            <div class="port-meta">
+              <span class="port-label">Port {{ port }}</span>
+              <el-tag :type="open ? 'success' : 'danger'" size="small">{{ open ? 'Connected' : 'Offline' }}</el-tag>
+            </div>
+            <el-button v-if="!open && !STATIC_MODE" size="small" type="primary" plain @click="handleLaunchChrome(Number(port))" :loading="launchingPort === Number(port)">Launch</el-button>
+          </div>
         </div>
-        <el-button size="small" @click="refreshChromeStatus" :loading="checkingChrome" :disabled="STATIC_MODE">Refresh</el-button>
-        <el-button size="small" type="primary" @click="handleLaunchAll" :loading="launchingAll" :disabled="STATIC_MODE || offlinePorts.length === 0">Launch All</el-button>
-        <el-button size="small" type="danger" plain @click="handleCloseAll" :loading="closingAll" :disabled="STATIC_MODE || connectedPorts.length === 0">Close All</el-button>
+        <div class="chrome-actions">
+          <el-button size="small" @click="refreshChromeStatus" :loading="checkingChrome" :disabled="STATIC_MODE">Refresh</el-button>
+          <el-button size="small" type="primary" @click="handleLaunchAll" :loading="launchingAll" :disabled="STATIC_MODE || offlinePorts.length === 0">Launch All</el-button>
+          <el-button size="small" type="danger" plain @click="handleCloseAll" :loading="closingAll" :disabled="STATIC_MODE || connectedPorts.length === 0">Close All</el-button>
+        </div>
       </div>
 
       <!-- Login check -->
@@ -538,9 +544,12 @@ async function handleStopDeploy() {
 .page-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin: 0 0 14px 0; }
 .card-header { display: flex; align-items: center; justify-content: space-between; }
 
-.chrome-status { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.port-status { display: flex; align-items: center; gap: 6px; }
+.chrome-status-panel { display: flex; flex-direction: column; gap: 12px; }
+.port-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.port-status { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--el-fill-color-blank); }
+.port-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .port-label { font-size: 13px; color: var(--text-secondary); }
+.chrome-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .login-status { margin-top: 12px; }
 
 .scraper-controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }

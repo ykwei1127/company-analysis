@@ -1,0 +1,350 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": "",
+    "company": "Google",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "Google",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Google",
+    "matched_city": "Sydney",
+    "url": "https://www.glassdoor.com/Reviews/Google-Sydney-Reviews-EI_IE9079.0,6_IL.7,13_IC2235932.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Google",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Google-Australia-Reviews-EI_IE9079.0,6_IL.7,16_IN16.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Google",
+    "matched_city": "Markham",
+    "url": "https://www.glassdoor.com/Reviews/Google-Markham-Reviews-EI_IE9079.0,6_IL.7,14_IC2280736.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Google",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Google-Canada-Reviews-EI_IE9079.0,6_IL.7,13_IN3.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Google",
+    "matched_city": "Santiago",
+    "url": "https://www.glassdoor.com/Reviews/Google-Santiago-Reviews-EI_IE9079.0,6_IL.7,15_IC2434030.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Google",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Google-France-Reviews-EI_IE9079.0,6_IL.7,13_IN86.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Google",
+    "matched_city": "Ratingen",
+    "url": "https://www.glassdoor.com/Reviews/Google-Ratingen-Reviews-EI_IE9079.0,6_IL.7,15_IC2584004.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Google",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Google-Germany-Reviews-EI_IE9079.0,6_IL.7,14_IN96.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Google",
+    "matched_city": "Budapest",
+    "url": "https://www.glassdoor.com/Reviews/Google-Budapest-Reviews-EI_IE9079.0,6_IL.7,15_IC3125126.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Google",
+    "matched_city": "Mumbai",
+    "url": "https://www.glassdoor.com/Reviews/Google-Mumbai-Reviews-EI_IE9079.0,6_IL.7,13_IC2851180.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Google",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Google-India-Reviews-EI_IE9079.0,6_IL.7,12_IN115.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Google",
+    "matched_city": "Jakarta",
+    "url": "https://www.glassdoor.com/Reviews/Google-Jakarta-Reviews-EI_IE9079.0,6_IL.7,14_IC2709872.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Google",
+    "matched_city": "Milan",
+    "url": "https://www.glassdoor.com/Reviews/Google-Milan-Reviews-EI_IE9079.0,6_IL.7,12_IC2802090.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Google",
+    "matched_city": "Tokyo",
+    "url": "https://www.glassdoor.com/Reviews/Google-Tokyo-Reviews-EI_IE9079.0,6_IL.7,12_IC2851580.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Google",
+    "matched_city": "Emmen",
+    "url": "https://www.glassdoor.com/Reviews/Google-Emmen-Reviews-EI_IE9079.0,6_IL.7,12_IC3060162.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Google",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Google-Netherlands-Reviews-EI_IE9079.0,6_IL.7,18_IN178.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Google",
+    "matched_city": "Manila",
+    "url": "https://www.glassdoor.com/Reviews/Google-Manila-Reviews-EI_IE9079.0,6_IL.7,13_IC2363570.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Google",
+    "matched_city": "Seoul",
+    "url": "https://www.glassdoor.com/Reviews/Google-Seoul-Reviews-EI_IE9079.0,6_IL.7,12_IC3021489.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Google",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Google-South-Korea-Reviews-EI_IE9079.0,6_IL.7,18_IN135.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Google",
+    "matched_city": "Barcelona",
+    "url": "https://www.glassdoor.com/Reviews/Google-Barcelona-Reviews-EI_IE9079.0,6_IL.7,16_IC2547194.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Google",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Google-Spain-Reviews-EI_IE9079.0,6_IL.7,12_IN219.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Taipei, TPQ",
+    "baseline_country": "Taiwan",
+    "company": "Google",
+    "matched_city": "Taipei",
+    "url": "https://www.glassdoor.com/Reviews/Google-Taipei-Reviews-EI_IE9079.0,6_IL.7,13_IC3271041.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Google",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Google-Taiwan-Reviews-EI_IE9079.0,6_IL.7,13_IN240.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "Google Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Google",
+    "matched_city": "Bangkok",
+    "url": "https://www.glassdoor.com/Reviews/Google-Bangkok-Reviews-EI_IE9079.0,6_IL.7,14_IC3179725.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Google",
+    "matched_city": "Dubai",
+    "url": "https://www.glassdoor.com/Reviews/Google-Dubai-Reviews-EI_IE9079.0,6_IL.7,12_IC2204498.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Google",
+    "matched_city": "Fremont",
+    "url": "https://www.glassdoor.com/Reviews/Google-Fremont-Reviews-EI_IE9079.0,6_IL.7,14_IC1147355.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Google",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Google-United-States-Reviews-EI_IE9079.0,6_IL.7,20_IN1.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  }
+]

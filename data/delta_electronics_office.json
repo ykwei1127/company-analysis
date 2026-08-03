@@ -22,17 +22,6 @@
     "status": "found"
   },
   {
-    "location": "Add a review",
-    "country": null,
-    "page_heading": "Rate a company",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
     "location": "Fremont, CA",
     "country": "United States",
     "page_heading": "Delta Electronics",
@@ -46,54 +35,32 @@
   {
     "location": "Hoofddorp, NH",
     "country": "Netherlands",
-    "page_heading": "Delta Electronics",
-    "heading_is_generic": true,
+    "page_heading": "Delta Electronics Hoofddorp (Netherlands)",
+    "heading_is_generic": false,
     "list_rating": 3.5,
     "address": "Zandsteen 15,, Hoofddorp, NH, 2132, Netherlands",
     "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Hoofddorp-Reviews-EI_IE41146.0,17_IL.18,27_IC3063772.htm",
-    "reviews_count": null,
+    "reviews_count": 19,
     "status": "found"
   },
   {
     "location": "Taipei, TPQ",
     "country": "Taiwan",
-    "page_heading": "Delta Electronics",
-    "heading_is_generic": true,
+    "page_heading": "Delta Electronics Taipei (Taiwan)",
+    "heading_is_generic": false,
     "list_rating": 4.0,
     "address": "186 Ruey Kuang Rd., Taipei, TPQ, 11491, Taiwan",
     "url": "https://www.glassdoor.com/Reviews/Delta-Electronics-Taipei-Reviews-EI_IE41146.0,17_IL.18,24_IC3271041.htm",
-    "reviews_count": null,
+    "reviews_count": 126,
     "status": "found"
   },
   {
     "location": "Notting Hill, VIC",
     "country": "Australia",
-    "page_heading": "Delta Electronics",
+    "page_heading": "Delta Electronics Notting Hill (Australia)",
     "heading_is_generic": true,
     "list_rating": null,
     "address": "20-21/45 Normanby Road, Notting Hill, VIC, 3168, Australia",
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
-    "location": "Delta Electronics locations",
-    "country": null,
-    "page_heading": "Delta Electronics Office Locations",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
-    "location": "Cookie Consent Tool",
-    "country": null,
-    "page_heading": "Delta Electronics Office Locations",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
     "url": null,
     "reviews_count": null,
     "status": "no_review_url"

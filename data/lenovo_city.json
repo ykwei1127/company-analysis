@@ -27,6 +27,33 @@
     "status": "found"
   },
   {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Lenovo",
+    "matched_city": "Morrisville, NC",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-Morrisville-Reviews-EI_IE8034.0,6_IL.7,18_IC1138956.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Lenovo",
+    "matched_city": "San Francisco, CA",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-San-Francisco-Reviews-EI_IE8034.0,6_IL.7,20_IC1147401.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Lenovo",
+    "matched_city": "San Jose, CA",
+    "url": "https://www.glassdoor.com/Reviews/Lenovo-San-Jose-Reviews-EI_IE8034.0,6_IL.7,15_IC1147436.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
     "baseline_location": "Markham, ON",
     "baseline_country": "Canada",
     "company": "Lenovo",
@@ -63,15 +90,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Hemel Hempstead, ENG",
-    "baseline_country": "United Kingdom",
-    "company": "Lenovo",
-    "matched_city": "Hemel Hempstead",
-    "url": "https://www.glassdoor.com/Reviews/Lenovo-Hemel%20Hempstead-Reviews-EI_IE8034.0,6_IL.7,22_IC2669775.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Milan, LOM",
     "baseline_country": "Italy",
     "company": "Lenovo",
@@ -84,10 +102,10 @@
     "baseline_location": "Noisy-le-Grand, A8",
     "baseline_country": "France",
     "company": "Lenovo",
-    "matched_city": "Noisy-le-Grand",
-    "url": "https://www.glassdoor.com/Reviews/Lenovo-Noisy-le-Grand-Reviews-EI_IE8034.0,6_IL.7,21_IC3100822.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Ratingen, NW",
@@ -126,15 +144,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Kuala Lumpur, 14",
-    "baseline_country": "Malaysia",
-    "company": "Lenovo",
-    "matched_city": "Kuala Lumpur",
-    "url": "https://www.glassdoor.com/Reviews/Lenovo-Kuala%20Lumpur-Reviews-EI_IE8034.0,6_IL.7,19_IC2986682.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Manila, D9",
     "baseline_country": "Philippines",
     "company": "Lenovo",
@@ -165,10 +174,10 @@
     "baseline_location": "Singapore",
     "baseline_country": "Singapore",
     "company": "Lenovo",
-    "matched_city": "Singapore",
-    "url": "https://www.glassdoor.com/Reviews/Lenovo-Singapore-Reviews-EI_IE8034.0,6_IL.7,16_IN215.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Taipei, TPQ",
@@ -194,15 +203,6 @@
     "company": "Lenovo",
     "matched_city": "Santiago",
     "url": "https://www.glassdoor.com/Reviews/Lenovo-Santiago-Reviews-EI_IE8034.0,6_IL.7,15_IC2434030.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
-    "baseline_location": "São Paulo, SP",
-    "baseline_country": "Brazil",
-    "company": "Lenovo",
-    "matched_city": "Campinas, SP",
-    "url": "https://www.glassdoor.com/Reviews/Lenovo-Campinas-Reviews-EI_IE8034.0,6_IL.7,15_IC2490130.htm",
     "reviews_count": null,
     "status": "found"
   },

@@ -63,15 +63,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Hemel Hempstead, ENG",
-    "baseline_country": "United Kingdom",
-    "company": "Acer Group",
-    "matched_city": "Hemel Hempstead",
-    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Hemel%20Hempstead-Reviews-EI_IE3802.0,10_IL.11,26_IC2669775.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Milan, LOM",
     "baseline_country": "Italy",
     "company": "Acer Group",
@@ -84,10 +75,10 @@
     "baseline_location": "Noisy-le-Grand, A8",
     "baseline_country": "France",
     "company": "Acer Group",
-    "matched_city": "Noisy-le-Grand",
-    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Noisy-le-Grand-Reviews-EI_IE3802.0,10_IL.11,25_IC3100822.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Ratingen, NW",
@@ -126,15 +117,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Kuala Lumpur, 14",
-    "baseline_country": "Malaysia",
-    "company": "Acer Group",
-    "matched_city": "Kuala Lumpur",
-    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Kuala%20Lumpur-Reviews-EI_IE3802.0,10_IL.11,23_IC2986682.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Manila, D9",
     "baseline_country": "Philippines",
     "company": "Acer Group",
@@ -165,10 +147,10 @@
     "baseline_location": "Singapore",
     "baseline_country": "Singapore",
     "company": "Acer Group",
-    "matched_city": "Singapore",
-    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Singapore-Reviews-EI_IE3802.0,10_IL.11,20_IN215.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Taipei, TPQ",
@@ -194,15 +176,6 @@
     "company": "Acer Group",
     "matched_city": "Santiago",
     "url": "https://www.glassdoor.com/Reviews/Acer-Group-Santiago-Reviews-EI_IE3802.0,10_IL.11,19_IC2434030.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
-    "baseline_location": "São Paulo, SP",
-    "baseline_country": "Brazil",
-    "company": "Acer Group",
-    "matched_city": "São Paulo",
-    "url": "https://www.glassdoor.com/Reviews/Acer-Group-S%C3%A3o%20Paulo-Reviews-EI_IE3802.0,10_IL.11,20_IC2479061.htm",
     "reviews_count": null,
     "status": "found"
   },

@@ -103,7 +103,7 @@
     "country": "India",
     "page_heading": "Lenovo",
     "heading_is_generic": true,
-    "list_rating": 3.8,
+    "list_rating": 3.9,
     "address": "Bengaluru, KA, India",
     "url": "https://www.glassdoor.com/Reviews/Lenovo-Bengaluru-Reviews-EI_IE8034.0,6_IL.7,16_IC2940587.htm",
     "reviews_count": null,
@@ -180,7 +180,7 @@
     "country": "Argentina",
     "page_heading": "Lenovo",
     "heading_is_generic": true,
-    "list_rating": 4.0,
+    "list_rating": 3.9,
     "address": "Buenos Aires, C, Argentina",
     "url": "https://www.glassdoor.com/Reviews/Lenovo-Buenos-Aires-Reviews-EI_IE8034.0,6_IL.7,19_IC2242084.htm",
     "reviews_count": null,
@@ -226,20 +226,20 @@
     "heading_is_generic": true,
     "list_rating": 4.2,
     "address": "Martínez, B, Argentina",
-    "url": "https://www.glassdoor.com/Reviews/Lenovo-Mart%C3%ADnez-Reviews-EI_IE8034.0,6_IL.7,15_IC2207815.htm",
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "no_review_url"
   },
   {
     "location": "São Paulo, SP",
     "country": "Brazil",
     "page_heading": "Lenovo",
     "heading_is_generic": true,
-    "list_rating": 4.3,
+    "list_rating": 4.2,
     "address": "São Paulo, SP, Brazil",
-    "url": "https://www.glassdoor.com/Reviews/Lenovo-S%C3%A3o-Paulo-Reviews-EI_IE8034.0,6_IL.7,16_IC2479061.htm",
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "no_review_url"
   },
   {
     "location": "Sorocaba, SP",

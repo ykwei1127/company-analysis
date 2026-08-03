@@ -1,0 +1,350 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": "",
+    "company": "Acer Group",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Reviews-E3802.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "Acer Group",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Acer Group",
+    "matched_city": "Sydney",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Sydney-Reviews-EI_IE3802.0,10_IL.11,17_IC2235932.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Acer Group",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Australia-Reviews-EI_IE3802.0,10_IL.11,20_IN16.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Acer Group",
+    "matched_city": "Markham",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Markham-Reviews-EI_IE3802.0,10_IL.11,18_IC2280736.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Acer Group",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Canada-Reviews-EI_IE3802.0,10_IL.11,17_IN3.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Acer Group",
+    "matched_city": "Santiago",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Santiago-Reviews-EI_IE3802.0,10_IL.11,19_IC2434030.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Acer Group",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-France-Reviews-EI_IE3802.0,10_IL.11,17_IN86.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Acer Group",
+    "matched_city": "Ratingen",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Ratingen-Reviews-EI_IE3802.0,10_IL.11,19_IC2584004.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Acer Group",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Germany-Reviews-EI_IE3802.0,10_IL.11,18_IN96.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Acer Group",
+    "matched_city": "Budapest",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Budapest-Reviews-EI_IE3802.0,10_IL.11,19_IC3125126.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Acer Group",
+    "matched_city": "Mumbai",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Mumbai-Reviews-EI_IE3802.0,10_IL.11,17_IC2851180.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Acer Group",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-India-Reviews-EI_IE3802.0,10_IL.11,16_IN115.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Acer Group",
+    "matched_city": "Jakarta",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Jakarta-Reviews-EI_IE3802.0,10_IL.11,18_IC2709872.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Acer Group",
+    "matched_city": "Milan",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Milan-Reviews-EI_IE3802.0,10_IL.11,16_IC2802090.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Acer Group",
+    "matched_city": "Tokyo",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Tokyo-Reviews-EI_IE3802.0,10_IL.11,16_IC2851580.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Acer Group",
+    "matched_city": "Emmen",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Emmen-Reviews-EI_IE3802.0,10_IL.11,16_IC3060162.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Acer Group",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Netherlands-Reviews-EI_IE3802.0,10_IL.11,22_IN178.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Acer Group",
+    "matched_city": "Manila",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Manila-Reviews-EI_IE3802.0,10_IL.11,17_IC2363570.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Acer Group",
+    "matched_city": "Seoul",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Seoul-Reviews-EI_IE3802.0,10_IL.11,16_IC3021489.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Acer Group",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-South-Korea-Reviews-EI_IE3802.0,10_IL.11,22_IN135.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Acer Group",
+    "matched_city": "Barcelona",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Barcelona-Reviews-EI_IE3802.0,10_IL.11,20_IC2547194.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Acer Group",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Spain-Reviews-EI_IE3802.0,10_IL.11,16_IN219.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Taipei, TPQ",
+    "baseline_country": "Taiwan",
+    "company": "Acer Group",
+    "matched_city": "Taipei",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Taipei-Reviews-EI_IE3802.0,10_IL.11,17_IC3271041.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Acer Group",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Taiwan-Reviews-EI_IE3802.0,10_IL.11,17_IN240.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "Acer Group Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Acer Group",
+    "matched_city": "Bangkok",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Bangkok-Reviews-EI_IE3802.0,10_IL.11,18_IC3179725.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Acer Group",
+    "matched_city": "Dubai",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Dubai-Reviews-EI_IE3802.0,10_IL.11,16_IC2204498.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Acer Group",
+    "matched_city": "Fremont",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-Fremont-Reviews-EI_IE3802.0,10_IL.11,18_IC1147355.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Acer Group",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Acer-Group-United-States-Reviews-EI_IE3802.0,10_IL.11,24_IN1.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  }
+]

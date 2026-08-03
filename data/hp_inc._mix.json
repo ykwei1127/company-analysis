@@ -1,0 +1,696 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": "",
+    "company": "HP Inc.",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Reviews-E1093161.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "HP Inc.",
+    "matched_city": "Sydney",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Sydney-Reviews-EI_IE1093161.0,6_IL.7,13_IC2235932.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "HP Inc.",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Australia-Reviews-EI_IE1093161.0,6_IL.7,16_IN16.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "HP Inc.",
+    "matched_city": "Markham",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Markham-Reviews-EI_IE1093161.0,6_IL.7,14_IC2280736.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "HP Inc.",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Canada-Reviews-EI_IE1093161.0,6_IL.7,13_IN3.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "HP Inc.",
+    "matched_city": "Santiago",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Santiago-Reviews-EI_IE1093161.0,6_IL.7,15_IC2434030.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "HP Inc.",
+    "matched_city": "Meudon, A8",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Meudon-Reviews-EI_IE1093161.0,6_IL.7,13_IC3019026.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Meudon, A8, France"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "HP Inc.",
+    "matched_city": "Paris, A8",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Paris-Reviews-EI_IE1093161.0,6_IL.7,12_IC2881970.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.7,
+    "address": "Paris, A8, France"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "HP Inc.",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-France-Reviews-EI_IE1093161.0,6_IL.7,13_IN86.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "HP Inc.",
+    "matched_city": "Ratingen",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Ratingen-Reviews-EI_IE1093161.0,6_IL.7,15_IC2584004.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "HP Inc.",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Germany-Reviews-EI_IE1093161.0,6_IL.7,14_IN96.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "HP Inc.",
+    "matched_city": "Budapest",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Budapest-Reviews-EI_IE1093161.0,6_IL.7,15_IC3125126.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "HP Inc.",
+    "matched_city": "Bengaluru, KA",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Bengaluru-Reviews-EI_IE1093161.0,6_IL.7,16_IC2940587.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.9,
+    "address": "Bengaluru, KA, India"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "HP Inc.",
+    "matched_city": "Whitefield, KA",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Whitefield-Reviews-EI_IE1093161.0,6_IL.7,17_IC2941717.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.0,
+    "address": "Whitefield, KA, India"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "HP Inc.",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-India-Reviews-EI_IE1093161.0,6_IL.7,12_IN115.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "HP Inc.",
+    "matched_city": "Jakarta",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Jakarta-Reviews-EI_IE1093161.0,6_IL.7,14_IC2709872.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "HP Inc.",
+    "matched_city": "Milan",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Milan-Reviews-EI_IE1093161.0,6_IL.7,12_IC2802090.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "HP Inc.",
+    "matched_city": "Tokyo",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Tokyo-Reviews-EI_IE1093161.0,6_IL.7,12_IC2851580.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Guadalajara, JAL",
+    "baseline_country": "Mexico",
+    "company": "HP Inc.",
+    "matched_city": "Guadalajara, JAL",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Guadalajara-Reviews-EI_IE1093161.0,6_IL.7,18_IC3486357.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.1,
+    "address": "Montemorelos 299, Loma Bonita, Guadalajara, JAL, 45060, Mexico"
+  },
+  {
+    "baseline_location": "Tlaquepaque, JAL",
+    "baseline_country": "Mexico",
+    "company": "HP Inc.",
+    "matched_city": "Tlaquepaque, JAL",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Tlaquepaque-Reviews-EI_IE1093161.0,6_IL.7,18_IC3486348.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.2,
+    "address": "Tlaquepaque, JAL, Mexico"
+  },
+  {
+    "baseline_location": "Zapopan, JAL",
+    "baseline_country": "Mexico",
+    "company": "HP Inc.",
+    "matched_city": "Zapopan, JAL",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Zapopan-Reviews-EI_IE1093161.0,6_IL.7,14_IC3487018.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.1,
+    "address": "Zapopan, JAL, Mexico"
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "HP Inc.",
+    "matched_city": "Emmen",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Emmen-Reviews-EI_IE1093161.0,6_IL.7,12_IC3060162.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "HP Inc.",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Netherlands-Reviews-EI_IE1093161.0,6_IL.7,18_IN178.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "HP Inc.",
+    "matched_city": "Manila",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Manila-Reviews-EI_IE1093161.0,6_IL.7,13_IC2363570.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Bucharest, B",
+    "baseline_country": "Romania",
+    "company": "HP Inc.",
+    "matched_city": "Bucharest, B",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Bucharest-Reviews-EI_IE1093161.0,6_IL.7,16_IC3184907.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.8,
+    "address": "Bucharest, B, Romania"
+  },
+  {
+    "baseline_location": "Singapore",
+    "baseline_country": "Singapore",
+    "company": "HP Inc.",
+    "matched_city": "Singapore",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Singapore-Reviews-EI_IE1093161.0,6_IL.7,16_IC3235921.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "1 Depot Close, Singapore, Singapore, 109841 , Singapore"
+  },
+  {
+    "baseline_location": "Tuas, W",
+    "baseline_country": "Singapore",
+    "company": "HP Inc.",
+    "matched_city": "Tuas, W",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Tuas-Reviews-EI_IE1093161.0,6_IL.7,11_IC3235538.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.7,
+    "address": "Tuas, W, Singapore"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "HP Inc.",
+    "matched_city": "Seoul",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Seoul-Reviews-EI_IE1093161.0,6_IL.7,12_IC3021489.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "HP Inc.",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-South-Korea-Reviews-EI_IE1093161.0,6_IL.7,18_IN135.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "HP Inc.",
+    "matched_city": "Barcelona, CT",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Barcelona-Reviews-EI_IE1093161.0,6_IL.7,16_IC2547194.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.1,
+    "address": "Barcelona, CT, Spain"
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "HP Inc.",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Spain-Reviews-EI_IE1093161.0,6_IL.7,12_IN219.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Taipei, TPQ",
+    "baseline_country": "Taiwan",
+    "company": "HP Inc.",
+    "matched_city": "Taipei, TPQ",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Taipei-Reviews-EI_IE1093161.0,6_IL.7,13_IC3271041.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.1,
+    "address": "Taipei, TPQ, Taiwan"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "HP Inc.",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Taiwan-Reviews-EI_IE1093161.0,6_IL.7,13_IN240.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city",
+      "country"
+    ],
+    "page_heading": "HP Inc. Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "HP Inc.",
+    "matched_city": "Bangkok",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Bangkok-Reviews-EI_IE1093161.0,6_IL.7,14_IC3179725.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "HP Inc.",
+    "matched_city": "Dubai",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Dubai-Reviews-EI_IE1093161.0,6_IL.7,12_IC2204498.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "city"
+    ]
+  },
+  {
+    "baseline_location": "Cambridge, ENG",
+    "baseline_country": "United Kingdom",
+    "company": "HP Inc.",
+    "matched_city": "Cambridge, ENG",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Cambridge-Reviews-EI_IE1093161.0,6_IL.7,16_IC2662516.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.3,
+    "address": "Cambridge, ENG, 00000, United Kingdom"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Boise, ID",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Boise-Reviews-EI_IE1093161.0,6_IL.7,12_IC1127927.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.4,
+    "address": "Boise, ID, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Corvallis, OR",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Corvallis-Reviews-EI_IE1093161.0,6_IL.7,16_IC1151455.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.9,
+    "address": "Corvallis, OR, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Fort Collins, CO",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Fort-Collins-Reviews-EI_IE1093161.0,6_IL.7,19_IC1148233.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.1,
+    "address": "Fort Collins, CO, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Houston, TX",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Houston-Reviews-EI_IE1093161.0,6_IL.7,14_IC1140171.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "city"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.6,
+    "address": "Houston, TX, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-United-States-Reviews-EI_IE1093161.0,6_IL.7,20_IN1.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Palo Alto, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Palo Alto, CA",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Palo-Alto-Reviews-EI_IE1093161.0,6_IL.7,16_IC1147434.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.5,
+    "address": "Palo Alto, CA, United States"
+  },
+  {
+    "baseline_location": "Portland, OR",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Portland, OR",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Portland-Reviews-EI_IE1093161.0,6_IL.7,15_IC1151614.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 4.2,
+    "address": "Portland, OR, United States"
+  },
+  {
+    "baseline_location": "San Diego, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "San Diego, CA",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-San-Diego-Reviews-EI_IE1093161.0,6_IL.7,16_IC1147311.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.2,
+    "address": "San Diego, CA, United States"
+  },
+  {
+    "baseline_location": "San Jose, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "San Jose, CA",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-San-Jose-Reviews-EI_IE1093161.0,6_IL.7,15_IC1147436.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.4,
+    "address": "San Jose, CA, United States"
+  },
+  {
+    "baseline_location": "Spring, TX",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Spring, TX",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Spring-Reviews-EI_IE1093161.0,6_IL.7,13_IC1140222.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.9,
+    "address": "Spring, TX, United States"
+  },
+  {
+    "baseline_location": "Sunnyvale, CA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Sunnyvale, CA",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Sunnyvale-Reviews-EI_IE1093161.0,6_IL.7,16_IC1147442.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.4,
+    "address": "Sunnyvale, CA, United States"
+  },
+  {
+    "baseline_location": "Vancouver, WA",
+    "baseline_country": "United States",
+    "company": "HP Inc.",
+    "matched_city": "Vancouver, WA",
+    "url": "https://www.glassdoor.com/Reviews/HP-Inc-Vancouver-Reviews-EI_IE1093161.0,6_IL.7,16_IC1150413.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "HP Inc.",
+    "heading_is_generic": true,
+    "list_rating": 3.7,
+    "address": "Vancouver, WA, United States"
+  }
+]

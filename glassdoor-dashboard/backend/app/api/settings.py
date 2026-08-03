@@ -30,7 +30,7 @@ def get_config():
     config = _load_config()
     return {
         "include_baseline": config.get("INCLUDE_BASELINE", True),
-        "parallel_ports": config.get("PARALLEL_PORTS", [9222, 9223, 9224]),
+        "parallel_ports": config.get("PARALLEL_PORTS", [9222, 9223, 9224, 9225, 9226, 9227]),
         "scraper_config": config.get("SCRAPER_CONFIG", {}),
         "output_config": config.get("OUTPUT_CONFIG", {}),
     }
@@ -124,7 +124,7 @@ def _run_finder_subprocess(cmd, mode, companies=None):
 
     # Pass parallel ports from config.py so company_finder can use multiple Chrome instances
     config = _load_config()
-    parallel_ports = config.get("PARALLEL_PORTS", [9222, 9223, 9224])
+    parallel_ports = config.get("PARALLEL_PORTS", [9222, 9223, 9224, 9225, 9226, 9227])
     if parallel_ports:
         env["FINDER_PORTS"] = ",".join(str(p) for p in parallel_ports)
 
@@ -153,8 +153,9 @@ def _run_finder_subprocess(cmd, mode, companies=None):
         except Exception:
             pass
         finally:
-            with _finder_lock:
-                _finder_state["running"] = False
+            # Keep running state controlled by the process monitor.
+            # The stdout reader may end early due to pipe behavior; don't mark completion here.
+            pass
 
     threading.Thread(target=_reader, daemon=True).start()
 
@@ -162,6 +163,7 @@ def _run_finder_subprocess(cmd, mode, companies=None):
         proc.wait()
         with _finder_lock:
             _finder_state["running"] = False
+            _finder_state["process"] = None
         print(f"Finder ({mode}) process exited with code {proc.returncode}")
 
     threading.Thread(target=_monitor, daemon=True).start()
@@ -438,7 +440,7 @@ def _load_config() -> dict:
         pass
     return {
         "INCLUDE_BASELINE": ns.get("INCLUDE_BASELINE", True),
-        "PARALLEL_PORTS": ns.get("PARALLEL_PORTS", [9222, 9223, 9224]),
+        "PARALLEL_PORTS": ns.get("PARALLEL_PORTS", [9222, 9223, 9224, 9225, 9226, 9227]),
         "SCRAPER_CONFIG": ns.get("SCRAPER_CONFIG", {}),
         "OUTPUT_CONFIG": ns.get("OUTPUT_CONFIG", {}),
     }

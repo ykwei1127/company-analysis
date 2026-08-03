@@ -21,8 +21,8 @@
     "baseline_location": "Fremont, CA",
     "baseline_country": "United States",
     "company": "Wistron",
-    "matched_city": "Fremont",
-    "url": "https://www.glassdoor.com/Reviews/Wistron-Fremont-Reviews-EI_IE15218.0,7_IL.8,15_IC1147355.htm",
+    "matched_city": "Rolling Meadows, IL",
+    "url": "https://www.glassdoor.com/Reviews/Wistron-Rolling-Meadows-Reviews-EI_IE15218.0,7_IL.8,23_IC1128962.htm",
     "reviews_count": null,
     "status": "found"
   },
@@ -63,15 +63,6 @@
     "status": "found"
   },
   {
-    "baseline_location": "Hemel Hempstead, ENG",
-    "baseline_country": "United Kingdom",
-    "company": "Wistron",
-    "matched_city": "Hemel Hempstead",
-    "url": "https://www.glassdoor.com/Reviews/Wistron-Hemel%20Hempstead-Reviews-EI_IE15218.0,7_IL.8,23_IC2669775.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Milan, LOM",
     "baseline_country": "Italy",
     "company": "Wistron",
@@ -84,10 +75,10 @@
     "baseline_location": "Noisy-le-Grand, A8",
     "baseline_country": "France",
     "company": "Wistron",
-    "matched_city": "Noisy-le-Grand",
-    "url": "https://www.glassdoor.com/Reviews/Wistron-Noisy-le-Grand-Reviews-EI_IE15218.0,7_IL.8,22_IC3100822.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Ratingen, NW",
@@ -126,22 +117,13 @@
     "status": "found"
   },
   {
-    "baseline_location": "Kuala Lumpur, 14",
-    "baseline_country": "Malaysia",
-    "company": "Wistron",
-    "matched_city": "Kuala Lumpur",
-    "url": "https://www.glassdoor.com/Reviews/Wistron-Kuala%20Lumpur-Reviews-EI_IE15218.0,7_IL.8,20_IC2986682.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
     "baseline_location": "Manila, D9",
     "baseline_country": "Philippines",
     "company": "Wistron",
-    "matched_city": null,
-    "url": null,
+    "matched_city": "Manila",
+    "url": "https://www.glassdoor.com/Reviews/Wistron-Manila-Reviews-EI_IE15218.0,7_IL.8,14_IC2363570.htm",
     "reviews_count": null,
-    "status": "not_in_company"
+    "status": "found"
   },
   {
     "baseline_location": "Mumbai, MH",
@@ -165,10 +147,10 @@
     "baseline_location": "Singapore",
     "baseline_country": "Singapore",
     "company": "Wistron",
-    "matched_city": "Singapore",
-    "url": "https://www.glassdoor.com/Reviews/Wistron-Singapore-Reviews-EI_IE15218.0,7_IL.8,17_IN215.htm",
+    "matched_city": null,
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "not_in_company"
   },
   {
     "baseline_location": "Taipei, TPQ",
@@ -194,15 +176,6 @@
     "company": "Wistron",
     "matched_city": "Santiago",
     "url": "https://www.glassdoor.com/Reviews/Wistron-Santiago-Reviews-EI_IE15218.0,7_IL.8,16_IC2434030.htm",
-    "reviews_count": null,
-    "status": "found"
-  },
-  {
-    "baseline_location": "São Paulo, SP",
-    "baseline_country": "Brazil",
-    "company": "Wistron",
-    "matched_city": "São Paulo",
-    "url": "https://www.glassdoor.com/Reviews/Wistron-S%C3%A3o%20Paulo-Reviews-EI_IE15218.0,7_IL.8,17_IC2479061.htm",
     "reviews_count": null,
     "status": "found"
   },

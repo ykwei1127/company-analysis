@@ -22,17 +22,6 @@
     "status": "found"
   },
   {
-    "location": "Add a review",
-    "country": null,
-    "page_heading": "Rate a company",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
     "location": "Aliso, CA",
     "country": "United States",
     "page_heading": "Dell Technologies",
@@ -134,35 +123,35 @@
   {
     "location": "Framingham, MA",
     "country": "United States",
-    "page_heading": "Dell Technologies",
-    "heading_is_generic": true,
+    "page_heading": "Dell Technologies Framingham, MA",
+    "heading_is_generic": false,
     "list_rating": 4.0,
     "address": "Framingham, MA, United States",
     "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Framingham-Reviews-EI_IE1327.0,17_IL.18,28_IC1154571.htm",
-    "reviews_count": null,
+    "reviews_count": 3,
     "status": "found"
   },
   {
     "location": "Franklin, MA",
     "country": "United States",
-    "page_heading": "Dell Technologies",
-    "heading_is_generic": true,
+    "page_heading": "Dell Technologies Franklin, MA",
+    "heading_is_generic": false,
     "list_rating": 3.6,
     "address": "Franklin, MA, United States",
     "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Franklin-Reviews-EI_IE1327.0,17_IL.18,26_IC1154572.htm",
-    "reviews_count": null,
+    "reviews_count": 121,
     "status": "found"
   },
   {
     "location": "Fuquay-Varina, NC",
     "country": "United States",
-    "page_heading": "Dell Technologies",
+    "page_heading": "Dell Technologies Fuquay-Varina, NC",
     "heading_is_generic": true,
     "list_rating": 5.0,
     "address": "Fuquay-Varina, NC, United States",
-    "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Fuquay-Varina-Reviews-EI_IE1327.0,17_IL.18,31_IC3757296.htm",
+    "url": null,
     "reviews_count": null,
-    "status": "found"
+    "status": "no_review_url"
   },
   {
     "location": "Georgetown, TX",
@@ -306,27 +295,5 @@
     "url": "https://www.glassdoor.com/Reviews/Dell-Technologies-Domlur-Reviews-EI_IE1327.0,17_IL.18,24_IC4470560.htm",
     "reviews_count": null,
     "status": "found"
-  },
-  {
-    "location": "Dell Technologies locations",
-    "country": null,
-    "page_heading": "Dell Technologies Office Locations",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
-    "location": "Cookie Consent Tool",
-    "country": null,
-    "page_heading": "Dell Technologies Office Locations",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
   }
 ]

@@ -1,0 +1,182 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": null,
+    "company": "Inventec",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Reviews-E13485.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Inventec",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Taiwan-Reviews-EI_IE13485.0,8_IL.9,15_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Inventec",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-United-States-Reviews-EI_IE13485.0,8_IL.9,22_IN1.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Inventec",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Canada-Reviews-EI_IE13485.0,8_IL.9,15_IN3.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Inventec",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Spain-Reviews-EI_IE13485.0,8_IL.9,14_IN219.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Inventec",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Netherlands-Reviews-EI_IE13485.0,8_IL.9,20_IN178.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Inventec",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-France-Reviews-EI_IE13485.0,8_IL.9,15_IN86.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Inventec",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Germany-Reviews-EI_IE13485.0,8_IL.9,16_IN96.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Inventec",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-India-Reviews-EI_IE13485.0,8_IL.9,14_IN115.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Inventec",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-South-Korea-Reviews-EI_IE13485.0,8_IL.9,20_IN135.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Singapore",
+    "baseline_country": "Singapore",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Inventec",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Inventec",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Inventec-Australia-Reviews-EI_IE13485.0,8_IL.9,18_IN16.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

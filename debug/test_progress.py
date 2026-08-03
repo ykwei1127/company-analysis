@@ -41,7 +41,7 @@ print(f"\n共 {len(tasks_all)} 筆任務，預計 1-2 分鐘完成\n")
 
 # 呼叫 parallel_scrape（include_baseline=False 跳過 ASUS）
 data = parallel_scrape(
-    ports=[9222, 9223, 9224],
+    ports=[9222, 9223, 9224, 9225, 9226, 9227],
     matched_files=test_files,
     include_baseline=False,
     baseline_file='data/asus_locations.json',

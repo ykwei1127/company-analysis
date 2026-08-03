@@ -1,0 +1,182 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": null,
+    "company": "Compal Electronics",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-Reviews-E13464.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "Compal Electronics",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-Taiwan-Reviews-EI_IE13464.0,18_IL.19,25_IN240.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "Compal Electronics",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-United-States-Reviews-EI_IE13464.0,18_IL.19,32_IN1.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "Compal Electronics",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-Canada-Reviews-EI_IE13464.0,18_IL.19,25_IN3.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "Compal Electronics",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-Spain-Reviews-EI_IE13464.0,18_IL.19,24_IN219.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "Compal Electronics",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-Netherlands-Reviews-EI_IE13464.0,18_IL.19,30_IN178.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "Compal Electronics",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-France-Reviews-EI_IE13464.0,18_IL.19,25_IN86.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "Compal Electronics",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-Germany-Reviews-EI_IE13464.0,18_IL.19,26_IN96.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "Compal Electronics",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-India-Reviews-EI_IE13464.0,18_IL.19,24_IN115.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "Compal Electronics",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-South-Korea-Reviews-EI_IE13464.0,18_IL.19,30_IN135.htm",
+    "reviews_count": null,
+    "status": "found"
+  },
+  {
+    "baseline_location": "Singapore",
+    "baseline_country": "Singapore",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "Compal Electronics",
+    "matched_city": null,
+    "url": null,
+    "reviews_count": null,
+    "status": "not_in_company"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "Compal Electronics",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/Compal-Electronics-Australia-Reviews-EI_IE13464.0,18_IL.19,28_IN16.htm",
+    "reviews_count": null,
+    "status": "found"
+  }
+]

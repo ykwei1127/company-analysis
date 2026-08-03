@@ -1,0 +1,448 @@
+[
+  {
+    "baseline_location": "Global",
+    "baseline_country": "",
+    "company": "ASUS",
+    "matched_city": "Global",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Reviews-E40093.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "country"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Global"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "ASUS",
+    "matched_city": "Sydney, NSW",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Sydney-Reviews-EI_IE40093.0,4_IL.5,11_IC2235932.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 1.2,
+    "address": "2/6-10 Talavera Rd, Sydney, NSW, NSW 2113, Australia"
+  },
+  {
+    "baseline_location": "Sydney, NSW",
+    "baseline_country": "Australia",
+    "company": "ASUS",
+    "matched_city": "Australia",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Australia-Reviews-EI_IE40093.0,4_IL.5,14_IN16.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "ASUS",
+    "matched_city": "Markham, ON",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Markham-Reviews-EI_IE40093.0,4_IL.5,12_IC2280736.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 2.0,
+    "address": "70 Gough Road, Markham, ON, L3R 0E9, Canada"
+  },
+  {
+    "baseline_location": "Markham, ON",
+    "baseline_country": "Canada",
+    "company": "ASUS",
+    "matched_city": "Canada",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Canada-Reviews-EI_IE40093.0,4_IL.5,11_IN3.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Santiago, RM",
+    "baseline_country": "Chile",
+    "company": "ASUS",
+    "matched_city": "Santiago, RM",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Santiago-Reviews-EI_IE40093.0,4_IL.5,13_IC2434030.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 5.0,
+    "address": "Los Militares 6191, Las Condes, Santiago, RM, Región Metropolitana, Chile"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "ASUS",
+    "matched_city": "Noisy-le-Grand, A8",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Noisy-le-Grand-Reviews-EI_IE40093.0,4_IL.5,19_IC3100822.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 2.5,
+    "address": "1 Rue Galilée, Noisy-le-Grand, A8, 93160, France"
+  },
+  {
+    "baseline_location": "Noisy-le-Grand, A8",
+    "baseline_country": "France",
+    "company": "ASUS",
+    "matched_city": "France",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-France-Reviews-EI_IE40093.0,4_IL.5,11_IN86.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "ASUS",
+    "matched_city": "Ratingen, NW",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Ratingen-Reviews-EI_IE40093.0,4_IL.5,13_IC2584004.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Harkortstraße 21 - 23, Ratingen, NW, 40880 , Germany"
+  },
+  {
+    "baseline_location": "Ratingen, NW",
+    "baseline_country": "Germany",
+    "company": "ASUS",
+    "matched_city": "Germany",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Germany-Reviews-EI_IE40093.0,4_IL.5,12_IN96.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Budapest, BU",
+    "baseline_country": "Hungary",
+    "company": "ASUS",
+    "matched_city": "Budapest, BU",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Budapest-Reviews-EI_IE40093.0,4_IL.5,13_IC3125126.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 5.0,
+    "address": "Wesselényi u. 16, Budapest, BU, 1075, Hungary"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "ASUS",
+    "matched_city": "Mumbai, MH",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Mumbai-Reviews-EI_IE40093.0,4_IL.5,11_IC2851180.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 3.3,
+    "address": "17, 4C, Supreme Chambers, 18, Veera Desai Road, Mumbai, MH, 400072, India"
+  },
+  {
+    "baseline_location": "Mumbai, MH",
+    "baseline_country": "India",
+    "company": "ASUS",
+    "matched_city": "India",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-India-Reviews-EI_IE40093.0,4_IL.5,10_IN115.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Jakarta, JK",
+    "baseline_country": "Indonesia",
+    "company": "ASUS",
+    "matched_city": "Jakarta, JK",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Jakarta-Reviews-EI_IE40093.0,4_IL.5,12_IC2709872.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 4.0,
+    "address": "Graha Boulevard Blok C No. 7-9, Jl. Boulevard Raya, RT.8/RW.1, Klp. Gading Tim., Kec. Klp. Gading, Kota Jkt Utara, Jakarta, JK, 14240, Indonesia"
+  },
+  {
+    "baseline_location": "Milan, LOM",
+    "baseline_country": "Italy",
+    "company": "ASUS",
+    "matched_city": "Milan, LOM",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Milan-Reviews-EI_IE40093.0,4_IL.5,10_IC2802090.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 1.0,
+    "address": "Str. Padana Superiore, 28, Milan, LOM, 20063, Italy"
+  },
+  {
+    "baseline_location": "Tokyo, 40",
+    "baseline_country": "Japan",
+    "company": "ASUS",
+    "matched_city": "Tokyo, 40",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Tokyo-Reviews-EI_IE40093.0,4_IL.5,10_IC2851580.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 1.0,
+    "address": "3 Chome-23-2 Kanda Jinbocho, Tokyo, 40, 101-0051, Japan"
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "ASUS",
+    "matched_city": "Emmen, DR",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Emmen-Reviews-EI_IE40093.0,4_IL.5,10_IC3060162.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 4.9,
+    "address": "Marconistraat 2, Emmen, DR, 7825 GD, Netherlands"
+  },
+  {
+    "baseline_location": "Emmen, DR",
+    "baseline_country": "Netherlands",
+    "company": "ASUS",
+    "matched_city": "Netherlands",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Netherlands-Reviews-EI_IE40093.0,4_IL.5,16_IN178.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Manila, D9",
+    "baseline_country": "Philippines",
+    "company": "ASUS",
+    "matched_city": "Manila, D9",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Manila-Reviews-EI_IE40093.0,4_IL.5,11_IC2363570.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 4.3,
+    "address": "Hanston Building, Emerald Ave, Ortigas Center, Pasig, Manila, D9, 1605, Philippines"
+  },
+  {
+    "baseline_location": "Singapore",
+    "baseline_country": "Singapore",
+    "company": "ASUS",
+    "matched_city": "Singapore",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Singapore-Reviews-EI_IE40093.0,4_IL.5,14_IC3235921.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 2.8,
+    "address": "#11-16, 8 Burn Rd, 16 Trivex, Singapore, 369977, Singapore"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "ASUS",
+    "matched_city": "Seoul, 11",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Seoul-Reviews-EI_IE40093.0,4_IL.5,10_IC3021489.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 3.0,
+    "address": "15F, 67, Yeouinaru-ro, Yeongdeungpo-gu, Seoul, 11, 07327, South Korea"
+  },
+  {
+    "baseline_location": "Seoul, 11",
+    "baseline_country": "South Korea",
+    "company": "ASUS",
+    "matched_city": "South Korea",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-South-Korea-Reviews-EI_IE40093.0,4_IL.5,16_IN135.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "ASUS",
+    "matched_city": "Barcelona, CT",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Barcelona-Reviews-EI_IE40093.0,4_IL.5,14_IC2547194.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 2.4,
+    "address": "Passeig de la Zona Franca, 111, Barcelona, CT, 08038, Spain"
+  },
+  {
+    "baseline_location": "Barcelona, CT",
+    "baseline_country": "Spain",
+    "company": "ASUS",
+    "matched_city": "Spain",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Spain-Reviews-EI_IE40093.0,4_IL.5,10_IN219.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  },
+  {
+    "baseline_location": "Taipei, TPQ",
+    "baseline_country": "Taiwan",
+    "company": "ASUS",
+    "matched_city": "Taipei, TPQ",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Taipei-Reviews-EI_IE40093.0,4_IL.5,11_IC3271041.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 3.8,
+    "address": "No. 15, Li-De Road, Beitou District, Taipei, TPQ, 112, Taiwan"
+  },
+  {
+    "baseline_location": "Taiwan",
+    "baseline_country": "Taiwan",
+    "company": "ASUS",
+    "matched_city": "Taiwan",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Taiwan-Reviews-EI_IE40093.0,4_IL.5,11_IN240.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office",
+      "country"
+    ],
+    "page_heading": "ASUS Taiwan",
+    "heading_is_generic": false,
+    "list_rating": null,
+    "address": "Taiwan"
+  },
+  {
+    "baseline_location": "Bangkok, 10",
+    "baseline_country": "Thailand",
+    "company": "ASUS",
+    "matched_city": "Bangkok, 10",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Bangkok-Reviews-EI_IE40093.0,4_IL.5,12_IC3179725.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 3.9,
+    "address": "Huai Khwang, Bangkok, 10, 10310, Thailand"
+  },
+  {
+    "baseline_location": "Dubai, DU",
+    "baseline_country": "United Arab Emirates",
+    "company": "ASUS",
+    "matched_city": "Dubai, DU",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Dubai-Reviews-EI_IE40093.0,4_IL.5,10_IC2204498.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 2.6,
+    "address": "Garhoud Star Building, Office No. M03, Dubai, DU, 54443, United Arab Emirates"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "ASUS",
+    "matched_city": "Fremont, CA",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-Fremont-Reviews-EI_IE40093.0,4_IL.5,12_IC1147355.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "office"
+    ],
+    "page_heading": "ASUS",
+    "heading_is_generic": true,
+    "list_rating": 3.7,
+    "address": "48720 Kato Road, Fremont, CA, 94538, United States"
+  },
+  {
+    "baseline_location": "Fremont, CA",
+    "baseline_country": "United States",
+    "company": "ASUS",
+    "matched_city": "United States",
+    "url": "https://www.glassdoor.com/Reviews/ASUS-United-States-Reviews-EI_IE40093.0,4_IL.5,18_IN1.htm",
+    "reviews_count": null,
+    "status": "found",
+    "source_modes": [
+      "country"
+    ]
+  }
+]

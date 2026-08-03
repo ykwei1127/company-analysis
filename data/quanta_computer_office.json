@@ -22,47 +22,14 @@
     "status": "found"
   },
   {
-    "location": "Add a review",
-    "country": null,
-    "page_heading": "Rate a company",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
     "location": "Fremont, CA",
     "country": "United States",
     "page_heading": "Quanta Computer",
     "heading_is_generic": true,
-    "list_rating": 2.7,
+    "list_rating": 2.8,
     "address": "Fremont, CA, 0, United States",
     "url": "https://www.glassdoor.com/Reviews/Quanta-Computer-Fremont-Reviews-EI_IE11939.0,15_IL.16,23_IC1147355.htm",
     "reviews_count": null,
     "status": "found"
-  },
-  {
-    "location": "Quanta Computer locations",
-    "country": null,
-    "page_heading": "Quanta Computer Office Locations",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
-  },
-  {
-    "location": "Cookie Consent Tool",
-    "country": null,
-    "page_heading": "Quanta Computer Office Locations",
-    "heading_is_generic": true,
-    "list_rating": null,
-    "address": null,
-    "url": null,
-    "reviews_count": null,
-    "status": "no_review_url"
   }
 ]
